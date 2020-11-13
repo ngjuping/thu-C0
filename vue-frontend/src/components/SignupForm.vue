@@ -89,12 +89,13 @@ export default {
       )
       .then(res => 
       {
-        this.$router.push({name:'Mainpage'});
         this.signing_up = false;
         let data = res.data
-        console.log(data);
+        this.$store.commit('login',data.user_id)
+        this.$router.push({name:'Mainpage'});
+
         Swal.fire({
-          title: "注册完成" + data.nickname,
+          title: "注册完成" + data.user_id,
           text: "现在帮您登陆",
           icon: "success",
           timer: 1000}
@@ -109,6 +110,12 @@ export default {
           timer: 1500});
         
         });
+    }
+  },
+  mounted(){
+    if(this.$store.state.logged_in)
+    {
+      this.$router.go(-1);
     }
   }
 }

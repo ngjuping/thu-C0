@@ -7,14 +7,17 @@
       <router-link to="/main" class="text-white">Main page</router-link>
     </div>
     <router-view/>
+    <Qfooter></Qfooter>
   </div>
 </template>
 <script>
 import Qheader from '@/components/Qheader.vue'
+import Qfooter from '@/components/Qfooter.vue'
 
 export default {
   components:{
-    Qheader
+    Qheader,
+    Qfooter
   }
 }
 </script>

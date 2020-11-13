@@ -9,7 +9,7 @@ let server = new Server({
     models: {
       user: Model,
       notice: Model,
-      venue: Model.extend()
+      venue: Model
     },
     
   seeds(server) {
@@ -18,8 +18,16 @@ let server = new Server({
       server.create("notice", { title:"Hello World",content:"Lorem Ipsum" });
       server.create("notice", { title:"主页，登陆，注册页",content:"采用bootstrap框架" });
       server.create("notice", { title:"Hello World",content:"Lorem Ipsum" });
-      server.create("venue", { name:"新林院", description:"First venue", img:"https://miro.medium.com/max/1140/0*16bH8WYK3fOtu-kJ.jpg"} );
-      server.create("venue", { name:"活动中心" , description:"Normal venue", img:"https://blog.playo.co/wp-content/uploads/2018/09/5b3f1476cb29c_badminton1.jpg"});
+      server.create("venue", { name:"新林院", 
+      description:"First venue", 
+      img:"https://miro.medium.com/max/1140/0*16bH8WYK3fOtu-kJ.jpg", 
+      notice:[{ title:"闭馆通知",content:"请注意，11月15日闭馆" },{ title:"场地折扣10%",content:"即日起至12月1日" }]
+      });
+      server.create("venue", { name:"活动中心" , 
+      description:"Normal venue", 
+      img:"https://blog.playo.co/wp-content/uploads/2018/09/5b3f1476cb29c_badminton1.jpg",
+      notice:[{ title:"闭馆通知",content:"小心了，11月15日闭馆" },{ title:"场地折扣5%",content:"只限马杯赛事场地" }]
+    });
       
     },
 
@@ -34,7 +42,7 @@ let server = new Server({
         let selected_user = schema.users.findBy({user_id:attrs.user_id});
 
         if(selected_user.password == attrs.password){
-          return {"message":"ok", name:selected_user.user_id};
+          return {"message":"ok", user_id:attrs.user_id};
         }
         else{
           return {"message":"not ok"};
@@ -59,7 +67,7 @@ let server = new Server({
             name:attrs.name
           });
     
-          return {"message":"ok"};
+          return {"message":"ok",user_id:attrs.user_id};
         }
     });
 

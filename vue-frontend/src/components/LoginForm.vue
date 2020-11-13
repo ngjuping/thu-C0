@@ -43,7 +43,6 @@
 
 <script>
 import Swal from 'sweetalert2'
-import moment from 'moment'
 
 export default {
   data()
@@ -68,13 +67,13 @@ export default {
       )
       .then(res => 
       {
-        this.$store.state.logged_in_time = moment().format(); 
-        this.$store.state.logged_in = true
-        this.$router.push({name:'Mainpage'});
         this.logging_in = false;
         let data = res.data
+        this.$store.commit('login',data.user_id)
+        this.$router.push({name:'Mainpage'});
+
         Swal.fire({
-          title: "欢迎! " + data.name,
+          title: "欢迎! " + data.user_id,
           text: "成功登陆",
           icon: "success",
           timer: 1000}
@@ -89,6 +88,12 @@ export default {
           timer: 1500});
         
         });
+    }
+  },
+  mounted(){
+    if(this.$store.state.logged_in)
+    {
+      this.$router.go(-1);
     }
   }
 }
