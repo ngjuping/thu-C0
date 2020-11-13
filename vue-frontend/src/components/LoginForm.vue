@@ -30,13 +30,14 @@
 
 <script>
 import Swal from 'sweetalert2'
+import moment from 'moment'
 
 export default {
   data()
   {
     return {
-      userid: "2018080120",
-      password: "365391",
+      userid: "admin",
+      password: "123456",
       logging_in: false
     }
   },
@@ -44,14 +45,15 @@ export default {
     login(){
       this.logging_in = true;
       this.$axios
-      .patch('/api/v1/login',{
-          username: this.userid,
+      .post('/api/v1/login',{
+          user_id: this.userid,
           password: this.password
         }
       )
       .then(res => 
       {
-        this.$router.push({name:'Welcome'});
+        this.$store.state.logged_in_time = moment().format(); 
+        this.$router.push({name:'Mainpage'});
         this.logging_in = false;
         let data = res.data
         Swal.fire({
@@ -60,10 +62,6 @@ export default {
           icon: "success",
           timer: 1000}
         );
-
-        localStorage.setItem('my-jwt',data.jwt);
-        
-
       })
       .catch(()=>{
         this.logging_in = false;
