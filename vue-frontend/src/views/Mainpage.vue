@@ -39,6 +39,7 @@
 <script>
 //import moment from 'moment'
 import Notices from '@/components/Notices.vue'
+import Swal from 'sweetalert2'
 
 export default {
     components:{
@@ -70,6 +71,14 @@ export default {
         }
     },
     mounted(){
+        if(!this.$store.state.logged_in)
+        {
+            Swal.fire({
+            title: "尚未登陆",
+            text: "您可以查看场地信息，但不能做任何操作",
+            icon: "error",
+            timer: 1500});
+        }
         //get the first 3 notices
         this.$axios
         .get('/api/v1/main/notice')

@@ -34,7 +34,7 @@ let server = new Server({
         let selected_user = schema.users.findBy({user_id:attrs.user_id});
 
         if(selected_user.password == attrs.password){
-          return {"message":"ok"};
+          return {"message":"ok", name:selected_user.user_id};
         }
         else{
           return {"message":"not ok"};
