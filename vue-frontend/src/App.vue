@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <Qheader></Qheader>
     <div id="nav">
       <router-link to="/login" class="text-white">Login</router-link> |
       <router-link to="/signup" class="text-white">Sign up</router-link> |
@@ -8,7 +9,15 @@
     <router-view/>
   </div>
 </template>
+<script>
+import Qheader from '@/components/Qheader.vue'
 
+export default {
+  components:{
+    Qheader
+  }
+}
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -19,6 +28,7 @@
   background-image:url("assets/prototype_bg.jpg");
   background-size:100%;
   background-repeat:no-repeat;
+  
 }
 
 #nav {
