@@ -7,10 +7,10 @@ import { makeServer } from "./server"
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faArrowCircleRight } from '@fortawesome/free-solid-svg-icons'
+import { faArrowCircleRight,faStar } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faArrowCircleRight)
+library.add(faArrowCircleRight,faStar)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

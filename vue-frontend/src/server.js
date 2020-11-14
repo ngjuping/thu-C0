@@ -19,7 +19,7 @@ let server = new Server({
       server.create("notice", { title:"主页，登陆，注册页",content:"采用bootstrap框架" });
       server.create("notice", { title:"Hello World",content:"Lorem Ipsum" });
       server.create("venue", { name:"新林院", 
-      description:"First venue", 
+      description:"鸟语花香的环境，和蔼可亲的工作人员，舒适的场地——你一定会爱上这里。", 
       img:"https://miro.medium.com/max/1140/0*16bH8WYK3fOtu-kJ.jpg", 
       notice:[{ title:"闭馆通知",content:"请注意，11月15日闭馆" },{ title:"场地折扣10%",content:"即日起至12月1日" }]
       });

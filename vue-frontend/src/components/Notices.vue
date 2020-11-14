@@ -1,6 +1,6 @@
 <template>
     <!-- notices -->
-        <div class="rounded p-5 text-left shadow bg-light">
+        <div class="rounded p-2 p-sm-3 p-lg-5 text-left shadow bg-light">
             <h1>最新通知</h1>
             <hr>
             <div v-for="notice in notices" :key="notice.id" class="list-group-item shadow text-left mb-1">
