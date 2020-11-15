@@ -25,10 +25,10 @@
           <hr>
           <div class="container">
             <div class="row">
-              <div class="col-9 d-flex justify-content-end align-items-center">
+              <div class="col-8 d-flex justify-content-end align-items-center">
                 <small>没有账户?</small>
               </div>
-              <div class="col">
+              <div class="col d-flex justify-content-end align-items-center">
                 <button type="submit" class="btn btn-secondary" @click.prevent="gotoSignup">注册</button>
               </div>
             </div>
