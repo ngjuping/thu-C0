@@ -3,7 +3,7 @@
         <Notices :notices="notices"></Notices>
         <br/>
         <br/>
-        <VenueDescribe :latestreview="latestreview" :venues="venues" :currentvenue="currentvenue"></VenueDescribe>
+        <VenueDescribe :venues="venues" ></VenueDescribe>
     </div>
 </template>
 
@@ -22,8 +22,6 @@ export default {
         return{
             notices:[],
             venues:[],
-            currentvenue:{},
-            latestreview:{stars:4,content:"场地不错，服务还行，稍微贵了些"}
         }
     },
     mounted(){
@@ -47,12 +45,7 @@ export default {
         .then(res => {
             this.venues = res.data.venues;
         })
-        //get details on specific venue 1
-        this.$axios
-        .get('/api/v1/venues/1')
-        .then(res => {
-            this.currentvenue = res.data.venue;
-        })
+        
     }
 
 }

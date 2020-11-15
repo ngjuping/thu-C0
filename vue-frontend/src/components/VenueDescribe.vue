@@ -60,8 +60,9 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">最新反馈</h5>
-                            <h6 class="card-subtitle mb-2 text-muted"><font-awesome-icon icon="star" v-for="i in latestreview.stars" :key="i"/></h6>
-                            <p class="card-text">{{ latestreview.content }}</p>
+                            <h6 class="card-subtitle mb-2 text-muted"><font-awesome-icon icon="star" v-for="i in currentvenue.review.stars" :key="i"/></h6>
+                            <p class="card-text">{{ currentvenue.review.content }}</p>
+                            <p class="card-text">{{ now() }}</p>
                             <button class="btn btn-primary">查看更多</button>
                         </div>
                     </div>
@@ -74,9 +75,20 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
-    props:["currentvenue","venues","latestreview"],
-    
+    props:["venues"],
+    data(){
+        return {
+            currentvenue: {
+                name:"新林院", 
+                description:"鸟语花香的环境，和蔼可亲的工作人员，舒适的场地——你一定会爱上这里。", 
+                img:"https://miro.medium.com/max/1140/0*16bH8WYK3fOtu-kJ.jpg", 
+                notice:[{ title:"闭馆通知",content:"请注意，11月15日闭馆" }],
+                review:{stars:4,content:"No review",publish_date:moment().format()}
+            }
+        }
+    },
     methods:{
         getVenueInfo(x){
             if(x == this.currentvenue.id)
@@ -93,8 +105,24 @@ export default {
                     this.currentvenue = res.data.venue;
                 })
             }
+        },
+        //get relative time of the review publish date
+        now(){
+            let review_time = this.currentvenue.review.publish_date
+            let first_half = review_time.split("T")[0];
+            let second_half_time = review_time.split("T")[1].split("+")[0];
+            
+            return moment(first_half + " " + second_half_time,"YYYY-MM-DD hh:mm:ss").fromNow();
         }
     },
+    mounted(){
+        //get details on specific venue 1 (default venue)
+        this.$axios
+        .get('/api/v1/venues/1')
+        .then(res => {
+            this.currentvenue = res.data.venue;
+        })
+    }
 }
 </script>
 

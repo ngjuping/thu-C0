@@ -49,13 +49,14 @@ export default {
             return moment(first_half + " " + second_half_time,"YYYY-MM-DD hh:mm:ss").fromNow();
         }
     },
+    //use timer to simulate real time update
     beforeUpdate(){
         clearInterval(this.timer);
         
     },
     updated(){
 
-        //force recompute
+        //force recompute last logged in time
         this.timer = setInterval(()=>{
             this.$forceUpdate();            
 
