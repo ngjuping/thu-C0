@@ -86,3 +86,5 @@ class Course(DynamicDocument):
     price=StringField()
     course_id=IntField()
 
+for i in User.objects:
+    print(i.name)
