@@ -2,28 +2,46 @@ from django.http import HttpResponse, JsonResponse
 
 from Qinghuiyue.models import *
 from Qinghuiyue.models.models import User
-
-
+from Qinghuiyue.models.models import Stat
+import json
 #@require('post')
 def signup(request):
-    params = request.params
-    user = User.create(**{
-        'password': params['password']
-    })
-    return JsonResponse({'id': user.id})
+    '''
+
+    :param request:
+    :return:
+
+    目前可以根据注册人数自动增加id,但是还没有做重复的检查，工会id不能重复
+    '''
+    params = json.loads(request.body)
+    stat=Stat.objects(name="size_of_collection")[0]
+
+    user = User.create(password=params['pwd'],user_id=stat.data['user']+1,name=params['name'],api_id=params['api_id'])
+    stat.data['user']+=1
+    stat.save()
+    return JsonResponse({"message":"ok","content":{'id': user.user_id}})
 
 
 #@require('post')
 def login(request):
-    params = request.params
-    user = User.objects.first()
-    if user and user.authenticate(params['password']):
-        request.session['user_id'] = user.id
-        return JsonResponse(user.todict())
+    #print(request.body)
+    params = json.loads(request.body)
+
+    #print(params)
+    user = User.objects(api_id=params['api_id']).first()
+
+    if user and user.authenticate(params['pwd']):
+
+        return JsonResponse({"message":"ok","content":{'id': user.user_id}})
     return HttpResponse(status=400)
 
 
 #@require('post')
+'''
+需要实现session之后再来实现这个模块
 def logout(request):
     request.session.delete()
     return JsonResponse({})
+
+'''
+

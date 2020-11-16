@@ -1,7 +1,7 @@
 from mongoengine import *
 import bson
 import bcrypt
-connect('qhy',host='mongodb://thuC1:C0Qinghuiyue@58.87.86.11:27017',authentication_source='admin')
+connect('qhy',host='mongodb://thuC0:C0Qinghuiyue@58.87.86.11:27017',authentication_source='admin')
 
 class User(DynamicDocument):
     user_id=IntField(required=True)
@@ -21,6 +21,9 @@ class User(DynamicDocument):
             'password': bcrypt.hashpw(pw, bcrypt.gensalt())
         })
 
+    def authenticate(self,password):
+        pw=password.encode('utf-8')
+        return bcrypt.checkpw(pw,self.password)
 class Venue(DynamicDocument):
     name=StringField()
     intro=StringField()
@@ -86,3 +89,6 @@ class Course(DynamicDocument):
     price=StringField()
     course_id=IntField()
 
+class Stat(DynamicDocument):
+    data=DictField()
+    name=StringField()
