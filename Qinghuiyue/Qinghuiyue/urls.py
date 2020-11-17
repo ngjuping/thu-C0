@@ -17,10 +17,13 @@ from django.contrib import admin
 from django.urls import path
 
 from Qinghuiyue import views
+import Qinghuiyue.users.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('signup', views.signup),
-    path('login', views.login),
-    path('logout', views.logout),
+    path('api/main/notices',views.get_notices),
+    path('api/main/venues',views.get_venues_info),
+    path('api/signup', Qinghuiyue.users.views.signup),
+    path('api/login', Qinghuiyue.users.views.login),
+    path('api/logout', Qinghuiyue.users.views.logout)
 ]

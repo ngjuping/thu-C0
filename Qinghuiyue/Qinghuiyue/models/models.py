@@ -1,25 +1,8 @@
 from mongoengine import *
 import bson
 import bcrypt
-connect('qhy',host='58.87.86.11',port=27017)
 
-class User(DynamicDocument):
-    user_id=IntField(required=True)
-    name=StringField()
-    api_id=IntField(required=True)
-    # password hash
-    password =BinaryField()
-    # password=StringField()
-    rent_now=ListField()
-    rent_history=ListField()
-    invitation=ListField()
-    feedback=ListField()
-    @classmethod
-    def create(cls,  password, **kwargs):
-        pw = password.encode('utf-8')
-        return cls.objects.create(**kwargs, **{
-            'password': bcrypt.hashpw(pw, bcrypt.gensalt())
-        })
+
 
 class Venue(DynamicDocument):
     name=StringField()
@@ -27,6 +10,7 @@ class Venue(DynamicDocument):
     courts=ListField()
     image=StringField()
     venue_id=IntField()
+    notices=ListField()
 
 class  Court(DynamicDocument):
     name=StringField()
@@ -86,5 +70,6 @@ class Course(DynamicDocument):
     price=StringField()
     course_id=IntField()
 
-for i in User.objects:
-    print(i.name)
+class Stat(DynamicDocument):
+    data=DictField()
+    name=StringField()
