@@ -1,28 +1,18 @@
 from mongoengine import *
 import bson
-connect('qhy',host='58.87.86.11',port=27017)
+import bcrypt
 
-class User(DynamicDocument):
-    _id=ObjectIdField()
-    user_id=IntField(required=True)
-    name=StringField()
-    api_id=IntField(required=True)
-    password=StringField()
-    rent_now=ListField()
-    rent_history=ListField()
-    invitation=ListField()
-    feedback=ListField()
+
 
 class Venue(DynamicDocument):
-    _id=ObjectIdField()
     name=StringField()
     intro=StringField()
     courts=ListField()
     image=StringField()
     venue_id=IntField()
+    notices=ListField()
 
 class  Court(DynamicDocument):
-    _id = ObjectIdField()
     name=StringField()
     venue=ObjectIdField()
     status_now=StringField()
@@ -33,7 +23,6 @@ class  Court(DynamicDocument):
     Status=ListField()
 
 class Feedback(DynamicDocument):
-    _id=ObjectIdField()
     user_id=IntField()
     time=DateTimeField()
     stars=IntField(min_value=1,max_value=5)
@@ -43,14 +32,12 @@ class Feedback(DynamicDocument):
     feedback_id=IntField()
 
 class Notification(DynamicDocument):
-    _id=ObjectIdField()
     time=DateTimeField()
     content=StringField()
     title=StringField()
     notice_id=IntField()
 
 class Queue_reservation(DynamicDocument):
-    _id=ObjectIdField()
     reservation_id=IntField()
     user_id=IntField()
     sport_type=IntField()
@@ -61,14 +48,12 @@ class Queue_reservation(DynamicDocument):
     type=IntField()#抽签方式？
 
 class Reservation(DynamicDocument):
-    _id=ObjectIdField()
     type=IntField()
     paras=DictField()
     status=StringField()
     reservation_id=IntField()
 
 class Share_notification(DynamicDocument):
-    _id=ObjectIdField()
     user_id=IntField()
     time=DateTimeField()
     content=StringField()
@@ -77,7 +62,6 @@ class Share_notification(DynamicDocument):
     share_id=IntField()
 
 class Course(DynamicDocument):
-    _id=ObjectIdField()
     name=StringField()
     date=DateField()
     time=StringField()
@@ -86,6 +70,6 @@ class Course(DynamicDocument):
     price=StringField()
     course_id=IntField()
 
-
-for i in Reservation.objects:
-    print(i['paras'])
+class Stat(DynamicDocument):
+    data=DictField()
+    name=StringField()
