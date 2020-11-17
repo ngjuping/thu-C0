@@ -8,7 +8,7 @@
         <div class="list-group-item list-group-item-action container" v-for="venue in venues" :key="venue.id">
             <div class="row">
                 <div class="col-8 d-flex align-items-center"  @click="getVenueInfo(venue.id)"><a>{{ venue.name }}</a></div>
-                <button type="button" class="col btn btn-dark h-100">前往订场</button>
+                <button type="button" class="col btn btn-dark h-100" @click="goBooking(venue.id)">前往订场</button>
             </div>
         </div>
         
@@ -25,7 +25,7 @@
                         <div class="col-12 col-md-6 d-flex align-items-center">
                             <div class="btn-group shadow w-100">
                                 <button type="button" class="btn btn-light h-100">导航</button>
-                                <button type="button" class="btn btn-light h-100">前往订场</button>
+                                <button type="button" class="btn btn-light h-100" @click="goBooking(currentvenue.id)">前往订场</button>
                                 <button type="button" class="btn btn-dark h-100">长期预约</button>
                             </div>
                         </div>
@@ -81,6 +81,7 @@ export default {
     data(){
         return {
             currentvenue: {
+                id:1,
                 name:"新林院", 
                 description:"鸟语花香的环境，和蔼可亲的工作人员，舒适的场地——你一定会爱上这里。", 
                 img:"https://miro.medium.com/max/1140/0*16bH8WYK3fOtu-kJ.jpg", 
@@ -105,6 +106,9 @@ export default {
                     this.currentvenue = res.data.venue;
                 })
             }
+        },
+        goBooking(x){
+            this.$router.push({name:'Booking',params:{venueid:x}});
         },
         //get relative time of the review publish date
         now(){

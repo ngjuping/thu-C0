@@ -6,7 +6,7 @@
             <button class="btn btn-danger" v-if="this.$store.state.logged_in" @click="logout">登出 as {{ this.$store.state.logged_in_user}}</button>
             <button class="btn btn-primary" v-else  @click="gotoLogin">登录</button>
             <br/>
-            <small v-if="this.$store.state.logged_in">最近登陆：{{ now() }}</small>
+            <small v-if="this.$store.state.logged_in">已上线：{{ now() }}</small>
         </div>
         
         
