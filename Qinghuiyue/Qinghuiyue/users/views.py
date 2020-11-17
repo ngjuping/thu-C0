@@ -38,7 +38,6 @@ def login(request):
 
 #@require('post')
 
-
 def logout(request):
     #print(request.session['user_id'])
     request.session.delete()

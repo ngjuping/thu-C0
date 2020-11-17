@@ -12,7 +12,7 @@ class Venue(DynamicDocument):
     venue_id=IntField()
     notices=ListField()
 
-class  Court(DynamicDocument):
+class Court(DynamicDocument):
     name=StringField()
     venue=ObjectIdField()
     status_now=StringField()
