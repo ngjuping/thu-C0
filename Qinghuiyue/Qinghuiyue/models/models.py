@@ -87,5 +87,3 @@ class Course(DynamicDocument):
     course_id=IntField()
 
 
-for i in Reservation.objects:
-    print(i['paras'])

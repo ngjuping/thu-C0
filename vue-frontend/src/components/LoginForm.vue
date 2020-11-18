@@ -68,6 +68,7 @@ export default {
       .then(res => 
       {
         this.logging_in = false;
+		console.log("success");
         let data = res.data
         this.$store.commit('login',data.user_id)
         this.$router.push({name:'Mainpage'});
