@@ -1,4 +1,7 @@
 node_modules/
+<<<<<<< HEAD
+Qinghuiyue/.idea/
+=======
 
 .idea
 
@@ -117,3 +120,4 @@ media/
 # **/migrations/**
 # !**/migrations
 # !**/migrations/__init__.py
+>>>>>>> backpb

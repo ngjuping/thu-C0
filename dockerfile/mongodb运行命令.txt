@@ -1,0 +1,2 @@
+docker run --name mongo -p 27017:27017 -v /home/ubuntu/mongodb/data:/data/db  -e MONGO_INITDB_ROOT_USERNAME=thuC0 -e MONGO_INITDB_ROOT_PASSWORD=C0Qinghuiyue -d mongo
+#设置用户名和密码并挂载数据
