@@ -30,8 +30,8 @@ let server = new Server({
         notice:[{ title:"闭馆通知",content:"请注意，11月15日闭馆" },{ title:"场地折扣10%",content:"即日起至12月1日" }],
         review:{stars:4,content:"场地不错，服务还行，稍微贵了些",publish_date:"2013-03-01T00:00:00+01:00"},
         courts:[
-          {id:0,type:0,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1100",code:1}]},
-          {id:1,type:0,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1100",code:1}]},
+          {id:0,type:0,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1100",code:1},{start:"1100",end:"1200",code:0}]},
+          {id:1,type:1,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1100",code:1},{start:"1100",end:"1200",code:1}]},
         ]
       });
       
@@ -43,7 +43,7 @@ let server = new Server({
         review:{stars:5,content:"还行",publish_date:"2017-03-01T00:00:00+01:00"},
         courts:[
           {id:0,type:0,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1000",code:1}]},
-          {id:1,type:0,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1000",code:1}]},
+          {id:1,type:1,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1000",code:1}]},
         ]
     });
       
