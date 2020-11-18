@@ -6,7 +6,7 @@
             <button class="btn btn-danger" v-if="this.$store.state.logged_in" @click="logout">登出 as {{ this.$store.state.logged_in_user}}</button>
             <button class="btn btn-primary" v-else  @click="gotoLogin">登录</button>
             <br/>
-            <small v-if="this.$store.state.logged_in">最近登陆：{{ now() }}</small>
+            <small v-if="this.$store.state.logged_in">已上线：{{ now() }}</small>
         </div>
         
         
@@ -49,13 +49,14 @@ export default {
             return moment(first_half + " " + second_half_time,"YYYY-MM-DD hh:mm:ss").fromNow();
         }
     },
+    //use timer to simulate real time update
     beforeUpdate(){
         clearInterval(this.timer);
         
     },
     updated(){
 
-        //force recompute
+        //force recompute last logged in time
         this.timer = setInterval(()=>{
             this.$forceUpdate();            
 

@@ -3,7 +3,7 @@
         <Notices :notices="notices"></Notices>
         <br/>
         <br/>
-        <VenueDescribe :latestreview="latestreview" :venues="venues" :currentvenue="currentvenue"></VenueDescribe>
+        <VenueDescribe :venues="venues" ></VenueDescribe>
     </div>
 </template>
 
@@ -22,8 +22,6 @@ export default {
         return{
             notices:[],
             venues:[],
-            currentvenue:{},
-            latestreview:{stars:4,content:"场地不错，服务还行，稍微贵了些"}
         }
     },
     mounted(){
@@ -47,52 +45,9 @@ export default {
         .then(res => {
             this.venues = res.data.venues;
         })
-        //get details on specific venue 1
-        this.$axios
-        .get('/api/v1/venues/1')
-        .then(res => {
-            this.currentvenue = res.data.venue;
-        })
+        
     }
 
 }
 </script>
 
-<style scoped>
-
-
-#venue_panel{
-    border-radius:20px;
-    background-image:url("../assets/prototype_bg2.jpg");
-    background-size:100%;
-    background-position: 0% 100%;
-    background-repeat:no-repeat;
-
-}
-
-#venue_select_panel{
-    position:relative;
-    z-index:0;
-}
-
-#venue_select_panel::after{
-    content:"";
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background-image:url("../assets/venue_select_bg.jpg");
-    background-size:cover;
-    background-repeat:no-repeat;
-    opacity:0.8;
-    z-index:-1;
-    border-radius:50px;
-}
-
-#venue_description{
-    background-color:rgb(73, 136, 190);
-}
-
-
-</style>
