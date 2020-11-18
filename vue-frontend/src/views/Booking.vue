@@ -1,10 +1,10 @@
 <template>
-    <div class="container">
-        <div class="display-4">预定<b>{{ this.venue_name }}</b>场地</div>
-        <hr>
-        <div class="d-flex justify-content-start">
+    <div class="container bg-gradient-light rounded">
+        <div id="title" class="mb-5"><span class="p-3 px-4 bg-dark rounded shadow text-white">预定<span class="text-warning mx-3">{{ this.venue_name }}</span>场地</span></div>
+        
+        <div class="d-flex justify-content-start mb-4">
             
-            <div class="btn btn-danger" @click="$router.go(-1)">回到前一页</div>
+            <div class="btn btn-danger mr-2" @click="$router.go(-1)">回到前一页</div>
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     根据运动类型筛选
@@ -67,4 +67,13 @@ export default {
 
 <style scoped>
 
+#title{
+    font-size:50px;
+}
+
+@media (max-width:760px) {
+    #title{
+        font-size:30px;
+    }
+}
 </style>
