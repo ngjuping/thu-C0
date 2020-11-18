@@ -44,7 +44,7 @@ export default {
         let month = parseInt(moment().month())+1
         let year = moment().year()
         this.$axios
-        .get(`/api/v1/booking?id=${this.venue_id}&day=${day}&month=${month}&year=${year}`)
+        .get(`/api/booking?id=${this.venue_id}&day=${day}&month=${month}&year=${year}`)
         .then(res => {
             this.courts = res.data.courts;
             this.venue_name = res.data.venue_name;

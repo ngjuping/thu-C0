@@ -18,12 +18,12 @@
 
           <div class="form-group">
             <label >账号名称/ID</label>
-            <input class="form-control" :disabled="signing_up" v-model="userid" :required="userid===''">
+            <input class="form-control" :disabled="signing_up" v-model="id" :required="id===''">
           </div>
 
           <div class="form-group">
             <label >密码</label>
-            <input type="password" class="form-control" required :disabled="signing_up" v-model="password">
+            <input type="password" class="form-control" required :disabled="signing_up" v-model="pwd">
           </div>
           
           <button type="submit" class="btn btn-primary text-white" @click.prevent="signup" v-show="!signing_up" autofocus>提交</button>
@@ -44,29 +44,61 @@ export default {
   data()
   {
     return {
-      userid: "admin",
-      password: "123456",
+      id: "admin",
+      pwd: "123456",
       realname: "",
       signing_up: false,
       errors:[]
     }
   },
   methods:{
+    tryLogin(){
+        this.$axios
+        .post('/api/login',{
+            id: this.id,
+            pwd: this.pwd
+          }
+        )
+        .then(res => 
+        {
+          this.logging_in = false;
+          let data = res.data
+          this.$store.commit('login',data.user_info.user_id)
+          this.$router.push({name:'Mainpage'});
+
+          Swal.fire({
+            title: "欢迎! " + data.user_info.user_id,
+            text: "成功登陆",
+            icon: "success",
+            timer: 1000}
+          );
+        })
+        .catch((err)=>{
+          this.logging_in = false;
+          Swal.fire({
+            title: "资料有误",
+            text: `错误信息: ${err.response.data.message}`,
+            icon: "error",
+            timer: 1500});
+          
+          });
+
+    },
     checkForm(){
         
       this.errors = [];
 
-        if (this.userid && this.password && this.realname) {
+        if (this.id && this.pwd && this.realname) {
         return true;
       }
 
       if (!this.realname) {
         this.errors.push('请输入您的真实姓名.');
       }
-      if (!this.userid) {
+      if (!this.id) {
         this.errors.push('账号名称不能为空.');
       }
-      if (!this.password) {
+      if (!this.pwd) {
         this.errors.push('密码不能为空.');
       }
         return false;
@@ -81,33 +113,25 @@ export default {
 
       this.signing_up = true;
       this.$axios
-      .post('/api/v1/signup',{
-          user_id: this.userid,
-          password: this.password,
+      .post('/api/signup',{
+          id: this.id,
+          pwd: this.pwd,
           name: this.realname,
         }
       )
-      .then(res => 
+      .then(() => 
       {
         this.signing_up = false;
-        let data = res.data
-        this.$store.commit('login',data.user_id)
-        this.$router.push({name:'Mainpage'});
-
-        Swal.fire({
-          title: "注册完成" + data.user_id,
-          text: "现在帮您登陆",
-          icon: "success",
-          timer: 1000}
-        );
+        this.tryLogin();
+        
       })
-      .catch(()=>{
+      .catch((err)=>{
         this.signing_up = false;
         Swal.fire({
           title: "注册出现问题",
-          text:  "可能是您的用户名或密码不满足要求",
+          text:  `错误信息：${err.response.data.message}`,
           icon:  "error",
-          timer: 1500});
+          timer: 1000});
         
         });
     }

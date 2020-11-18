@@ -8,13 +8,13 @@
       <form class="card-body h-50 pb-5">
           <div class="form-group text-left">
             <label>账号</label>
-            <input class="form-control" :disabled="logging_in" v-model="userid" :required="userid===''">
-            <small class="form-text text-muted text-center">欢迎回来 {{userid}}</small>
+            <input class="form-control" :disabled="logging_in" v-model="id" :required="id===''">
+            <small class="form-text text-muted text-center">欢迎回来 {{id}}</small>
           </div>
 
           <div class="form-group text-left">
             <label >密码</label>
-            <input type="password" class="form-control" required :disabled="logging_in" v-model="password">
+            <input type="password" class="form-control" required :disabled="logging_in" v-model="pwd">
           </div>
           
           <button type="submit" class="btn btn-primary text-white" @click.prevent="login" v-show="!logging_in" autofocus>登录</button>
@@ -48,8 +48,8 @@ export default {
   data()
   {
     return {
-      userid: "admin",
-      password: "123456",
+      id: "admin",
+      pwd: "123456",
       logging_in: false
     }
   },
@@ -60,30 +60,30 @@ export default {
     login(){
       this.logging_in = true;
       this.$axios
-      .post('/api/v1/login',{
-          user_id: this.userid,
-          password: this.password
+      .post('/api/login',{
+          id: this.id,
+          pwd: this.pwd
         }
       )
       .then(res => 
       {
         this.logging_in = false;
         let data = res.data
-        this.$store.commit('login',data.user_id)
+        this.$store.commit('login',data.user_info.user_id)
         this.$router.push({name:'Mainpage'});
 
         Swal.fire({
-          title: "欢迎! " + data.user_id,
-          text: "成功登陆",
+          title: "欢迎! " + data.user_info.user_id,
+          text: "成功登陆", 
           icon: "success",
           timer: 1000}
         );
       })
-      .catch(()=>{
+      .catch((err)=>{
         this.logging_in = false;
         Swal.fire({
           title: "资料有误",
-          text: "请检查",
+          text: `错误信息: ${err.response.data.message}`,
           icon: "error",
           timer: 1500});
         

@@ -4,12 +4,17 @@
         <table class="table">
             <tbody>
                 <tr>
-                    <td scope="col"  v-for="status in info.status" :class="[`courtstatus-${status.code}`]" :key="status.start" 
-                    data-toggle="tooltip" data-placement="top" :title="statustext[status.code]"></td>
+                    <td scope="col"  v-for="status in info.status" 
+                    :class="[`courtstatus-${status.code}`]" 
+                    :key="status.start" 
+                    :title="statustext[status.code]"
+                    @click="selectCourt(status)"
+                    data-toggle="tooltip" 
+                    data-placement="top"></td>
                 </tr>
             </tbody>
         </table>
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-end" v-if="selectedCourt">
             <button type="button" class="btn btn-secondary" >
                 预定这个场地！
             </button>
@@ -26,12 +31,16 @@ export default {
         return {
             sports:["羽球","篮球","乒乓"],
             statustext:["空场地","已有人预定"],
-            
+            selectedCourt:null
         }
-        
     },
     mounted(){
         $('[data-toggle="tooltip"]').tooltip();
+    },
+    methods:{
+        selectCourt(courtinfo){
+            this.selectedCourt = courtinfo
+        }
     }
 
 }

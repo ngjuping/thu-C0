@@ -6,7 +6,7 @@
             <button class="btn btn-danger" v-if="this.$store.state.logged_in" @click="logout">登出 as {{ this.$store.state.logged_in_user}}</button>
             <button class="btn btn-primary" v-else  @click="gotoLogin">登录</button>
             <br/>
-            <small v-if="this.$store.state.logged_in">已上线：{{ now() }}</small>
+            <!-- <small v-if="this.$store.state.logged_in">已上线：{{ now() }}</small> -->
         </div>
         
         
@@ -15,7 +15,7 @@
 
 <script>
 import Swal from 'sweetalert2'
-import moment from 'moment'
+//import moment from 'moment'
 
 export default {
     data(){
@@ -29,39 +29,52 @@ export default {
         },
         logout()
         {
-            this.$store.commit('logout');
-            this.$router.replace('Login');
-            Swal.fire({
-            title: "成功登出",
-            text: "感谢您的使用",
-            icon: "success",
-            timer: 1500});
-        },
-        now(){
-            let stored_time = this.$store.state.logged_in_time
-            if(stored_time == "Notime")
-            {
-                return "Not logged in";
-            }
-            let first_half = stored_time.split("T")[0];
-            let second_half_time = stored_time.split("T")[1].split("+")[0];
+            this.$axios
+            .post('/api/logout',{id: this.$store.state.logged_in_user})
+            .then(() => {
+                this.$store.commit('logout');
+                this.$router.replace('Login');
+
+                Swal.fire({
+                title: "成功登出",
+                text: "感谢您的使用",
+                icon: "success",
+                timer: 1000});
+            })
+            .catch((err) => {
+                Swal.fire({
+                title: "无法登出",
+                text: `错误信息${err.response.data.message}`,
+                icon: "error",
+                timer: 1000});
+            })
             
-            return moment(first_half + " " + second_half_time,"YYYY-MM-DD hh:mm:ss").fromNow();
-        }
+        },
+        // now(){
+        //     let stored_time = this.$store.state.logged_in_time
+        //     if(stored_time == "Notime")
+        //     {
+        //         return "Not logged in";
+        //     }
+        //     let first_half = stored_time.split("T")[0];
+        //     let second_half_time = stored_time.split("T")[1].split("+")[0];
+            
+        //     return moment(first_half + " " + second_half_time,"YYYY-MM-DD hh:mm:ss").fromNow();
+        // }
     },
-    //use timer to simulate real time update
-    beforeUpdate(){
-        clearInterval(this.timer);
+    // //use timer to simulate real time update
+    // beforeUpdate(){
+    //     clearInterval(this.timer);
         
-    },
-    updated(){
+    // },
+    // updated(){
 
-        //force recompute last logged in time
-        this.timer = setInterval(()=>{
-            this.$forceUpdate();            
+    //     //force recompute last logged in time
+    //     this.timer = setInterval(()=>{
+    //         this.$forceUpdate();            
 
-        },3000);
-    }
+    //     },3000);
+    // }
 }
 </script>
 

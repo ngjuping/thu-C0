@@ -1,8 +1,14 @@
 <template>
     <div class="container">
+        <div class="alert alert-danger" v-if="failedToGetNotices">
+            无法获得通告
+        </div>
         <Notices :notices="notices"></Notices>
         <br/>
         <br/>
+        <div class="alert alert-danger" v-if="failedToGetVenues">
+            无法获得场地列表
+        </div>
         <VenueDescribe :venues="venues" ></VenueDescribe>
     </div>
 </template>
@@ -20,6 +26,8 @@ export default {
     },
     data(){
         return{
+            failedToGetNotices:false,
+            failedToGetVenues:false,
             notices:[],
             venues:[],
         }
@@ -35,15 +43,22 @@ export default {
         }
         //get the first 3 notices
         this.$axios
-        .get('/api/v1/main/notice')
+        .get('/api/main/notice')
         .then(res => {
             this.notices = res.data.notices;
         })
+        .catch(() => {
+            this.failedToGetNotices = true;
+        })
+
         //get venues list
         this.$axios
-        .get('/api/v1/venues/list')
+        .get('/api/main/venues/list')
         .then(res => {
             this.venues = res.data.venues;
+        })
+        .catch(() => {
+            this.failedToGetVenues = true;
         })
         
     }

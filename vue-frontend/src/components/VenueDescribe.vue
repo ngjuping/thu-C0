@@ -18,6 +18,9 @@
         <div class="container">
             <div class="row mb-4">
                 <div class="col container">
+                    <div class="alert alert-danger" v-if="failedToGetVenueInfo">
+                        无法获得场地信息...
+                    </div>
                     <div class="row">
                         <div class="col-12 col-md-6 p-4">
                             <h1>{{ currentvenue.name }}</h1>
@@ -80,13 +83,14 @@ export default {
     props:["venues"],
     data(){
         return {
+            failedToGetVenueInfo:false,
             currentvenue: {
-                id:1,
+                id:0,
                 name:"新林院", 
                 description:"鸟语花香的环境，和蔼可亲的工作人员，舒适的场地——你一定会爱上这里。", 
                 img:"https://miro.medium.com/max/1140/0*16bH8WYK3fOtu-kJ.jpg", 
-                notice:[{ title:"闭馆通知",content:"请注意，11月15日闭馆" }],
-                review:{stars:4,content:"No review",publish_date:moment().format()}
+                notice:[{ title:"无通知",content:"默认通知内容" }],
+                review:{stars:4,content:"默认评论",publish_date:moment().format()}
             }
         }
     },
@@ -101,9 +105,12 @@ export default {
             {
                 //get details on specific venue x
                 this.$axios
-                .get(`/api/v1/venues/${x}`)
+                .get(`/api/main/venues?id=${x}`)
                 .then(res => {
-                    this.currentvenue = res.data.venue;
+                    this.currentvenue = res.data.venue_info;
+                })
+                .catch(() => {
+                    this.failedToGetVenueInfo = true;
                 })
             }
         },
@@ -121,11 +128,7 @@ export default {
     },
     mounted(){
         //get details on specific venue 1 (default venue)
-        this.$axios
-        .get('/api/v1/venues/1')
-        .then(res => {
-            this.currentvenue = res.data.venue;
-        })
+        this.getVenueInfo(1);
     }
 }
 </script>

@@ -14,7 +14,7 @@ let server = new Server({
     
   seeds(server) {
       //create a default user
-      server.create("user", { user_id:'admin',password:'123456',name:"Admin" });
+      server.create("user", { id:'admin',pwd:'123456',name:"Admin",status:0 });
 
       //create 4 notices
       server.create("notice", { title:"正式启动",content:"马上体验" });
@@ -52,42 +52,63 @@ let server = new Server({
 
   routes() {
 
-    this.namespace = "api/v1";
+    this.namespace = "api";
 
-    //access data: res.data.user_id
     this.post("/login", (schema,request) => {
         let attrs = JSON.parse(request.requestBody);
 
-        let selected_user = schema.users.findBy({user_id:attrs.user_id});
+        let selected_user = schema.users.findBy({id:attrs.id});
 
-        if(selected_user.password == attrs.password){
-          return {"message":"ok", user_id:attrs.user_id};
+
+        try{
+          if(selected_user.pwd == attrs.pwd){
+
+            console.log(selected_user.status);
+
+            selected_user.update({ status: 1 });
+            
+            return {message:"ok", user_info:{ user_id:attrs.id }};
+          }
         }
-        else{
-          return {"message":"not ok"};
+        catch(e){
+          return new Response(400, {}, {message:"User doesn't exist"});
         }
+
 
     })
 
-    //access data: res.data.user_id
+    this.post("/logout", (schema,request) => {
+
+        let attrs = JSON.parse(request.requestBody);
+
+        let selected_user = schema.users.findBy({id:attrs.id});
+
+        console.log(selected_user.status);
+
+        selected_user.update({ status: 0 });
+
+        return {message:"ok"};
+    })
+
+
     this.post("/signup", (schema,request) => {
         let attrs = JSON.parse(request.requestBody);
         console.log(attrs);
-        let existed_user = schema.users.findBy({user_id:attrs.user_id});
+        let existed_user = schema.users.findBy({id:attrs.id});
 
         if(existed_user)
         {
-          return new Response(400, {}, { message: "not ok" });
+          return new Response(400, {}, { message: "wrong id or password" });
         }
         else
         {
           schema.users.create({
-            user_id:attrs.user_id,
-            password:attrs.password,
+            id:attrs.id,
+            pwd:attrs.pwd,
             name:attrs.name
           });
     
-          return {"message":"ok",user_id:attrs.user_id};
+          return {message:"ok",user_id:attrs.id};
         }
     });
 
@@ -99,14 +120,17 @@ let server = new Server({
     });
 
     //access data: this.venues = res.data.venues;
-    this.get("/venues/list", (schema) => {
+    this.get("/main/venues/list", (schema) => {
       
       return schema.venues.all();
     
     });
 
     //access data: this.currentvenue = res.data.venue;
-    this.get("/venues/:id")
+    this.get("/main/venues",(schema,request)=>{
+      let selected_venue = schema.venues.findBy({id:request.queryParams.id});
+      return {message:"ok",venue_info:selected_venue}
+    })
 
     this.get("/booking",(schema,request)=>{
       
