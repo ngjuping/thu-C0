@@ -41,20 +41,20 @@ def get_venues_info(request):
 
 
 def get_courts_info(request):
-	'''
+   '''
     获取某个场馆下所有场地的信息
     :return:
     '''
-	venue_id = request.GET['id']
-	venue = Venue.objects(venue_id=venue_id).first()
-	courts_id = venue.courts
-	courts = [Court.objects(_id=i)[0] for i in courts_id]
-	court_json = [{"name": i.name, "enum_id": i.enum_id}
-	for i in courts]
-	print(court_json)
+   venue_id = request.GET['id']
+   venue = Venue.objects(venue_id=venue_id).first()
+   courts_id = venue.courts
+   courts = [Court.objects(_id=i)[0] for i in courts_id]
+   court_json = [{"name": i.name, "enum_id": i.enum_id,
+               "times":[j for j in i.Status]
+               } for i in courts]
 
-	return JsonResponse({
-		"message": "ok",
-		"venue_name": venue.name,
-		"courts": court_json
-	})
+   return JsonResponse({
+      "message": "ok",
+      "venue_name": venue.name,
+      "courts": court_json
+   })
