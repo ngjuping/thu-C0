@@ -59,7 +59,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-4  pl-0">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">最新反馈</h5>

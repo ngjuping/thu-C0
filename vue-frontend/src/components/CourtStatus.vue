@@ -6,8 +6,8 @@
                     <div class="col-12 col-md-12">
                         <div class="row d-flex justify-content-around" id="ranges">
                             <div class="col-12 col-md ranges d-flex justify-content-center align-items-center"  v-for="status in info.status" 
-                            :class="[`courtstatus-${status.code} border border-success rounded`]" 
-                            :key="`range${status.start}`" 
+                            :class="[`courtstatus-${status.code} border border-success rounded`]"
+                            :key="`range${status.start}`"
                             :title="statustext[status.code]"
                             @click="selectCourt(status)"
                             data-toggle="tooltip" 
@@ -61,6 +61,7 @@ export default {
         selectCourt(courtinfo){
             this.selectedCourt = courtinfo
         }
+
     }
 
 }
@@ -70,6 +71,7 @@ export default {
 #title{
     font-size:30px;
 }
+
 .courtstatus-0{
     background-color:greenyellow;
     opacity:0.5;

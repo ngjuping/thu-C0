@@ -35,6 +35,8 @@ let server = new Server({
           {start:"1600",end:"1700",code:1},{start:"1700",end:"1800",code:1},{start:"1800",end:"1900",code:0},{start:"1900",end:"2000",code:0}]},
           
           {id:1,type:1,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1100",code:1},{start:"1100",end:"1200",code:1}]},
+          {id:2,type:2,status:[{start:"0900",end:"1000",code:1},{start:"1000",end:"1100",code:1},{start:"1100",end:"1200",code:1},{start:"1200",end:"1300",code:1}
+          ,{start:"1300",end:"1400",code:1},{start:"1400",end:"1500",code:0},{start:"1500",end:"1600",code:0}]},
         ]
       });
       

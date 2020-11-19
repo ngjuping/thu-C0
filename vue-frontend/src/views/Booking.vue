@@ -10,14 +10,14 @@
                     根据运动类型筛选
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#">羽球</a>
-                    <a class="dropdown-item" href="#">篮球</a>
-                    <a class="dropdown-item" href="#">乒乓</a>
+                    <a class="dropdown-item" @click="setFilter(0)">羽球</a>
+                    <a class="dropdown-item" @click="setFilter(1)">篮球</a>
+                    <a class="dropdown-item" @click="setFilter(2)">乒乓</a>
                 </div>
             </div>
         </div>
-        <div  v-if="courts">
-            <CourtStatus v-for="court in courts" :key="court.id" :info="court"></CourtStatus>
+        <div v-if="courts">
+            <CourtStatus v-for="court in filteredcourts" :key="court.id" :info="court"></CourtStatus>
         </div>
     </div>
 
@@ -33,10 +33,16 @@ export default {
             venue_id:0,
             courts:null,
             venue_name: "默认场馆",
+            filter_type:-1
         };
     },
     components:{
         CourtStatus
+    },
+    methods:{
+        setFilter(x){
+            this.filter_type = x;
+        }
     },
     mounted(){
         this.venue_id = this.$route.params.venueid
@@ -50,6 +56,15 @@ export default {
             this.venue_name = res.data.venue_name;
         })
     },
+    computed:{
+        filteredcourts(){
+            if(this.filter_type === -1)
+            {
+                return this.courts;
+            }
+            return this.courts.filter((court)=>{console.log(court.type); return court.type === this.filter_type});
+        }
+    }
     // beforeUpdate(){
     //     clearInterval(this.timer);
         
