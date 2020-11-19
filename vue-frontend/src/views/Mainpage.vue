@@ -43,7 +43,7 @@ export default {
         }
         //get the first 3 notices
         this.$axios
-        .get('/api/main/notice')
+        .get('/api/main/notices')
         .then(res => {
             this.notices = res.data.notices;
         })

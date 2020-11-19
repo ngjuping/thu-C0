@@ -49,7 +49,7 @@ export default {
     props:["info"],
     data(){
         return {
-            sports:["羽球","篮球","乒乓"],
+            sports:[null,"羽球","篮球","乒乓"],
             statustext:["空场地","已有人预定"],
             selectedCourt:null
         }

@@ -10,9 +10,9 @@
                     根据运动类型筛选
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" @click="setFilter(0)">羽球</a>
-                    <a class="dropdown-item" @click="setFilter(1)">篮球</a>
-                    <a class="dropdown-item" @click="setFilter(2)">乒乓</a>
+                    <a class="dropdown-item" @click="setFilter(1)">羽球</a>
+                    <a class="dropdown-item" @click="setFilter(2)">篮球</a>
+                    <a class="dropdown-item" @click="setFilter(3)">乒乓</a>
                 </div>
             </div>
         </div>

@@ -30,12 +30,12 @@ let server = new Server({
         notice:[{ title:"闭馆通知",content:"请注意，11月15日闭馆" },{ title:"场地折扣10%",content:"即日起至12月1日" }],
         review:{stars:4,content:"场地不错，服务还行，稍微贵了些",publish_date:"2013-03-01T00:00:00+01:00"},
         courts:[
-          {id:0,type:0,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1100",code:1},{start:"1100",end:"1200",code:0},
+          {id:1,type:1,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1100",code:1},{start:"1100",end:"1200",code:0},
           {start:"1200",end:"1300",code:0},{start:"1300",end:"1400",code:0},{start:"1400",end:"1500",code:0},{start:"1500",end:"1600",code:0},
           {start:"1600",end:"1700",code:1},{start:"1700",end:"1800",code:1},{start:"1800",end:"1900",code:0},{start:"1900",end:"2000",code:0}]},
           
-          {id:1,type:1,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1100",code:1},{start:"1100",end:"1200",code:1}]},
-          {id:2,type:2,status:[{start:"0900",end:"1000",code:1},{start:"1000",end:"1100",code:1},{start:"1100",end:"1200",code:1},{start:"1200",end:"1300",code:1}
+          {id:2,type:2,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1100",code:1},{start:"1100",end:"1200",code:1}]},
+          {id:3,type:3,status:[{start:"0900",end:"1000",code:1},{start:"1000",end:"1100",code:1},{start:"1100",end:"1200",code:1},{start:"1200",end:"1300",code:1}
           ,{start:"1300",end:"1400",code:1},{start:"1400",end:"1500",code:0},{start:"1500",end:"1600",code:0}]},
         ]
       });
@@ -47,8 +47,8 @@ let server = new Server({
         notice:[{ title:"闭馆通知",content:"小心了，11月15日闭馆" },{ title:"场地折扣5%",content:"只限马杯赛事场地" }],
         review:{stars:5,content:"还行",publish_date:"2017-03-01T00:00:00+01:00"},
         courts:[
-          {id:0,type:0,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1000",code:1}]},
-          {id:1,type:1,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1000",code:1}]},
+          {id:4,type:1,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1000",code:1}]},
+          {id:5,type:2,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1000",code:1}]},
         ]
     });
       
@@ -118,7 +118,7 @@ let server = new Server({
     });
 
     //access data: this.notices = res.data.notices;
-    this.get("/main/notice", (schema) => {
+    this.get("/main/notices", (schema) => {
       
       return schema.notices.all();
     
