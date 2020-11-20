@@ -2,9 +2,6 @@
   <div id="app">
     <Qheader></Qheader>
     <div id="nav">
-      <router-link to="/login" class="text-white">Login</router-link> |
-      <router-link to="/signup" class="text-white">Sign up</router-link> |
-      <router-link to="/main" class="text-white">Main page</router-link>
     </div>
     <router-view/>
     <Qfooter></Qfooter>

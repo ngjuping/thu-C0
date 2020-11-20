@@ -14,7 +14,7 @@ let server = new Server({
     
   seeds(server) {
       //create a default user
-      server.create("user", { user_id:'admin',password:'123456',name:"Admin" });
+      server.create("user", { id:'admin',pwd:'123456',name:"Admin",status:0 });
 
       //create 4 notices
       server.create("notice", { title:"正式启动",content:"马上体验" });
@@ -30,8 +30,13 @@ let server = new Server({
         notice:[{ title:"闭馆通知",content:"请注意，11月15日闭馆" },{ title:"场地折扣10%",content:"即日起至12月1日" }],
         review:{stars:4,content:"场地不错，服务还行，稍微贵了些",publish_date:"2013-03-01T00:00:00+01:00"},
         courts:[
-          {id:0,type:0,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1100",code:1}]},
-          {id:1,type:0,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1100",code:1}]},
+          {id:1,type:1,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1100",code:1},{start:"1100",end:"1200",code:0},
+          {start:"1200",end:"1300",code:0},{start:"1300",end:"1400",code:0},{start:"1400",end:"1500",code:0},{start:"1500",end:"1600",code:0},
+          {start:"1600",end:"1700",code:1},{start:"1700",end:"1800",code:1},{start:"1800",end:"1900",code:0},{start:"1900",end:"2000",code:0}]},
+          
+          {id:2,type:2,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1100",code:1},{start:"1100",end:"1200",code:1}]},
+          {id:3,type:3,status:[{start:"0900",end:"1000",code:1},{start:"1000",end:"1100",code:1},{start:"1100",end:"1200",code:1},{start:"1200",end:"1300",code:1}
+          ,{start:"1300",end:"1400",code:1},{start:"1400",end:"1500",code:0},{start:"1500",end:"1600",code:0}]},
         ]
       });
       
@@ -42,8 +47,8 @@ let server = new Server({
         notice:[{ title:"闭馆通知",content:"小心了，11月15日闭馆" },{ title:"场地折扣5%",content:"只限马杯赛事场地" }],
         review:{stars:5,content:"还行",publish_date:"2017-03-01T00:00:00+01:00"},
         courts:[
-          {id:0,type:0,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1000",code:1}]},
-          {id:1,type:0,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1000",code:1}]},
+          {id:4,type:1,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1000",code:1}]},
+          {id:5,type:2,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1000",code:1}]},
         ]
     });
       
@@ -52,61 +57,85 @@ let server = new Server({
 
   routes() {
 
-    this.namespace = "api/v1";
+    this.namespace = "api";
 
-    //access data: res.data.user_id
     this.post("/login", (schema,request) => {
         let attrs = JSON.parse(request.requestBody);
 
-        let selected_user = schema.users.findBy({user_id:attrs.user_id});
+        let selected_user = schema.users.findBy({id:attrs.id});
 
-        if(selected_user.password == attrs.password){
-          return {"message":"ok", user_id:attrs.user_id};
+
+        try{
+          if(selected_user.pwd == attrs.pwd){
+
+            console.log(selected_user.status);
+
+            selected_user.update({ status: 1 });
+            
+            return {message:"ok", user_info:{ user_id:attrs.id }};
+          }
         }
-        else{
-          return {"message":"not ok"};
+        catch(e){
+          return new Response(400, {}, {message:"User doesn't exist"});
         }
+
 
     })
 
-    //access data: res.data.user_id
+    this.post("/logout", (schema,request) => {
+
+        let attrs = JSON.parse(request.requestBody);
+
+        let selected_user = schema.users.findBy({id:attrs.id});
+
+        console.log(selected_user.status);
+
+        selected_user.update({ status: 0 });
+
+        return {message:"ok"};
+    })
+
+
     this.post("/signup", (schema,request) => {
         let attrs = JSON.parse(request.requestBody);
         console.log(attrs);
-        let existed_user = schema.users.findBy({user_id:attrs.user_id});
+        let existed_user = schema.users.findBy({id:attrs.id});
 
         if(existed_user)
         {
-          return new Response(400, {}, { message: "not ok" });
+          return new Response(400, {}, { message: "wrong id or password" });
         }
         else
         {
           schema.users.create({
-            user_id:attrs.user_id,
-            password:attrs.password,
+            id:attrs.id,
+            pwd:attrs.pwd,
             name:attrs.name
           });
     
-          return {"message":"ok",user_id:attrs.user_id};
+          return {message:"ok",user_id:attrs.id};
         }
     });
 
     //access data: this.notices = res.data.notices;
-    this.get("/main/notice", (schema) => {
+    this.get("/main/notices", (schema) => {
       
       return schema.notices.all();
     
     });
 
     //access data: this.venues = res.data.venues;
-    this.get("/venues/list", (schema) => {
+    this.get("/main/venues/list", (schema) => {
       
       return schema.venues.all();
     
     });
 
     //access data: this.currentvenue = res.data.venue;
-    this.get("/venues/:id")
+    this.get("/main/venues",(schema,request)=>{
+      let selected_venue = schema.venues.findBy({id:request.queryParams.id});
+      return {message:"ok",venue_info:selected_venue}
+    })
 
     this.get("/booking",(schema,request)=>{
       

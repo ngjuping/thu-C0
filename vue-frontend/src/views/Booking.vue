@@ -1,23 +1,23 @@
 <template>
-    <div class="container">
-        <div class="display-4">预定<b>{{ this.venue_name }}</b>场地</div>
-        <hr>
-        <div class="d-flex justify-content-start">
+    <div class="container bg-gradient-light rounded">
+        <div id="title" class="mb-5"><span class="p-3 px-4 bg-dark rounded shadow text-white">预定<span class="text-warning mx-3">{{ this.venue_name }}</span>场地</span></div>
+        
+        <div class="d-flex justify-content-start mb-4">
             
-            <div class="btn btn-danger" @click="$router.go(-1)">回到前一页</div>
+            <div class="btn btn-danger mr-2" @click="$router.go(-1)">回到前一页</div>
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     根据运动类型筛选
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#">羽球</a>
-                    <a class="dropdown-item" href="#">篮球</a>
-                    <a class="dropdown-item" href="#">乒乓</a>
+                    <a class="dropdown-item" @click="setFilter(1)">羽球</a>
+                    <a class="dropdown-item" @click="setFilter(2)">篮球</a>
+                    <a class="dropdown-item" @click="setFilter(3)">乒乓</a>
                 </div>
             </div>
         </div>
-        <div  v-if="courts">
-            <CourtStatus v-for="court in courts" :key="court.id" :info="court"></CourtStatus>
+        <div v-if="courts">
+            <CourtStatus v-for="court in filteredcourts" :key="court.id" :info="court"></CourtStatus>
         </div>
     </div>
 
@@ -33,10 +33,16 @@ export default {
             venue_id:0,
             courts:null,
             venue_name: "默认场馆",
+            filter_type:-1
         };
     },
     components:{
         CourtStatus
+    },
+    methods:{
+        setFilter(x){
+            this.filter_type = x;
+        }
     },
     mounted(){
         this.venue_id = this.$route.params.venueid
@@ -44,12 +50,21 @@ export default {
         let month = parseInt(moment().month())+1
         let year = moment().year()
         this.$axios
-        .get(`/api/v1/booking?id=${this.venue_id}&day=${day}&month=${month}&year=${year}`)
+        .get(`/api/booking?id=${this.venue_id}&day=${day}&month=${month}&year=${year}`)
         .then(res => {
             this.courts = res.data.courts;
             this.venue_name = res.data.venue_name;
         })
     },
+    computed:{
+        filteredcourts(){
+            if(this.filter_type === -1)
+            {
+                return this.courts;
+            }
+            return this.courts.filter((court)=>{console.log(court.type); return court.type === this.filter_type});
+        }
+    }
     // beforeUpdate(){
     //     clearInterval(this.timer);
         
@@ -67,4 +82,13 @@ export default {
 
 <style scoped>
 
+#title{
+    font-size:50px;
+}
+
+@media (max-width:760px) {
+    #title{
+        font-size:30px;
+    }
+}
 </style>
