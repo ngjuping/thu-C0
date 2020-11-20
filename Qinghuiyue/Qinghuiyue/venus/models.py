@@ -19,3 +19,4 @@ class Court(DynamicDocument):
     draw_list=ListField()
     rent_for_long=ListField()
     Status=ListField()
+    court_id=IntField()
