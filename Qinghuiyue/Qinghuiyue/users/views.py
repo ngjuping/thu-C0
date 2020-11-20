@@ -15,10 +15,10 @@ def signup(request):
     params = json.loads(request.body)
     stat=Stat.objects(name="size_of_collection")[0]
 
-    user = User.create(password=params['pwd'],user_id=stat.data['user']+1,name=params['name'],api_id=params['api_id'])
+    user = User.create(password=params['pwd'],user_id=stat.data['user']+1,name=params['name'],api_id=params['id'])
     stat.data['user']+=1
     stat.save()
-    return JsonResponse({"message":"ok","content":{'id': user.user_id}})
+    return JsonResponse({"message":"ok","user_id":user.user_id})
 
 
 #@require('post')
@@ -27,11 +27,11 @@ def login(request):
     params = json.loads(request.body)
 
     #print(params)
-    user = User.objects(api_id=params['api_id']).first()
+    user = User.objects(api_id=params['id']).first()
 
     if user and user.authenticate(params['pwd']):
         request.session['user_id']=user.id
-        return JsonResponse({"message":"ok","content":{'id': user.user_id}})
+        return JsonResponse({"message":"ok","user_info":{'id': user.user_id}})
     return HttpResponse(status=400)
 
 
