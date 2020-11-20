@@ -6,7 +6,7 @@ import bcrypt
 class User(DynamicDocument):
     user_id=IntField(required=True)
     name=StringField()
-    api_id=IntField(required=True)
+    api_id=StringField(required=True)
     # password hash
     password =BinaryField()
     # password=StringField()

@@ -23,7 +23,7 @@ def signup(request):
 
 #@require('post')
 def login(request):
-    #print(request.body)
+    print(request.body)
     params = json.loads(request.body)
 
     #print(params)
@@ -31,8 +31,11 @@ def login(request):
 
     if user and user.authenticate(params['pwd']):
         request.session['user_id']=user.id
-        return JsonResponse({"message":"ok","user_info":{'id': user.user_id}})
-    return HttpResponse(status=400)
+        return JsonResponse({"message":"ok","user_info":{'user_id': user.api_id,'name':user.name}})
+    else:
+        return JsonResponse({"message": "用户名或密码错误！"},status=400)
+
+    #return HttpResponse(status=400)
 
 
 
