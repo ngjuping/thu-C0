@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mongoengine',
     'Qinghuiyue.models',
-    'Qinghuiyue.users'
+    'Qinghuiyue.users',
+    
 ]
 
 MONGODB_DATABASES={
@@ -53,6 +54,7 @@ MONGODB_DATABASES={
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',#跨域
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

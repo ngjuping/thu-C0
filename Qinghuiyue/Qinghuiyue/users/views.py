@@ -35,7 +35,6 @@ def login(request):
     else:
         return JsonResponse({"message": "用户名或密码错误！"},status=400)
 
-    #return HttpResponse(status=400)
 
 
 
