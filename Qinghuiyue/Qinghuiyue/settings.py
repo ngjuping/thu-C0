@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'mongoengine',
     'Qinghuiyue.models',
     'Qinghuiyue.users',
-    
+    'corsheaders',
 ]
 
 MONGODB_DATABASES={
@@ -54,7 +54,7 @@ MONGODB_DATABASES={
 }
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',#跨域
+    'corsheaders.middleware.CorsMiddleware',#使用该模块解决跨域问题
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -62,8 +62,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
 
+]
+# 支持跨域配置,在最后应该要删除
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 ROOT_URLCONF = 'Qinghuiyue.urls'
 
 TEMPLATES = [
