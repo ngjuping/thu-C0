@@ -96,9 +96,9 @@ let server = new Server({
     })
 
 
-    this.post("/book", (schema,request) => {
+    this.post("/signup", (schema,request) => {
         let attrs = JSON.parse(request.requestBody);
-        let existed_user = schema.users.findBy({id:attrs.id});
+        let existed_user = schema.users.findBy({user_id:attrs.user_id});
 
         if(existed_user)
         {
@@ -107,7 +107,7 @@ let server = new Server({
         else
         {
           schema.users.create({
-            id:attrs.id,
+            user_id:attrs.user_id,
             pwd:attrs.pwd,
             name:attrs.name
           });

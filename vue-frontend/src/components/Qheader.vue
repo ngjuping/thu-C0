@@ -3,7 +3,7 @@
         <img src="@/assets/logo.png" width="100" class="d-inline-block align-top" alt="">
         <div id="title">工会场地预定系统</div>
         <div>
-            <button class="btn btn-danger" v-if="this.$store.state.logged_in" @click="logout">登出 as {{ this.$store.state.logged_in_user_id}}</button>
+            <button class="btn btn-danger" v-if="this.$store.state.logged_in" @click="logout">登出</button>
             <button class="btn btn-primary" v-else  @click="gotoLogin">登录</button>
             <br/>
             <!-- <small v-if="this.$store.state.logged_in">已上线：{{ now() }}</small> -->
