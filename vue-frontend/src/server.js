@@ -14,7 +14,7 @@ let server = new Server({
     
   seeds(server) {
       //create a default user
-      server.create("user", { id:'admin',pwd:'123456',name:"Admin",status:0 });
+      server.create("user", { user_id:'admin',pwd:'123456',name:"Admin",status:0 });
 
       //create 4 notices
       server.create("notice", { title:"正式启动",content:"马上体验" });
@@ -62,17 +62,15 @@ let server = new Server({
     this.post("/login", (schema,request) => {
         let attrs = JSON.parse(request.requestBody);
 
-        let selected_user = schema.users.findBy({id:attrs.id});
+        let selected_user = schema.users.findBy({user_id:attrs.user_id});
 
 
         try{
           if(selected_user.pwd == attrs.pwd){
 
-            console.log(selected_user.status);
-
             selected_user.update({ status: 1 });
             
-            return {message:"ok", user_info:{ user_id:attrs.id }};
+            return {message:"ok", user_info:{ user_id:attrs.user_id,name:selected_user.name }};
           }
         }
         catch(e){
@@ -86,9 +84,11 @@ let server = new Server({
 
         let attrs = JSON.parse(request.requestBody);
 
-        let selected_user = schema.users.findBy({id:attrs.id});
+        console.log(attrs);
+        
+        let selected_user = schema.users.findBy({user_id:attrs.user_id});
 
-        console.log(selected_user.status);
+        console.log(selected_user);
 
         selected_user.update({ status: 0 });
 
@@ -96,9 +96,8 @@ let server = new Server({
     })
 
 
-    this.post("/signup", (schema,request) => {
+    this.post("/book", (schema,request) => {
         let attrs = JSON.parse(request.requestBody);
-        console.log(attrs);
         let existed_user = schema.users.findBy({id:attrs.id});
 
         if(existed_user)
@@ -143,6 +142,21 @@ let server = new Server({
       
       return {venue_name:selected_venue.attrs.name,courts:selected_venue.attrs.courts};
     })
+
+    this.post("/book", (schema,request) => {
+      let attrs = JSON.parse(request.requestBody);
+      let courtisbooked = false;
+      if(attrs.start == "24-11-2020T10:00:00+01:00")
+        courtisbooked = true;
+      if(courtisbooked)
+      {
+        return new Response(422, {}, { message: "场地已被预定" });
+      }
+      return {message:"ok"};
+      
+  });
+
+    
   }
   
 })

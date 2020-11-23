@@ -2,22 +2,60 @@
     <div class="container bg-gradient-light rounded">
         <div id="title" class="mb-5"><span class="p-3 px-4 bg-dark rounded shadow text-white">预定<span class="text-warning mx-3">{{ this.venue_name }}</span>场地</span></div>
         
-        <div class="d-flex justify-content-start mb-4">
-            
-            <div class="btn btn-danger mr-2" @click="$router.go(-1)">回到前一页</div>
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    根据运动类型筛选
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" @click="setFilter(1)">羽球</a>
-                    <a class="dropdown-item" @click="setFilter(2)">篮球</a>
-                    <a class="dropdown-item" @click="setFilter(3)">乒乓</a>
+        <div class="container mb-4" id="filter_panel">
+            <div class="row">
+                <div class="col-12 col-md-3 d-flex justify-content-start mb-4 pl-0">
+                    <div class="btn-group shadow">
+                        <div class="btn btn-danger" @click="$router.go(-1)">前一页</div>
+                        <div class="dropdown btn-group">
+                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                筛选球类
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" @click="setFilter(1)">羽球</a>
+                                <a class="dropdown-item" @click="setFilter(2)">乒乓</a>
+                                <a class="dropdown-item" @click="setFilter(3)">网球</a>
+                                <a class="dropdown-item" @click="setFilter(4)">篮球</a>
+                                <hr>
+                                <a class="dropdown-item" @click="setFilter(-1)">清除过滤</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md  d-flex justify-content-start mb-4 pl-0">
+                    <div class="btn-group shadow">
+                        <div class="btn btn-dark" @click="updateCourts(today())">
+                            今天
+                        </div>
+                        <div class="btn btn-dark" @click="updateCourts(today(1))">
+                            明天
+                        </div>
+                        <div class="btn-group dropdown">
+                            <div class="btn btn-dark dropdown-toggle" type="button" data-toggle="dropdown">
+                                更多
+                            </div>
+                            <div class="dropdown-menu" >
+                                <a class="dropdown-item" @click="updateCourts(today(2))">{{ today(2).join("-") }}</a>
+                                <a class="dropdown-item" @click="updateCourts(today(3))">{{ today(3).join("-") }}</a>
+                                <a class="dropdown-item" @click="updateCourts(today(4))">{{ today(4).join("-") }}</a>
+                                <a class="dropdown-item" @click="updateCourts(today(5))">{{ today(5).join("-") }}</a>
+                                <a class="dropdown-item" @click="updateCourts(today(6))">{{ today(6).join("-") }}</a>
+                            </div>
+                        </div>
+                        <div class="spinner-border" v-if="loadingCourts">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <div class="card px-2 pt-1">
+                            <span class="card-text vertical-align-center">
+                                当前预定日期：{{ selected_date.join("-") }}
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div v-if="courts">
-            <CourtStatus v-for="court in filteredcourts" :key="court.id" :info="court"></CourtStatus>
+            <CourtStatus v-for="court in filteredcourts" :key="court.id" :info="court" :date="selected_date"></CourtStatus>
         </div>
     </div>
 
@@ -33,7 +71,10 @@ export default {
             venue_id:0,
             courts:null,
             venue_name: "默认场馆",
-            filter_type:-1
+            filter_type:-1,
+            failedToLoadCourts:false,
+            loadingCourts:false,
+            selected_date:this.today()
         };
     },
     components:{
@@ -42,19 +83,55 @@ export default {
     methods:{
         setFilter(x){
             this.filter_type = x;
+        },
+        today(offset=0){
+            let day,month,year;
+            if(!offset) //if is today
+            {
+                day = moment().date().toString();
+                month = (parseInt(moment().month())+1).toString();
+                year = moment().year().toString();
+            }
+            else // x days after today
+            {
+                let date = moment();
+                let x_days_later_arr = date.add(offset,'day').format('DD-MM-YYYY').split("-");
+                [day,month,year] = x_days_later_arr;
+            }
+            return [day,month,year];
+        },
+        updateCourts(date){
+            //reset load failure
+            this.failedToLoadCourts = false;
+
+            //loading courts
+            this.loadingCourts = true;
+            
+            //upload select date for courtstatus to capture current date
+            this.selected_date = date;
+
+            let day = date[0];
+            let month = date[1];
+            let year = date[2];
+
+            this.$axios
+            .get(`/api/booking?id=${this.venue_id}&day=${day}&month=${month}&year=${year}`)
+            .then(res => {
+                this.courts = res.data.courts;
+                this.venue_name = res.data.venue_name;
+            })
+            .catch(() => {
+                this.failedToLoadCourts = true;
+            })
+            .finally(() => {
+                this.loadingCourts = false;
+            })
         }
     },
     mounted(){
         this.venue_id = this.$route.params.venueid
-        let day = moment().date()
-        let month = parseInt(moment().month())+1
-        let year = moment().year()
-        this.$axios
-        .get(`/api/booking?id=${this.venue_id}&day=${day}&month=${month}&year=${year}`)
-        .then(res => {
-            this.courts = res.data.courts;
-            this.venue_name = res.data.venue_name;
-        })
+        let today = this.today();
+        this.updateCourts(today);
     },
     computed:{
         filteredcourts(){
@@ -62,7 +139,7 @@ export default {
             {
                 return this.courts;
             }
-            return this.courts.filter((court)=>{console.log(court.type); return court.type === this.filter_type});
+            return this.courts.filter((court)=>{return court.type === this.filter_type});
         }
     }
     // beforeUpdate(){
