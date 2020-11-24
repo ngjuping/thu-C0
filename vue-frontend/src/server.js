@@ -154,7 +154,36 @@ let server = new Server({
       }
       return {message:"ok"};
       
-  });
+    });
+
+    this.get('/manage/courts',(schema,request) => {
+      console.log(request.queryParams.user_id);
+      return {
+        message:"ok",
+        courts:[
+        {
+          id:1,
+          type:1,
+          details:{
+            name: "新林院羽球场01",
+            start:"2020-10-01T00:00:00+01:00",
+            end:"2020-11-01T00:00:00+01:00"
+            },
+          status:1
+        },
+        {
+          id:2,
+          type:2,
+          details:{
+            name: "活动中心网球场03",
+            start:"2020-03-01T00:00:00+01:00",
+            end:"2020-03-01T00:00:00+01:00"
+            },
+          status:1
+          },
+        ]
+        };
+    });
 
     
   }

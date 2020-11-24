@@ -1,10 +1,10 @@
 <template>
     <div class="container bg-gradient-light rounded">
-        <div id="title" class="mb-5"><span class="p-3 px-4 bg-dark rounded shadow text-white">预定<span class="text-warning mx-3">{{ this.venue_name }}</span>场地</span></div>
+        <div id="title" class="p-3 px-4 bg-dark rounded shadow text-white mb-5">预定<span class="text-warning mx-3">{{ this.venue_name }}</span>场地</div>
         
         <div class="container mb-4" id="filter_panel">
             <div class="row">
-                <div class="col-12 col-md-3 d-flex justify-content-start mb-4 pl-0">
+                <div class="col-12 col-md-4 col-lg-3 d-flex justify-content-start mb-4 pl-0">
                     <div class="btn-group shadow">
                         <div class="btn btn-danger" @click="$router.go(-1)">前一页</div>
                         <div class="dropdown btn-group">
@@ -22,35 +22,42 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-md  d-flex justify-content-start mb-4 pl-0">
-                    <div class="btn-group shadow">
-                        <div class="btn btn-dark" @click="updateCourts(today())">
-                            今天
-                        </div>
-                        <div class="btn btn-dark" @click="updateCourts(today(1))">
-                            明天
-                        </div>
-                        <div class="btn-group dropdown">
-                            <div class="btn btn-dark dropdown-toggle" type="button" data-toggle="dropdown">
-                                更多
+                <div class="col-12 col-md col-lg  d-flex justify-content-start mb-4 px-0">
+                    <div class="container">
+                        <div class="row">
+                            <div class="btn-group shadow col-12 col-md px-0">
+                                <div class="btn btn-dark" @click="updateCourts(today())">
+                                    今天
+                                </div>
+                                <div class="btn btn-dark" @click="updateCourts(today(1))">
+                                    明天
+                                </div>
+                                <div class="btn-group dropdown" style="position: static;">
+                                    <div class="btn btn-dark dropdown-toggle" type="button" data-toggle="dropdown">
+                                        更多
+                                    </div>
+                                    <div class="dropdown-menu" >
+                                        <a class="dropdown-item" @click="updateCourts(today(2))">{{ today(2).join("-") }}</a>
+                                        <a class="dropdown-item" @click="updateCourts(today(3))">{{ today(3).join("-") }}</a>
+                                        <a class="dropdown-item" @click="updateCourts(today(4))">{{ today(4).join("-") }}</a>
+                                        <a class="dropdown-item" @click="updateCourts(today(5))">{{ today(5).join("-") }}</a>
+                                        <a class="dropdown-item" @click="updateCourts(today(6))">{{ today(6).join("-") }}</a>
+                                    </div>
+                                </div>
+                                
                             </div>
-                            <div class="dropdown-menu" >
-                                <a class="dropdown-item" @click="updateCourts(today(2))">{{ today(2).join("-") }}</a>
-                                <a class="dropdown-item" @click="updateCourts(today(3))">{{ today(3).join("-") }}</a>
-                                <a class="dropdown-item" @click="updateCourts(today(4))">{{ today(4).join("-") }}</a>
-                                <a class="dropdown-item" @click="updateCourts(today(5))">{{ today(5).join("-") }}</a>
-                                <a class="dropdown-item" @click="updateCourts(today(6))">{{ today(6).join("-") }}</a>
+
+                            <div class="card px-2 pt-1 col-12 col-md">
+                                <span class="card-text vertical-align-center">
+                                    当前预定日期：{{ selected_date.join("-") }}
+                                </span>
                             </div>
-                        </div>
-                        <div class="spinner-border" v-if="loadingCourts">
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                        <div class="card px-2 pt-1">
-                            <span class="card-text vertical-align-center">
-                                当前预定日期：{{ selected_date.join("-") }}
-                            </span>
                         </div>
                     </div>
+                </div>
+                
+                <div class="spinner-border shadow text-primary" v-if="loadingCourts">
+                    <span class="sr-only">Loading...</span>
                 </div>
             </div>
         </div>
@@ -166,6 +173,12 @@ export default {
 @media (max-width:760px) {
     #title{
         font-size:30px;
+    }
+}
+
+@media (max-width:500px) {
+    #title{
+        font-size:20px;
     }
 }
 </style>

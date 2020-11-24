@@ -7,10 +7,10 @@ import { makeServer } from "./server";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faArrowCircleRight,faStar } from '@fortawesome/free-solid-svg-icons';
+import { faArrowCircleRight,faStar,faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-library.add(faArrowCircleRight,faStar)
+library.add(faArrowCircleRight,faStar,faAngleUp)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

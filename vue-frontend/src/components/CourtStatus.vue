@@ -117,7 +117,14 @@ export default {
                     text:`服务器返回信息：${res.data.message}`,
                     timer: 3000,
                     })
+                    .then((result) => {
+                        if(result.isConfirmed){
+                            this.$router.push({name:'Manage'});
+                        }
+                    
                 })
+                })
+                
                 .catch((err) => {
                     Swal.showValidationMessage(
                     `请求失败: ${err.response.data.message}`

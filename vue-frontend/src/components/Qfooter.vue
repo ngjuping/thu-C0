@@ -1,5 +1,6 @@
 <template>
     <div class="container-fluid jumbotron mb-0 mt-5">
+        
         <div class="row">
             <div class="text-left col">
                 Created by team C0
@@ -10,6 +11,5 @@
                 012-3456789 (黄先生)
             </div>
         </div>
-        
     </div>
 </template>

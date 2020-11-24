@@ -1,14 +1,16 @@
 <template>
     <nav class="navbar bg-white shadow">
-        <img src="@/assets/logo.png" width="100" class="d-inline-block align-top" alt="">
+        <img src="@/assets/logo.png" width="100" class="d-inline-block align-top" alt="" id="headerimg">
         <div id="title">工会场地预定系统</div>
         <div>
-            <button class="btn btn-danger" v-if="this.$store.state.logged_in" @click="logout">登出</button>
+            <div class="btn-group" v-if="this.$store.state.logged_in">
+                <div class="btn btn-primary" @click="$router.push({name:'Manage'})">管理场地</div>
+                <button class="btn btn-danger" @click="logout">登出</button>
+            </div>
             <button class="btn btn-primary" v-else  @click="gotoLogin">登录</button>
             <br/>
             <!-- <small v-if="this.$store.state.logged_in">已上线：{{ now() }}</small> -->
         </div>
-        
         
     </nav>
 </template>
@@ -76,6 +78,28 @@ export default {
     }
 
     #title{
-        font-size:2vw
+        font-size:30px;
+    }
+
+    @media (max-width:760px) {
+        #title{
+            font-size:25px;
+        }
+    }
+    @media (max-width:500px) {
+        #title{
+            font-size:20px;
+        }
+        #headerimg{
+            width:50px;
+        }
+    }
+    @media (max-width:400px) {
+        #title{
+            font-size:15px;
+        }
+        #headerimg{
+            width:40px;
+        }
     }
 </style>
