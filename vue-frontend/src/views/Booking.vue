@@ -64,6 +64,9 @@
         <div v-if="courts">
             <CourtStatus v-for="court in filteredcourts" :key="court.id" :info="court" :date="selected_date"></CourtStatus>
         </div>
+        <div class="alert alert-danger" v-if="failedToLoadCourts">
+            无法加载场地信息
+        </div>
     </div>
 
 </template>
@@ -81,7 +84,8 @@ export default {
             filter_type:-1,
             failedToLoadCourts:false,
             loadingCourts:false,
-            selected_date:this.today()
+            selected_date:this.today(),
+            timer:0
         };
     },
     components:{
@@ -107,7 +111,7 @@ export default {
             }
             return [day,month,year];
         },
-        updateCourts(date){
+        updateCourts(date=this.selected_date){
             //reset load failure
             this.failedToLoadCourts = false;
 
@@ -139,6 +143,10 @@ export default {
         this.venue_id = this.$route.params.venueid
         let today = this.today();
         this.updateCourts(today);
+        this.timer = setInterval(this.updateCourts,3000);
+    },
+    destroyed(){
+        clearInterval(this.timer);
     },
     computed:{
         filteredcourts(){
@@ -149,18 +157,6 @@ export default {
             return this.courts.filter((court)=>{return court.type === this.filter_type});
         }
     }
-    // beforeUpdate(){
-    //     clearInterval(this.timer);
-        
-    // },
-    // updated(){
-
-    //     //force recompute last logged in time
-    //     this.timer = setInterval(()=>{
-    //         this.$forceUpdate();            
-
-    //     },3000);
-    // }
 }
 </script>
 

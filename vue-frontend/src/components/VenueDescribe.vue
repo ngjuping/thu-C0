@@ -49,12 +49,12 @@
                 <div class="col-12 col-md-8 list-group">
                     <div v-for="notice in currentvenue.notices" :key="notice.id" class="list-group-item text-left mb-1">
                         <div class="w-75 d-inline-block ">
-                        <h4><span class="bg-white">{{ notice.title }}&nbsp;&nbsp;<span class="badge badge-pill badge-dark">New</span></span></h4>
-                        <p class="lead"><span class="bg-white">{{ notice.content }}</span></p>
+                        <h4><span class="bg-white noticetitle">{{ notice.title }}&nbsp;&nbsp;<span class="badge badge-pill badge-dark">New</span></span></h4>
+                        <p class="lead"><span class="bg-white noticecontent">{{ notice.content }}</span></p>
                         </div>
                         <div class="d-inline-block w-25 h-100 display-4 text-right">
                             <div class="d-inline-block w-100">
-                            <font-awesome-icon icon="arrow-circle-right" />
+                            <font-awesome-icon icon="arrow-circle-right" class="rightarrow" />
                             </div>
                         </div>
                     </div>
@@ -170,5 +170,15 @@ export default {
     background-color:rgb(73, 136, 190);
 }
 
-
+@media(max-width:600px){
+    .noticetitle{
+        font-size:20px;
+    }
+    .noticecontent{
+        font-size:15px;
+    }
+    .rightarrow{
+        font-size:40px;
+    }
+}
 </style>
