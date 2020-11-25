@@ -31,5 +31,6 @@ urlpatterns = [
     path('api/logout', Qinghuiyue.users.views.logout),
     path('api/main/venues',Qinghuiyue.venus.views.get_venues_info),
     path('api/main/venues/list',Qinghuiyue.venus.views.get_venues_list),
-    path('api/manage/courts',views.get_reservations)
+    path('api/manage/courts',views.get_reservations),
+    path('api/book',views.book_first_come)
 ]
