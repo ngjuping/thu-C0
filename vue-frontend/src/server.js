@@ -14,7 +14,7 @@ let server = new Server({
     
   seeds(server) {
       //create a default user
-      server.create("user", { id:'admin',pwd:'123456',name:"Admin",status:0 });
+      server.create("user", { user_id:'admin',pwd:'123456',name:"Admin",status:0 });
 
       //create 4 notices
       server.create("notice", { title:"正式启动",content:"马上体验" });
@@ -27,7 +27,7 @@ let server = new Server({
         name:"新林院", 
         description:"鸟语花香的环境，和蔼可亲的工作人员，舒适的场地——你一定会爱上这里。", 
         img:"https://miro.medium.com/max/1140/0*16bH8WYK3fOtu-kJ.jpg", 
-        notice:[{ title:"闭馆通知",content:"请注意，11月15日闭馆" },{ title:"场地折扣10%",content:"即日起至12月1日" }],
+        notices:[{ title:"闭馆通知",content:"请注意，11月15日闭馆" },{ title:"场地折扣10%",content:"即日起至12月1日" }],
         review:{stars:4,content:"场地不错，服务还行，稍微贵了些",publish_date:"2013-03-01T00:00:00+01:00"},
         courts:[
           {id:1,type:1,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1100",code:1},{start:"1100",end:"1200",code:0},
@@ -44,8 +44,8 @@ let server = new Server({
         name:"活动中心" , 
         description:"Normal venue", 
         img:"https://blog.playo.co/wp-content/uploads/2018/09/5b3f1476cb29c_badminton1.jpg",
-        notice:[{ title:"闭馆通知",content:"小心了，11月15日闭馆" },{ title:"场地折扣5%",content:"只限马杯赛事场地" }],
-        review:{stars:5,content:"还行",publish_date:"2017-03-01T00:00:00+01:00"},
+        notices:[{ title:"闭馆通知",content:"小心了，11月15日闭馆" },{ title:"场地折扣5%",content:"只限马杯赛事场地" }],
+        review:{stars:5,content:"还行",publish_date:"2013-03-01T00:00:00+01:00"},
         courts:[
           {id:4,type:1,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1000",code:1}]},
           {id:5,type:2,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1000",code:1}]},
@@ -62,17 +62,15 @@ let server = new Server({
     this.post("/login", (schema,request) => {
         let attrs = JSON.parse(request.requestBody);
 
-        let selected_user = schema.users.findBy({id:attrs.id});
+        let selected_user = schema.users.findBy({user_id:attrs.user_id});
 
 
         try{
           if(selected_user.pwd == attrs.pwd){
 
-            console.log(selected_user.status);
-
             selected_user.update({ status: 1 });
             
-            return {message:"ok", user_info:{ user_id:attrs.id }};
+            return {message:"ok", user_info:{ user_id:attrs.user_id,name:selected_user.name }};
           }
         }
         catch(e){
@@ -86,9 +84,11 @@ let server = new Server({
 
         let attrs = JSON.parse(request.requestBody);
 
-        let selected_user = schema.users.findBy({id:attrs.id});
+        console.log(attrs);
+        
+        let selected_user = schema.users.findBy({user_id:attrs.user_id});
 
-        console.log(selected_user.status);
+        console.log(selected_user);
 
         selected_user.update({ status: 0 });
 
@@ -98,8 +98,7 @@ let server = new Server({
 
     this.post("/signup", (schema,request) => {
         let attrs = JSON.parse(request.requestBody);
-        console.log(attrs);
-        let existed_user = schema.users.findBy({id:attrs.id});
+        let existed_user = schema.users.findBy({user_id:attrs.user_id});
 
         if(existed_user)
         {
@@ -108,7 +107,7 @@ let server = new Server({
         else
         {
           schema.users.create({
-            id:attrs.id,
+            user_id:attrs.user_id,
             pwd:attrs.pwd,
             name:attrs.name
           });
@@ -143,6 +142,50 @@ let server = new Server({
       
       return {venue_name:selected_venue.attrs.name,courts:selected_venue.attrs.courts};
     })
+
+    this.post("/book", (schema,request) => {
+      let attrs = JSON.parse(request.requestBody);
+      let courtisbooked = false;
+      if(attrs.start == "24-11-2020T10:00:00+01:00")
+        courtisbooked = true;
+      if(courtisbooked)
+      {
+        return new Response(422, {}, { message: "场地已被预定" });
+      }
+      return {message:"ok"};
+      
+    });
+
+    this.get('/manage/courts',(schema,request) => {
+      console.log(request.queryParams.user_id);
+      return {
+        message:"ok",
+        courts:[
+        {
+          id:1,
+          type:1,
+          details:{
+            name: "新林院羽球场01",
+            start:"2020-10-01T00:00:00+01:00",
+            end:"2020-11-01T00:00:00+01:00"
+            },
+          status:1
+        },
+        {
+          id:2,
+          type:2,
+          details:{
+            name: "活动中心网球场03",
+            start:"2020-03-01T00:00:00+01:00",
+            end:"2020-03-01T00:00:00+01:00"
+            },
+          status:1
+          },
+        ]
+        };
+    });
+
+    
   }
   
 })

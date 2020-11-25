@@ -13,12 +13,12 @@
           </div>
           <div class="form-group">
             <label >您的名字</label>
-            <input class="form-control" :required="!signing_up" :disabled="signing_up" v-model="realname" >
+            <input class="form-control" :disabled="signing_up" v-model="realname" >
           </div>
 
           <div class="form-group">
             <label >账号名称/ID</label>
-            <input class="form-control" :disabled="signing_up" v-model="id" :required="id===''">
+            <input class="form-control" :disabled="signing_up" v-model="user_id">
           </div>
 
           <div class="form-group">
@@ -44,7 +44,7 @@ export default {
   data()
   {
     return {
-      id: "admin",
+      user_id: "admin",
       pwd: "123456",
       realname: "",
       signing_up: false,
@@ -55,7 +55,7 @@ export default {
     tryLogin(){
         this.$axios
         .post('/api/login',{
-            id: this.id,
+            user_id: this.user_id,
             pwd: this.pwd
           }
         )
@@ -67,7 +67,7 @@ export default {
           this.$router.push({name:'Mainpage'});
 
           Swal.fire({
-            title: "欢迎! " + data.user_info.user_id,
+            title: "欢迎! " + data.user_info.name,
             text: "成功登陆",
             icon: "success",
             timer: 1000}
@@ -88,14 +88,14 @@ export default {
         
       this.errors = [];
 
-        if (this.id && this.pwd && this.realname) {
+        if (this.user_id && this.pwd && this.realname) {
         return true;
       }
 
       if (!this.realname) {
         this.errors.push('请输入您的真实姓名.');
       }
-      if (!this.id) {
+      if (!this.user_id) {
         this.errors.push('账号名称不能为空.');
       }
       if (!this.pwd) {
@@ -114,7 +114,7 @@ export default {
       this.signing_up = true;
       this.$axios
       .post('/api/signup',{
-          id: this.id,
+          user_id: this.user_id,
           pwd: this.pwd,
           name: this.realname,
         }

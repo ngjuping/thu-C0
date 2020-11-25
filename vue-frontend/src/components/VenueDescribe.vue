@@ -47,14 +47,14 @@
             </div>
             <div class="row">
                 <div class="col-12 col-md-8 list-group">
-                    <div v-for="notice in currentvenue.notice" :key="notice.id" class="list-group-item text-left mb-1">
+                    <div v-for="notice in currentvenue.notices" :key="notice.id" class="list-group-item text-left mb-1">
                         <div class="w-75 d-inline-block ">
-                        <h4><span class="bg-white">{{ notice.title }}&nbsp;&nbsp;<span class="badge badge-pill badge-dark">New</span></span></h4>
-                        <p class="lead"><span class="bg-white">{{ notice.content }}</span></p>
+                        <h4><span class="bg-white noticetitle">{{ notice.title }}&nbsp;&nbsp;<span class="badge badge-pill badge-dark">New</span></span></h4>
+                        <p class="lead"><span class="bg-white noticecontent">{{ notice.content }}</span></p>
                         </div>
                         <div class="d-inline-block w-25 h-100 display-4 text-right">
                             <div class="d-inline-block w-100">
-                            <font-awesome-icon icon="arrow-circle-right" />
+                            <font-awesome-icon icon="arrow-circle-right" class="rightarrow" />
                             </div>
                         </div>
                     </div>
@@ -89,7 +89,7 @@ export default {
                 name:"新林院", 
                 description:"鸟语花香的环境，和蔼可亲的工作人员，舒适的场地——你一定会爱上这里。", 
                 img:"https://miro.medium.com/max/1140/0*16bH8WYK3fOtu-kJ.jpg", 
-                notice:[{ title:"无通知",content:"默认通知内容" }],
+                notices:[{ id:1,title:"无通知",content:"默认通知内容" }],
                 review:{stars:4,content:"默认评论",publish_date:moment().format()}
             }
         }
@@ -108,8 +108,10 @@ export default {
                 .get(`/api/main/venues?id=${x}`)
                 .then(res => {
                     this.currentvenue = res.data.venue_info;
+                    this.currentvenue.notices.forEach(function (notice, i) { notice["id"] = i });
                 })
-                .catch(() => {
+                .catch((err) => {
+                    console.log(err);
                     this.failedToGetVenueInfo = true;
                 })
             }
@@ -168,5 +170,15 @@ export default {
     background-color:rgb(73, 136, 190);
 }
 
-
+@media(max-width:600px){
+    .noticetitle{
+        font-size:20px;
+    }
+    .noticecontent{
+        font-size:15px;
+    }
+    .rightarrow{
+        font-size:40px;
+    }
+}
 </style>

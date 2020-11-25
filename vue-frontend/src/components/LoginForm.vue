@@ -8,8 +8,8 @@
       <form class="card-body h-50 pb-5">
           <div class="form-group text-left">
             <label>账号</label>
-            <input class="form-control" :disabled="logging_in" v-model="id" :required="id===''">
-            <small class="form-text text-muted text-center">欢迎回来 {{id}}</small>
+            <input class="form-control" :disabled="logging_in" v-model="user_id">
+            <small class="form-text text-muted text-center">欢迎回来 {{user_id}}</small>
           </div>
 
           <div class="form-group text-left">
@@ -48,7 +48,7 @@ export default {
   data()
   {
     return {
-      id: "admin",
+      user_id: "admin",
       pwd: "123456",
       logging_in: false
     }
@@ -61,7 +61,7 @@ export default {
       this.logging_in = true;
       this.$axios
       .post('/api/login',{
-          id: this.id,
+          user_id: this.user_id,
           pwd: this.pwd
         }
       )
@@ -74,7 +74,7 @@ export default {
         this.$router.push({name:'Mainpage'});
 
         Swal.fire({
-          title: "欢迎! " + data.user_info.user_id,
+          title: "欢迎! " + data.user_info.name,
           text: "成功登陆", 
           icon: "success",
           timer: 1000}
