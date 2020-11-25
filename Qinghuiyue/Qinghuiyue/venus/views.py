@@ -40,6 +40,7 @@ def get_venues_info(request):
     })
 
 
+
 def get_courts_info(request):
     '''
     获取某个场馆下所有场地的信息
@@ -59,7 +60,6 @@ def get_courts_info(request):
         "courts": court_json
     })
 
-
 def get_venues_list(request):
     '''
 	获取所有场馆的列表
@@ -72,4 +72,4 @@ def get_venues_list(request):
         "name": venue.name
     }
         for venue in venues]
-    return JsonResponse({"message":"ok","venus":venues_list})
+    return JsonResponse({"message":"ok","venues":venues_list})
