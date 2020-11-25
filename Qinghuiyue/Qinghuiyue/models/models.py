@@ -29,9 +29,10 @@ class Queue_reservation(DynamicDocument):
 
 class Reservation(DynamicDocument):
     type=IntField()
-    paras=DictField()
-    status=StringField()
+    details=DictField()
+    status=IntField()
     reservation_id=IntField()
+
 
 class Share_notification(DynamicDocument):
     user_id=IntField()
