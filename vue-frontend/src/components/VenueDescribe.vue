@@ -85,9 +85,9 @@ export default {
         return {
             failedToGetVenueInfo:false,
             currentvenue: {
-                id:0,
-                name:"新林院", 
-                description:"鸟语花香的环境，和蔼可亲的工作人员，舒适的场地——你一定会爱上这里。", 
+                id:1,
+                name:"默认场馆", 
+                description:"默认形容", 
                 img:"https://miro.medium.com/max/1140/0*16bH8WYK3fOtu-kJ.jpg", 
                 notices:[{ id:1,title:"无通知",content:"默认通知内容" }],
                 review:{stars:4,content:"默认评论",publish_date:moment().format()}
@@ -96,25 +96,17 @@ export default {
     },
     methods:{
         getVenueInfo(x){
-            if(x == this.currentvenue.id)
-            {
-                //already has the data no need to axios again
-                return;
-            }
-            else
-            {
-                //get details on specific venue x
-                this.$axios
-                .get(`/api/main/venues?id=${x}`)
-                .then(res => {
-                    this.currentvenue = res.data.venue_info;
-                    this.currentvenue.notices.forEach(function (notice, i) { notice["id"] = i });
-                })
-                .catch((err) => {
-                    console.log(err);
-                    this.failedToGetVenueInfo = true;
-                })
-            }
+            //get details on specific venue x
+            this.$axios
+            .get(`/api/main/venues?id=${x}`)
+            .then(res => {
+                this.currentvenue = res.data.venue_info;
+                this.currentvenue.notices.forEach(function (notice, i) { notice["id"] = i });
+            })
+            .catch((err) => {
+                console.log(err);
+                this.failedToGetVenueInfo = true;
+            })
         },
         goBooking(x){
             this.$router.push({name:'Booking',params:{venueid:x}});

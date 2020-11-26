@@ -7,7 +7,7 @@
                         <div class="row d-flex justify-content-around" id="ranges">
                             <div class="col-12 col-md range d-flex justify-content-center align-items-center"  v-for="status in info.status" 
                             :class="[`courtstatus-${status.code} border border-success rounded`]"
-                            :id="selectedCourt.start === status.start?'activeCourt':'notActive'"
+                            :id="selectedCourt && selectedCourt.start === status.start?'activeCourt':'notActive'"
                             :key="`range${status.start}`"
                             :title="statustext[status.code]"
                             @click="selectCourt(status)"
@@ -24,7 +24,7 @@
                                     {{ getTimeOnly(status.start) }}
                                 </div>      
                             </div>
-                            <div class="pr-0">
+                            <div class="pr-0" v-if="info.status.length">
                                 {{ getTimeOnly(info.status[info.status.length-1].end) }}
                             </div>
                         </div>
@@ -53,7 +53,7 @@ export default {
         return {
             sports:["清除过滤","羽球","乒乓","网球","篮球"],
             statustext:["无状态","空场地","已有人预定"],
-            selectedCourt:{start:"1999-03-01T00:00:00+01:00"} // a date that will never equals to any shown courts
+            selectedCourt:null
         }
     },
     mounted(){
