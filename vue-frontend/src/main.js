@@ -3,7 +3,7 @@ import App from './App.vue';
 import store from './store';
 import router from './router';
 import axios from 'axios';
-//import { makeServer } from "./server";
+import { makeServer } from "./server";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -17,10 +17,10 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
 
-// if(process.env.NODE_ENV == "development")
-// {
-//   makeServer();
-// } 
+ if(process.env.NODE_ENV == "development")
+ {
+   makeServer();
+ } 
 
 new Vue({
   store,

@@ -13,8 +13,9 @@ let server = new Server({
     },
     
   seeds(server) {
-      //create a default user
-      server.create("user", { user_id:'admin',pwd:'123456',name:"Admin",status:0 });
+      //create 2 default user
+      server.create("user", { user_id:'ordinary',pwd:'111111',name:"ordinary",status:0,privilege:0});//普通用户
+      server.create("user", { user_id:'admin',pwd:'123456',name:"Admin",status:0,privilege:1});//管理员
 
       //create 4 notices
       server.create("notice", { title:"正式启动",content:"马上体验" });
@@ -71,7 +72,7 @@ let server = new Server({
 
             selected_user.update({ status: 1 });
             
-            return {message:"ok", user_info:{ user_id:attrs.user_id,name:selected_user.name }};
+            return {message:"ok", user_info:{ user_id:attrs.user_id,name:selected_user.name,privilege:selected_user.privilege }};
           }
         }
         catch(e){
