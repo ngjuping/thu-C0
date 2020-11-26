@@ -13,6 +13,7 @@
                             @click="selectCourt(status)"
                             data-toggle="tooltip" 
                             data-placement="top">
+                            <span class="d-inline d-md-none bg-white">{{ getTimeOnly(status.start) }} -- {{ getTimeOnly(status.end) }}</span>
                             </div>
                         </div>
                         

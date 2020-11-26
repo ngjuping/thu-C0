@@ -68,7 +68,7 @@
                             <h5 class="card-title">最新反馈</h5>
                             <h6 class="card-subtitle mb-2 text-muted"><font-awesome-icon icon="star" v-for="i in currentvenue.review.stars" :key="i"/></h6>
                             <p class="card-text">{{ currentvenue.review.content }}</p>
-                            <p class="card-text">{{ now() }}</p>
+                            <p class="card-text" v-if="!loadingVenue">{{ now() }}</p>
                             <button class="btn btn-primary">查看更多</button>
                         </div>
                     </div>
@@ -108,7 +108,7 @@ export default {
             //set state variables
             this.hasReview = true;
             this.loadingVenue = true;
-
+            
             //get details on specific venue x
             this.$axios
             .get(`/api/main/venues?id=${x}`)
@@ -120,8 +120,7 @@ export default {
                 
                 this.currentvenue.notices.forEach(function (notice, i) { notice["id"] = i });
             })
-            .catch((err) => {
-                console.log(err);
+            .catch(() => {
                 this.failedToGetVenueInfo = true;
             })
             .finally(() => {this.loadingVenue = false;})
@@ -131,17 +130,10 @@ export default {
         },
         //get relative time of the review publish date
         now(){
-            try{
-                let review_time = this.currentvenue.review.publish_date
-                let first_half = review_time.split("T")[0];
-                let second_half_time = review_time.split("T")[1].split("+")[0];
-                return moment(first_half + " " + second_half_time,"YYYY-MM-DD hh:mm:ss").fromNow();
-            }
-            catch(err)
-            {
-                this.hasReview = false;
-            }
-
+            let review_time = this.currentvenue.review.publish_date
+            let first_half = review_time.split("T")[0];
+            let second_half_time = review_time.split("T")[1].split("+")[0];
+            return moment(first_half + " " + second_half_time,"YYYY-MM-DD hh:mm:ss").fromNow();
         }
     },
     mounted(){
