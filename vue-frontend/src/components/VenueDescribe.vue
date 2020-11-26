@@ -3,6 +3,9 @@
 <div class="row p-3 shadow" id="venue_panel">
     <div class="col-12 col-md-4 pt-4 shadow" id="venue_select_panel">
         <h1>选择场馆</h1>
+        <div class="spinner-border" v-if="loadingVenue">
+            <span class="sr-only">Loading...</span>
+        </div>
         <hr>
         <div class="list-group">
         <div class="list-group-item list-group-item-action container" v-for="venue in venues" :key="venue.id">
@@ -60,14 +63,17 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-4  pl-0">
-                    <div class="card">
+                    <div class="card" v-if="hasReview">
                         <div class="card-body">
                             <h5 class="card-title">最新反馈</h5>
                             <h6 class="card-subtitle mb-2 text-muted"><font-awesome-icon icon="star" v-for="i in currentvenue.review.stars" :key="i"/></h6>
                             <p class="card-text">{{ currentvenue.review.content }}</p>
-                            <p class="card-text">{{ now() }}</p>
+                            <p class="card-text" v-if="!loadingVenue">{{ now() }}</p>
                             <button class="btn btn-primary">查看更多</button>
                         </div>
+                    </div>
+                    <div class="alert alert-danger" v-else>
+                        没有找到回馈
                     </div>
                 </div>
             </div>
@@ -85,36 +91,39 @@ export default {
         return {
             failedToGetVenueInfo:false,
             currentvenue: {
-                id:0,
-                name:"新林院", 
-                description:"鸟语花香的环境，和蔼可亲的工作人员，舒适的场地——你一定会爱上这里。", 
+                id:1,
+                name:"默认场馆", 
+                description:"默认形容", 
                 img:"https://miro.medium.com/max/1140/0*16bH8WYK3fOtu-kJ.jpg", 
                 notices:[{ id:1,title:"无通知",content:"默认通知内容" }],
                 review:{stars:4,content:"默认评论",publish_date:moment().format()}
-            }
+            },
+            hasReview:true,
+            loadingVenue:true
         }
     },
     methods:{
         getVenueInfo(x){
-            if(x == this.currentvenue.id)
-            {
-                //already has the data no need to axios again
-                return;
-            }
-            else
-            {
-                //get details on specific venue x
-                this.$axios
-                .get(`/api/main/venues?id=${x}`)
-                .then(res => {
-                    this.currentvenue = res.data.venue_info;
-                    this.currentvenue.notices.forEach(function (notice, i) { notice["id"] = i });
-                })
-                .catch((err) => {
-                    console.log(err);
-                    this.failedToGetVenueInfo = true;
-                })
-            }
+
+            //set state variables
+            this.hasReview = true;
+            this.loadingVenue = true;
+            
+            //get details on specific venue x
+            this.$axios
+            .get(`/api/main/venues?id=${x}`)
+            .then(res => {
+                if(!Object.keys(res.data.venue_info.review).length){
+                    this.hasReview = false;
+                }
+                this.currentvenue = res.data.venue_info;
+                
+                this.currentvenue.notices.forEach(function (notice, i) { notice["id"] = i });
+            })
+            .catch(() => {
+                this.failedToGetVenueInfo = true;
+            })
+            .finally(() => {this.loadingVenue = false;})
         },
         goBooking(x){
             this.$router.push({name:'Booking',params:{venueid:x}});
@@ -124,7 +133,6 @@ export default {
             let review_time = this.currentvenue.review.publish_date
             let first_half = review_time.split("T")[0];
             let second_half_time = review_time.split("T")[1].split("+")[0];
-            
             return moment(first_half + " " + second_half_time,"YYYY-MM-DD hh:mm:ss").fromNow();
         }
     },

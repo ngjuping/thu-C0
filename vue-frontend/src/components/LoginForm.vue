@@ -70,7 +70,13 @@ export default {
         this.logging_in = false;
         let data = res.data
         this.$store.commit('login',data.user_info.user_id)
-        this.$router.push({name:'Mainpage'});
+        //this.$router.push({name:'Mainpage'});
+        // 如果privilege是1代表管理员
+        if(data.user_info.privilege===1) {
+          this.$router.push({name:'Admin'})
+        } else {
+          this.$router.push({name:'Mainpage'});
+        }
 
         Swal.fire({
           title: "欢迎! " + data.user_info.name,
@@ -93,7 +99,7 @@ export default {
   mounted(){
     if(this.$store.state.logged_in)
     {
-      this.$router.go(-1);
+      this.$router.replace({name:'Mainpage'});
     }
   }
 }
