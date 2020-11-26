@@ -7,12 +7,12 @@
                         <div class="row d-flex justify-content-around" id="ranges">
                             <div class="col-12 col-md range d-flex justify-content-center align-items-center"  v-for="status in info.status" 
                             :class="[`courtstatus-${status.code} border border-success rounded`]"
+                            :id="selectedCourt && selectedCourt.start === status.start?'activeCourt':'notActive'"
                             :key="`range${status.start}`"
                             :title="statustext[status.code]"
                             @click="selectCourt(status)"
                             data-toggle="tooltip" 
                             data-placement="top">
-                            <span class="d-inline d-md-none bg-light lead">{{ status.start }} -- {{ status.end }}</span>
                             </div>
                         </div>
                         
@@ -21,11 +21,11 @@
                         <div class="row d-flex justify-content-end">
                             <div class="col px-0" v-for="(status) in info.status" :key="`label${status.start}`">
                                 <div class="pl-0">
-                                    {{ status.start }}
+                                    {{ getTimeOnly(status.start) }}
                                 </div>      
                             </div>
-                            <div class="pr-0">
-                                {{ info.status[info.status.length-1].end }}
+                            <div class="pr-0" v-if="info.status.length">
+                                {{ getTimeOnly(info.status[info.status.length-1].end) }}
                             </div>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
             </div>
         <div class="d-flex justify-content-between" v-if="selectedCourt">
             <span>
-                您选中了时段&nbsp;<b>{{ selectedCourt.start }}</b> &nbsp;至&nbsp; <b>{{ selectedCourt.end }}</b>
+                您选中了时段&nbsp;<b>{{ getTimeOnly(selectedCourt.start) }}</b> &nbsp;至&nbsp; <b>{{ getTimeOnly(selectedCourt.end) }}</b>
             </span>
             <button type="button" class="btn btn-secondary" @click="submitBooking">
                 预定这个场地！
@@ -52,7 +52,7 @@ export default {
     data(){
         return {
             sports:["清除过滤","羽球","乒乓","网球","篮球"],
-            statustext:["空场地","已有人预定"],
+            statustext:["无状态","空场地","已有人预定"],
             selectedCourt:null
         }
     },
@@ -63,11 +63,23 @@ export default {
         selectCourt(courtinfo){
             this.selectedCourt = courtinfo
         },
+        getTimeOnly(date){
+            if(!date) return "解析日期错误"
+            try{
+                //input: "1999-03-01T00:00:00+01:00"
+                let date_second_part = date.split("T")[1]; //["1999-03-01","00:00:00+01:00"][1] = "00:00:00+01:00"
+                let [hour,minutes] = date_second_part.split(":").slice(0,2); 
+                return hour+minutes;
+            }
+            catch(err){
+                return "解析日期错误"
+            }
+        },
         getBookStartTime(){
-            return `${this.date.join("-")}T${this.selectedCourt.start.slice(0,2)}:${this.selectedCourt.start.slice(2,4)}:00+01:00`;
+            return this.selectedCourt.start;
         },
         getBookEndTime(){
-            return `${this.date.join("-")}T${this.selectedCourt.end.slice(0,2)}:${this.selectedCourt.end.slice(2,4)}:00+01:00`;
+            return this.selectedCourt.start;
         },
         submitBooking(){
             if(!this.$store.state.logged_in)
@@ -90,7 +102,7 @@ export default {
                     <h5 class="card-title">${ this.sports[this.info.type] } 场地 ${ this.info.id }</h5>
                     <p class="card-text">${this.date.join("/")}
                     <hr>
-                    ${this.selectedCourt.start} 到 ${this.selectedCourt.end}</p>
+                    ${this.getTimeOnly(this.selectedCourt.start)} 到 ${this.getTimeOnly(this.selectedCourt.end)}</p>
                 </div>
             </div>`,
             showCancelButton: true,
@@ -143,12 +155,16 @@ export default {
     font-size:30px;
 }
 
-.courtstatus-0{
+#activeCourt{
+    background-color:yellow;
+    opacity:0.8;
+}
+.courtstatus-1{
     background-color:greenyellow;
     opacity:0.5;
 }
 
-.courtstatus-1{
+.courtstatus-2{
     background-color:red;
     opacity:0.5;
 }

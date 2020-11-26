@@ -93,7 +93,7 @@ export default {
   mounted(){
     if(this.$store.state.logged_in)
     {
-      this.$router.go(-1);
+      this.$router.replace({name:'Mainpage'});
     }
   }
 }
