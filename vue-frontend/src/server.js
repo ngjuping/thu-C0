@@ -30,6 +30,7 @@ let server = new Server({
         notices:[{ title:"闭馆通知",content:"请注意，11月15日闭馆" },{ title:"场地折扣10%",content:"即日起至12月1日" }],
         review:{stars:4,content:"场地不错，服务还行，稍微贵了些",publish_date:"2013-03-01T00:00:00+01:00"},
         courts:[
+<<<<<<< HEAD
           {id:1,type:1,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1100",code:1},{start:"1100",end:"1200",code:0},
           {start:"1200",end:"1300",code:0},{start:"1300",end:"1400",code:0},{start:"1400",end:"1500",code:0},{start:"1500",end:"1600",code:0},
           {start:"1600",end:"1700",code:1},{start:"1700",end:"1800",code:1},{start:"1800",end:"1900",code:0},{start:"1900",end:"2000",code:0}]},
@@ -37,6 +38,16 @@ let server = new Server({
           {id:2,type:2,status:[{start:"0900",end:"1000",code:0},{start:"1000",end:"1100",code:1},{start:"1100",end:"1200",code:1}]},
           {id:3,type:3,status:[{start:"0900",end:"1000",code:1},{start:"1000",end:"1100",code:1},{start:"1100",end:"1200",code:1},{start:"1200",end:"1300",code:1}
           ,{start:"1300",end:"1400",code:1},{start:"1400",end:"1500",code:0},{start:"1500",end:"1600",code:0}]},
+=======
+          {
+            id:1,
+            type:1,
+            status:[
+              {start:"2020-11-26T10:00:00+01:00",end:"2020-11-26T11:00:00+01:00",code:1},
+              {start:"2020-11-26T11:00:00+01:00",end:"2020-11-26T12:00:00+01:00",code:1},
+              {start:"2020-11-26T12:00:00+01:00",end:"2020-11-26T13:00:00+01:00",code:1}]
+          }
+>>>>>>> 4407ac60fb72b46c607d58e635d200911a4221bb
         ]
       });
       
