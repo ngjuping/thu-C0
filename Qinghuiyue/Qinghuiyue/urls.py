@@ -20,6 +20,8 @@ from Qinghuiyue import views
 import Qinghuiyue.users.views
 from Qinghuiyue import venus
 import Qinghuiyue.venus.views
+from Qinghuiyue import adminapi
+import Qinghuiyue.adminapi.views
 
 
 urlpatterns = [
@@ -32,6 +34,7 @@ urlpatterns = [
     path('api/main/venues',Qinghuiyue.venus.views.get_venues_info),
     path('api/main/venues/list',Qinghuiyue.venus.views.get_venues_list),
     path('api/manage/courts',views.get_reservations),
-    path('api/book',views.book_first_come)
-    
+    path('api/book',views.book_first_come),
+    path('api/adminapi/modify/court', Qinghuiyue.adminapi.views.modify_court),
+    path('api/adminapi/modify/venue', Qinghuiyue.adminapi.views.modify_venue)
 ]
