@@ -5,25 +5,23 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">编辑场地</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModal">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body" style="text-align: left;">
             <form>
               <div class="row form-group">
-                <label class="col-sm-2">type</label>
+                <label class="col-sm-2">场地</label>
                 <div class="col-sm-10">
-                  <select v-model="formMessage.type" class="form-control">
-                    <option :value="''" disabled>请选择</option>
-                    <option :value="1">1</option>
-                    <option :value="2">2</option>
-                    <option :value="3">3</option>
-                  </select>
+                  {{sports[formMessage.type]}}
                 </div>
               </div>
-              <h6>场地配置</h6>
-              <div class="row form-group" v-for="(item,index) in courtInfo.status" :key="index">
+              <div class="row form-group">
+                <div class="col-sm-2">场地配置</div>
+                <div class="col-sm-10"><button type="button" class="btn btn-primary" @click="handleAddItem">添加</button></div>
+              </div>
+              <div class="row form-group" v-for="(item,index) in formMessage.timeInfoList" :key="index">
                 <div class="col-sm-3">
                   <select v-model="item.start" class="form-control">
                     <option :value="''" disabled>开始时间</option>
@@ -43,11 +41,15 @@
                     <option :value="1">已预定</option>
                   </select>
                 </div>
-                <div class="col-sm-3">
-                  <button type="button" class="btn btn-danger">删除</button>
+                <div class="col-sm-3" v-if="index === formMessage.timeInfoList.length - 1">
+                  <button type="button" class="btn btn-danger" @click="handleDeleteItem">删除</button>
                 </div>
               </div>
             </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="closeModal">取消</button>
+            <button type="button" class="btn btn-primary" @click="handleSave">保存</button>
           </div>
         </div>
       </div>
@@ -56,20 +58,79 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   name: 'CourtEditModal',
   props: {
     courtInfo: {
       type: Object,
       required: true
+    },
+    show: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
+      sports:[null,"羽球","篮球","乒乓"],
       formMessage: {
-        type: '',
+        type: 0,
+        timeInfoList: []
       },
       timeList: []
+    }
+  },
+  methods: {
+    closeModal() {
+      this.$emit('close')
+    },
+    handleAddItem() {
+      const temp = this.formMessage.timeInfoList
+      temp.push({
+        start: '',
+        end: '',
+        code: ''
+      })
+      this.formMessage.timeInfoList = temp
+    },
+    handleDeleteItem() {
+      const temp = this.formMessage.timeInfoList
+      temp.pop()
+      this.formMessage.timeInfoList = temp
+    },
+    handleSave() {
+      const params = {
+        court: [
+          {
+            id: this.courtInfo.id,
+            type: this.courtInfo.type,
+            status: []
+          }
+        ]
+      }
+      this.formMessage.timeInfoList.forEach(item => {
+        const startDate = moment()
+        const startHour = parseInt(item.start.substr(0,2))
+        startDate.hour(startHour)
+        const endDate = moment()
+        const endHour = parseInt(item.end.substr(0,2))
+        endDate.hour(endHour)
+        params.court[0].status.push({
+          start: startDate.format(),
+          end: endDate.format(),
+          code: item.code
+        })
+      })
+      this.$axios.request({
+        method: 'post',
+        url: '/api/admin/modify/court',
+        data: params
+      }).then(() => {
+        this.$emit('success-eidt')
+      }).catch(error => {
+        console.log(error)
+      })
     }
   },
   mounted() {
@@ -87,8 +148,28 @@ export default {
     }
   },
   watch: {
-    courtInfo(val) {
-      this.formMessage.type = val.type
+    show(val) {
+      console.log(val,this.courtInfo)
+      if (val) {
+        const type = this.courtInfo.type
+        const timeInfoList = []
+        this.courtInfo.status.forEach(item => {
+          timeInfoList.push({
+            start: item.start,
+            end: item.end,
+            code: item.code
+          })
+        })
+        this.formMessage = {
+          type,
+          timeInfoList
+        }
+      } else {
+        this.formMessage = {
+          type: 0,
+          timeInfoList: []
+        }
+      }
     }
   }
 }

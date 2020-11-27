@@ -27,7 +27,8 @@
         </div>
       </div>
       <div>
-          <court-manage v-for="court in filteredcourts" :key="court.id" :info="court"></court-manage>
+          <court-manage v-for="court in filteredcourts" :key="court.id" :info="court" @court-change="handleGetCourts" @edit="handleEdit"></court-manage>
+          <court-edit-modal :show="show" :court-info="info" @success-edit="handleGetCourts" @close="show=false"/>
       </div>
     </div>
   </div>
@@ -36,16 +37,19 @@
 <script>
 import moment from 'moment'
 import CourtManage from '../components/CourtManage.vue'
+import CourtEditModal from '../components/CourtEditModal.vue';
 
 export default {
   name: 'BookingManage',
-  components: {CourtManage},
+  components: {CourtManage, CourtEditModal},
   data() {
     return {
       venuesList: [],
       venueId: '',
       courts: null,
-      filter_type: -1
+      filter_type: -1,
+      info: {},
+      show: false
     }
   },
   computed:{
@@ -79,6 +83,10 @@ export default {
     },
     setFilter(x){
       this.filter_type = x;
+    },
+    handleEdit(info) {
+      this.info = info
+      this.show = true
     }
   },
   mounted() {

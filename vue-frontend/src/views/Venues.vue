@@ -31,7 +31,7 @@
         </tr>
       </tbody>
     </table>
-    <venue-edit-modal :venue-detail="venueDetail"/>
+    <venue-edit-modal :venue-detail="venueDetail" @edit-success="handleGetVenues"/>
     <venue-detail-modal :venue-id="venueId" />
   </div>
 </template>
@@ -55,17 +55,20 @@ export default {
     },
     handleShowDetailModal(item) {
       this.venueId = item.id
+    },
+    handleGetVenues() {
+      this.$axios.request({
+        method: 'get',
+        url: '/api/main/venues/list',
+      }).then(response => {
+        this.venuesList = response.data.venues
+      }).catch(error => {
+        console.log(error)
+      })
     }
   },
   mounted() {
-    this.$axios.request({
-      method: 'get',
-      url: '/api/main/venues/list',
-    }).then(response => {
-      this.venuesList = response.data.venues
-    }).catch(error => {
-      console.log(error)
-    })
+    this.handleGetVenues()
   }
 }
 </script>

@@ -2,7 +2,7 @@
 <div class="jumbotron text-left shadow p-3">
   <div class="row top">
     <span id="title">{{ sports[info.type] }}场地{{ info.id }}</span>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editCourtModal" @click="handleShowEditModal(info)">编辑场地</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editCourtModal" @click="showModal">编辑场地</button>
   </div>
   <div class="container">
     <div class="row">
@@ -32,29 +32,31 @@
       </div>
     </div>
   </div>
-  <court-edit-modal :court-info="courtInfo"/>
 </div>
 </template>
 <script>
 import $ from 'jquery'
-import CourtEditModal from './CourtEditModal.vue';
 export default {
-  components: { CourtEditModal },
     props:["info"],
     data(){
         return {
             sports:[null,"羽球","篮球","乒乓"],
             statustext:["空场地","已有人预定"],
             selectedCourt:null,
-            courtInfo: {}
+            courtInfo: {},
+            show: false
         }
     },
     mounted(){
       $('[data-toggle="tooltip"]').tooltip();
     },
     methods:{
-      handleShowEditModal(info) {
-        this.courtInfo = info
+      showModal() {
+        this.show = true
+        this.$emit('edit', this.info)
+      },
+      handleSuccessEdit() {
+        this.$emit('court-change')
       }
     }
 

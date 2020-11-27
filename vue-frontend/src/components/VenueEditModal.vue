@@ -27,10 +27,7 @@
                 <label class="col-sm-2 col-form-label">场馆图片</label>
                 <div class="col-sm-10">
                   <div class="col-sm-6">
-                    <input type="file" class="form-control-file">
-                  </div>
-                  <div class="col-sm-6">
-                    <img :src="formMessage.img" alt="" />
+                    <input type="file" class="form-control-file" @change="handleFileChange">
                   </div>
                 </div>
               </div>
@@ -63,20 +60,27 @@ export default {
         name: '',
         description: '',
         img: ''
-      }
+      },
+      file: null
     }
   },
   methods: {
+    handleFileChange(e) {
+      this.file = e.target.files[0]
+    },
     handleSave() {
-      const params = Object.assign({}, this.formMessage)
+      const params = new FormData()
+      params.append('name', this.formMessage.name)
+      params.append('description', this.formMessage.description)
+      params.append('img', this.file)
       this.$axios.request({
         method: 'post',
         url: '/api/admin/modify/venue',
         data: params
       }).then(() => {
-
-      }).catch(() => {
-
+        this.$emit('edit-success')
+      }).catch((error) => {
+        console.log(error)
       })
     }
   },
