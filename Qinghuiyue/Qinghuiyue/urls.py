@@ -33,4 +33,5 @@ urlpatterns = [
     path('api/main/venues/list',Qinghuiyue.venus.views.get_venues_list),
     path('api/manage/courts',views.get_reservations),
     path('api/book',views.book_first_come)
+    
 ]
