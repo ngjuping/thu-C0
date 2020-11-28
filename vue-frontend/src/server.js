@@ -74,6 +74,9 @@ let server = new Server({
             
             return {message:"ok", user_info:{ user_id:attrs.user_id,name:selected_user.name,privilege:selected_user.privilege }};
           }
+          else{
+            return new Response(400, {}, {message:"User doesn't exist"});
+          }
         }
         catch(e){
           return new Response(400, {}, {message:"User doesn't exist"});
