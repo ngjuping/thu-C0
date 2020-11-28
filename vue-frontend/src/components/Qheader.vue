@@ -34,7 +34,7 @@ export default {
             .post('/api/logout',{user_id: this.$store.state.logged_in_user_id})
             .then(() => {
                 this.$store.commit('logout');
-                this.$router.replace('Login');
+                this.$router.replace({name:'Login'});
 
                 Swal.fire({
                 title: "成功登出",
