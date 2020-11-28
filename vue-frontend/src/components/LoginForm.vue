@@ -69,7 +69,7 @@ export default {
       {
         this.logging_in = false;
         let data = res.data
-        this.$store.commit('login',data.user_info.user_id)
+        this.$store.commit('login',data.user_info)
         //this.$router.push({name:'Mainpage'});
         // 如果privilege是1代表管理员
         if(data.user_info.privilege===1) {
