@@ -10,7 +10,7 @@ class Feedback(DynamicDocument):
     feedback=ListField()
     court=ObjectIdField()
     feedback_id=IntField()
-
+    img=StringField()
 class Notification(DynamicDocument):
     time=DateTimeField()
     content=StringField()

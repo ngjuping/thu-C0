@@ -55,7 +55,7 @@ def get_courts_info(request):
       return JsonResponse({"error":"venue id required"}, status=400)
 
    courts = [Court.objects(_id=i)[0] for i in courts_id]
-   print(courts)
+   #print(courts)
    court_json = [{"id": i.court_id, "type": i.enum_id,
                "status":[j for j in i.Status]
                } for i in courts]

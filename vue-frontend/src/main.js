@@ -3,11 +3,8 @@ import App from './App.vue';
 import store from './store';
 import router from './router';
 import axios from 'axios';
-<<<<<<< HEAD
-import { makeServer } from "./server";
-=======
 //import { makeServer } from "./server";
->>>>>>> 3b88c374a7e3d91ea0709ac264af5bd2a7aaa013
+
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
