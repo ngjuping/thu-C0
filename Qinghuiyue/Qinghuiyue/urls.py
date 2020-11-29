@@ -22,7 +22,7 @@ from Qinghuiyue import venus
 import Qinghuiyue.venus.views
 from Qinghuiyue import adminapi
 import Qinghuiyue.adminapi.views
-
+import Qinghuiyue.share.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,5 +36,9 @@ urlpatterns = [
     path('api/manage/courts',views.get_reservations),
     path('api/book',views.book_first_come),
     path('api/adminapi/modify/court', Qinghuiyue.adminapi.views.modify_court),
-    path('api/adminapi/modify/venue', Qinghuiyue.adminapi.views.modify_venue)
+    path('api/adminapi/modify/venue', Qinghuiyue.adminapi.views.modify_venue),
+    path('api/manage/share',Qinghuiyue.share.views.get_share_notifications),
+    path('api/manage/share/create',Qinghuiyue.share.views.create_share),
+    path('api/manage/share/update',Qinghuiyue.share.views.update_share),
+    path('api/manage/share/delete',Qinghuiyue.share.views.delete_share)
 ]

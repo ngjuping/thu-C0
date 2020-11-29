@@ -8,7 +8,7 @@ from Qinghuiyue.venus.models import Court
 import json
 import datetime
 from Qinghuiyue.utils.time import str2datetime
-
+import dateutil.parser
 
 def get_notices(request):
     '''
@@ -38,7 +38,7 @@ def get_reservations(request):
     '''
     print(request.session.get('user_id'))
     user_id = str(request.GET['user_id'])
-    user = User.objects(api_id=user_id)[0]
+    user = User.objects(user_id=user_id)[0]
     rent_now_id = user.rent_now
     rent_now = Reservation.objects(id__in=rent_now_id)
     courts = [{
@@ -76,9 +76,10 @@ def book_first_come(request):
     for status in court_status:
         #print(status['start'], status['end'])
         if status['start'] == book_info['start'] \
-                and status['end'] == book_info['end'] and status['code'] == 2:
-            if status["user_id"] == -1:  # 此时用户就是第一个到的，时间段和场地状态都符合要求，直接预定成功
+                and status['end'] == book_info['end']:
+            if status['code'] == 1:  # 场地状态1，先到先得还能订此时用户就是第一个到的，时间段和场地状态都符合要求，直接预定成功
                 status["user_id"] = user.user_id
+                status["code"]=2#2是已经定了
                 stat = Stat.objects(name="size_of_collection")[0]
                 reservation = Reservation(type=court.enum_id, details={
                     "court": court.id,

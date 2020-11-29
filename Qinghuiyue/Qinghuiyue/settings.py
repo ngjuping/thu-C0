@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'Qinghuiyue.users',
     'corsheaders',
     'Qinghuiyue.utils',
+
 ]
 
 MONGODB_DATABASES={

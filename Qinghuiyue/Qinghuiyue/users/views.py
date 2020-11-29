@@ -15,9 +15,7 @@ def signup(request):
     params = json.loads(request.body)
     stat=Stat.objects(name="size_of_collection")[0]
 
-    user = User.create(password=params['pwd'],user_id=stat.data['user']+1,name=params['name'],api_id=params['user_id'])
-    stat.data['user']+=1
-    stat.save()
+    user = User.create(password=params['pwd'],user_id=Stat.add_object("user"),name=params['name'],api_id=params['api_id'])
     return JsonResponse({"message":"ok","user_id":user.user_id})
 
 
@@ -27,11 +25,11 @@ def login(request):
     params = json.loads(request.body)
 
     #print(params)
-    user = User.objects(api_id=params['user_id']).first()
+    user = User.objects(api_id=params['api_id']).first()
 
     if user and user.authenticate(params['pwd']):
-        request.session['user_id']=user.api_id
-        return JsonResponse({"message":"ok","user_info":{'user_id': user.api_id,'name':user.name}})
+        request.session['user_id']=user.user_id
+        return JsonResponse({"message":"ok","user_info":{'user_id': user.user_id,'name':user.name}})
     else:
         return JsonResponse({"message": "用户名或密码错误！"},status=400)
 
