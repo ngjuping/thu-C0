@@ -8,8 +8,8 @@
       <form class="card-body h-50 pb-5">
           <div class="form-group text-left">
             <label>账号</label>
-            <input class="form-control" :disabled="logging_in" v-model="user_id">
-            <small class="form-text text-muted text-center">欢迎回来 {{user_id}}</small>
+            <input class="form-control" :disabled="logging_in" v-model="api_id">
+            <small class="form-text text-muted text-center">欢迎回来 {{api_id}}</small>
           </div>
 
           <div class="form-group text-left">
@@ -48,7 +48,7 @@ export default {
   data()
   {
     return {
-      user_id: "admin",
+      api_id: "admin",
       pwd: "123456",
       logging_in: false
     }
@@ -61,7 +61,7 @@ export default {
       this.logging_in = true;
       this.$axios
       .post('/api/login',{
-          user_id: this.user_id,
+          api_id: this.api_id,
           pwd: this.pwd
         }
       )

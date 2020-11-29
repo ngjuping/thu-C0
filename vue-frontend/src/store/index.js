@@ -12,7 +12,7 @@ const vuexLocal = new VuexPersistence({
 export default new Vuex.Store({
   state: {
     logged_in:false, // use this variable to check log in status
-    logged_in_user_id:"no-id",
+    logged_in_user_id:-1,
     logged_in_user_name:"no-name",
     privilege:-1 // use this variable to check user type
   },
@@ -25,7 +25,7 @@ export default new Vuex.Store({
     },
     logout(state){
       state.logged_in = false;
-      state.logged_in_user_id = "no-id";
+      state.logged_in_user_id = -1;
       state.logged_in_user_name = "no-name";
       state.privilege = -1;
     }

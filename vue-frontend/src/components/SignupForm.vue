@@ -18,7 +18,7 @@
 
           <div class="form-group">
             <label >账号名称/ID</label>
-            <input class="form-control" :disabled="signing_up" v-model="user_id">
+            <input class="form-control" :disabled="signing_up" v-model="api_id">
           </div>
 
           <div class="form-group">
@@ -44,7 +44,7 @@ export default {
   data()
   {
     return {
-      user_id: "admin",
+      api_id: "admin",
       pwd: "123456",
       realname: "",
       signing_up: false,
@@ -55,7 +55,7 @@ export default {
     tryLogin(){
         this.$axios
         .post('/api/login',{
-            user_id: this.user_id,
+            api_id: this.api_id,
             pwd: this.pwd
           }
         )
@@ -88,14 +88,14 @@ export default {
         
       this.errors = [];
 
-        if (this.user_id && this.pwd && this.realname) {
+        if (this.api_id && this.pwd && this.realname) {
         return true;
       }
 
       if (!this.realname) {
         this.errors.push('请输入您的真实姓名.');
       }
-      if (!this.user_id) {
+      if (!this.api_id) {
         this.errors.push('账号名称不能为空.');
       }
       if (!this.pwd) {
@@ -114,7 +114,7 @@ export default {
       this.signing_up = true;
       this.$axios
       .post('/api/signup',{
-          user_id: this.user_id,
+          api_id: this.api_id,
           pwd: this.pwd,
           name: this.realname,
         }

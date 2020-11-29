@@ -14,8 +14,8 @@ let server = new Server({
     
   seeds(server) {
       //create 2 default user
-      server.create("user", { user_id:'ordinary',pwd:'111111',name:"ordinary",status:0,privilege:0});//普通用户
-      server.create("user", { user_id:'admin',pwd:'123456',name:"Admin",status:0,privilege:1});//管理员
+      server.create("user", { api_id:'ordinary',pwd:'111111',name:"ordinary",status:0,privilege:0});//普通用户
+      server.create("user", { api_id:'admin',pwd:'123456',name:"Admin",status:0,privilege:1});//管理员
 
       //create 4 notices
       server.create("notice", { title:"正式启动",content:"马上体验" });
@@ -64,7 +64,7 @@ let server = new Server({
     this.post("/login", (schema,request) => {
         let attrs = JSON.parse(request.requestBody);
 
-        let selected_user = schema.users.findBy({user_id:attrs.user_id});
+        let selected_user = schema.users.findBy({api_id:attrs.api_id});
 
 
         try{
@@ -72,7 +72,7 @@ let server = new Server({
 
             selected_user.update({ status: 1 });
             
-            return {message:"ok", user_info:{ user_id:attrs.user_id,name:selected_user.name,privilege:selected_user.privilege }};
+            return {message:"ok", user_info:{ user_id:parseInt(selected_user.id),name:selected_user.name,privilege:selected_user.privilege }};
           }
           else{
             return new Response(400, {}, {message:"User doesn't exist"});
@@ -88,12 +88,8 @@ let server = new Server({
     this.post("/logout", (schema,request) => {
 
         let attrs = JSON.parse(request.requestBody);
-
-        console.log(attrs);
         
-        let selected_user = schema.users.findBy({user_id:attrs.user_id});
-
-        console.log(selected_user);
+        let selected_user = schema.users.findBy({id:attrs.user_id});
 
         selected_user.update({ status: 0 });
 
@@ -103,7 +99,7 @@ let server = new Server({
 
     this.post("/signup", (schema,request) => {
         let attrs = JSON.parse(request.requestBody);
-        let existed_user = schema.users.findBy({user_id:attrs.user_id});
+        let existed_user = schema.users.findBy({api_id:attrs.api_id});
 
         if(existed_user)
         {
@@ -111,13 +107,13 @@ let server = new Server({
         }
         else
         {
-          schema.users.create({
-            user_id:attrs.user_id,
+          let new_user = schema.users.create({
+            api_id:attrs.api_id,
             pwd:attrs.pwd,
             name:attrs.name
           });
     
-          return {message:"ok",user_id:attrs.id};
+          return {message:"ok",user_id:parseInt(new_user.id)};
         }
     });
 
