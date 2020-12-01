@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
+from django.conf import settings
+from django.conf.urls.static import static
 from Qinghuiyue import views
 import Qinghuiyue.users.views
 from Qinghuiyue import venus
@@ -23,7 +24,7 @@ import Qinghuiyue.venus.views
 from Qinghuiyue import adminapi
 import Qinghuiyue.adminapi.views
 import Qinghuiyue.share.views
-
+import Qinghuiyue.feedback.views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/main/notices',views.get_notices),
@@ -40,5 +41,8 @@ urlpatterns = [
     path('api/manage/share',Qinghuiyue.share.views.get_share_notifications),
     path('api/manage/share/create',Qinghuiyue.share.views.create_share),
     path('api/manage/share/update',Qinghuiyue.share.views.update_share),
-    path('api/manage/share/delete',Qinghuiyue.share.views.delete_share)
-]
+    path('api/manage/share/delete',Qinghuiyue.share.views.delete_share),
+    path('api/manage/feedback/create',Qinghuiyue.feedback.views.create_feedback),
+    path('api/manage/feedback',Qinghuiyue.feedback.views.get_all_feedback),
+    path('api/manage/feedback/update',Qinghuiyue.feedback.views.update_feedback)
+]+static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)

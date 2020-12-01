@@ -80,7 +80,7 @@ export default {
             return this.selectedCourt.start;
         },
         getBookEndTime(){
-            return this.selectedCourt.start;
+            return this.selectedCourt.end;
         },
         submitBooking(){
             if(!this.$store.state.logged_in)

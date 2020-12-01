@@ -36,11 +36,13 @@ def get_reservations(request):
     :param request:
     :return:
     '''
-    print(request.session.get('user_id'))
-    user_id = str(request.GET['user_id'])
+    #print(request.session.get('user_id'))
+    user_id = request.GET['user_id']
     user = User.objects(user_id=user_id)[0]
     rent_now_id = user.rent_now
     rent_now = Reservation.objects(id__in=rent_now_id)
+    #print(len(rent_now))
+    #print(rent_now[0].details['court'])
     courts = [{
         "reservation_id": rent.reservation_id,
         "type": rent.type,
@@ -64,15 +66,17 @@ def book_first_come(request):
     :return:
     '''
     book_info = json.loads(request.body)
-
+    print(book_info)
     court = Court.objects(court_id=book_info['court_id']).first()
     #print(court.name)
     court_status = court.Status
     #print(court_status)
     book_info['start'] = str2datetime(book_info['start'])
+
     book_info['end'] = str2datetime(book_info['end'])
     #print(book_info)
-    user = User.objects(api_id=book_info['user_id']).first()
+    print(request.session.get("user_id"))
+    user = User.objects(user_id=request.session.get("user_id")).first()
     for status in court_status:
         #print(status['start'], status['end'])
         if status['start'] == book_info['start'] \
@@ -87,12 +91,13 @@ def book_first_come(request):
                     "start": book_info["start"],
                     "end": book_info["end"]
                 }, reservation_id=stat.data['reservation'] + 1, status=1)
+                reservation.save()#应该先保存，不然会导致读取不出id
                 stat.data['reservation'] += 1
                 user.rent_now.append(reservation.id)
 
                 court.save()
                 user.save()
                 stat.save()
-                reservation.save()
+
                 return JsonResponse({"message": "ok"})
     return JsonResponse({"message": "error"}, status=400)

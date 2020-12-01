@@ -55,7 +55,7 @@ export default {
     tryLogin(){
         this.$axios
         .post('/api/login',{
-            user_id: this.user_id,
+            api_id: this.user_id,
             pwd: this.pwd
           }
         )
