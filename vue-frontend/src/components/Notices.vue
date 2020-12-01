@@ -1,7 +1,17 @@
 <template>
     <!-- notices -->
         <div class="rounded p-2 p-sm-3 p-lg-5 text-left shadow bg-light">
-            <h1 id="notice">最新通知</h1>
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <h1 id="notice">最新通知</h1>
+                    </div>
+                    <div class="col text-right pr-0">
+                        <span class="btn btn-dark align-middle" @click="$router.push({name:'AllNotices'})">显示所有通告</span>
+                    </div>
+                </div>
+            </div>
+            
             <hr>
             <div v-for="notice in notices" :key="notice.id" class="list-group-item shadow text-left mb-1">
                 <div class="w-75 d-inline-block ">

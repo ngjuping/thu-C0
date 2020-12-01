@@ -185,6 +185,59 @@ let server = new Server({
         ]
         };
     });
+    let all_notices = [{
+      title: "title 1",
+      content: "content 1"
+    },
+    {
+      title: "title 2",
+      content: "content 2"
+    },
+    {
+      title: "title 3",
+      content: "content 3"
+    },
+    {
+      title: "title 4",
+      content: "content 4"
+    },
+    {
+      title: "title 5",
+      content: "content 5"
+    },
+    {
+      title: "title 6",
+      content: "content 6"
+    },
+    {
+      title: "title 7",
+      content: "content 7"
+    },
+    {
+      title: "title 8",
+      content: "content 8"
+    },
+    {
+      title: "title 9",
+      content: "content 9"
+    },
+    {
+      title: "title 10",
+      content: "content 10"
+    }];
+
+    this.get('/notices',(schema,request)=>{
+      let requested_page = request.queryParams.page;
+      if(requested_page < 1 || (requested_page-1)*5 > all_notices.length){
+        return new Response(422, {}, { message: "页面不存在" });
+      }
+      
+      return {
+        message:"ok",
+        total:all_notices.length,
+        notices: all_notices.slice((requested_page-1)*5,(requested_page)*5)
+      }
+    })
 
     
   }
