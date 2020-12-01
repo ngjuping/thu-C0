@@ -9,9 +9,89 @@ from pytz import tzinfo
 from pytz import utc
 from Qinghuiyue import settings
 
+def create_venue(request):
+    try:
+        venue_id = 3
+    except:
+        return JsonResponse({"error": "error on server, cannot get venue id"}, status=500)
+    try:
+        name = request.POST.get('name')
+        assert type(name) == str
+    except:
+        return JsonResponse({"error": "require venue name"}, status=401)
+    try:
+        description = request.POST.get('description')
+        assert type(name) == str
+    except:
+        return JsonResponse({"error": "require venue description"}, status=401)
+    try:
+        #img = request.FILES.get('img')
+        #if img.size < 128 or img.size > 2048 ** 2:
+        #    return JsonResponse({"error": "image size invalid"}, status=401)
+        img_name = 'test01.jpg'
+    except: ## 如果没有，启用默认图片
+        return JsonResponse({"error": "image fornat illegal"}, status=401)
 
+    Venue(name=name,
+        intro=description,
+        courts=[],
+        image=img_name,
+        venue_id=venue_id,
+        notices=[]).save()
 
-def modify_court(request):
+    return JsonResponse({
+        "message": "ok",
+        "venue_id": venue_id
+    })
+
+def create_court(request):
+    params = json.loads(request.body)
+    try:
+        venue_id = params['venue_id']
+        this_venue = Venue.objects(venue_id=int(venue_id)).first()  # the venue found with id in database
+        courts_ls = this_venue.courts
+    except:
+        return JsonResponse({"message": "venue id error"}, status=401)
+    try:
+        name = params['name']
+    except:
+        return JsonResponse({"message": "requires court name"}, status=401)
+    try:
+        type = params['type']
+        # assert type(type) == int
+        assert 0 <= type <= 5     # 需要改
+    except:
+        return JsonResponse({"message": "venue sport type error"}, status=401)
+    try:
+        param_status = params['status'] # from parameters
+        all_status = []
+        for status in param_status:  # iterate status in each court in POST params
+            new_status = {
+                "start":parse(status['start']),
+                "end":parse(status['end']),
+                "code":status['code']
+            }
+            all_status.append(new_status)
+    except:
+        return JsonResponse({"message": "status error"}, status=401)
+
+    new_court = Court(name=name,
+          enum_id = type,
+          venue = this_venue.id,
+          rent_queue = [],
+          draw_list = [],
+          rent_for_long = [],
+          Status = all_status,
+          status = '开放',
+          notices=[]).save()
+
+    courts_ls.append(new_court.id)
+
+    Venue.objects(venue_id=venue_id).update_one(set__courts=courts_ls)
+
+    return JsonResponse({"message": "ok"})
+
+def update_court(request):
 
     params = json.loads(request.body)
     courts = params['court'] # court_id
@@ -38,7 +118,7 @@ def modify_court(request):
         "message": "ok"
     })
 
-def modify_venue(request):
+def update_venue(request):
     try:
         venue_id = request.POST.get('venue_id')  # type(venue_id) is str
         this_venue = Venue.objects(venue_id=int(venue_id)).first()  # the court found with id in database
@@ -56,8 +136,7 @@ def modify_venue(request):
         pass
     try:
         img = request.FILES.get('img')
-        #print(type(img))
-        print(img.size)
+        #print(img.size)
         if img.size < 128 or img.size > 2048**2:
             return JsonResponse({"error": "image size invalid"}, status=401)
         Venue.objects(venue_id=venue_id).update_one(set__image=img.name)

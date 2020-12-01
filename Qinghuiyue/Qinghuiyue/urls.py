@@ -35,6 +35,8 @@ urlpatterns = [
     path('api/main/venues/list',Qinghuiyue.venus.views.get_venues_list),
     path('api/manage/courts',views.get_reservations),
     path('api/book',views.book_first_come),
-    path('api/adminapi/modify/court', Qinghuiyue.adminapi.views.modify_court),
-    path('api/adminapi/modify/venue', Qinghuiyue.adminapi.views.modify_venue)
+    path('api/admin/create/venue', Qinghuiyue.adminapi.views.create_venue),
+    path('api/admin/create/court', Qinghuiyue.adminapi.views.create_court),
+    path('api/admin/update/court', Qinghuiyue.adminapi.views.update_court),
+    path('api/admin/update/venue', Qinghuiyue.adminapi.views.update_venue)
 ]
