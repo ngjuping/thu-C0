@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
 from Qinghuiyue import views
@@ -29,20 +29,13 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/main/notices',views.get_notices),
     path('api/booking',Qinghuiyue.venus.views.get_courts_info),
-    path('api/signup', Qinghuiyue.users.views.signup),
-    path('api/login', Qinghuiyue.users.views.login),
-    path('api/logout', Qinghuiyue.users.views.logout),
+    path('api/',include('Qinghuiyue.users.urls')),
     path('api/main/venues',Qinghuiyue.venus.views.get_venues_info),
     path('api/main/venues/list',Qinghuiyue.venus.views.get_venues_list),
     path('api/manage/courts',views.get_reservations),
     path('api/book',views.book_first_come),
     path('api/adminapi/modify/court', Qinghuiyue.adminapi.views.modify_court),
     path('api/adminapi/modify/venue', Qinghuiyue.adminapi.views.modify_venue),
-    path('api/manage/share',Qinghuiyue.share.views.get_share_notifications),
-    path('api/manage/share/create',Qinghuiyue.share.views.create_share),
-    path('api/manage/share/update',Qinghuiyue.share.views.update_share),
-    path('api/manage/share/delete',Qinghuiyue.share.views.delete_share),
-    path('api/manage/feedback/create',Qinghuiyue.feedback.views.create_feedback),
-    path('api/manage/feedback',Qinghuiyue.feedback.views.get_all_feedback),
-    path('api/manage/feedback/update',Qinghuiyue.feedback.views.update_feedback)
+    path('api/manage/share',include('Qinghuiyue.share.urls')),
+    path('api/manage/feedback',include('Qinghuiyue.feedback.urls'))
 ]+static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)

@@ -1,5 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from Qinghuiyue.feedback.models import Feedback
+from Qinghuiyue.users.models import User
 from Qinghuiyue.venus.models import Court
 import json
 import datetime
@@ -67,3 +68,12 @@ def update_feedback(request):
         return JsonResponse({"message":"ok"})
     except Exception:
         return JsonResponse({"message": "服务器内部错误"}, status=500)
+
+def delete_feedback(request):
+    params=json.loads(request.body)
+    feedback=Feedback.objects(feedback_id=params['feedback_id']).first()
+    user=User.objects(user_id=feedback.user_id).first()
+    user.feedback.remove(feedback.id)
+    user.save()
+    feedback.delete()
+    return JsonResponse({"message":"ok"})
