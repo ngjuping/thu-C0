@@ -1,5 +1,5 @@
 import { Server, Model,Response  } from 'miragejs'
-
+import moment from 'moment'
 export function makeServer({ environment = "development" } = {}) {
 
 
@@ -190,42 +190,53 @@ let server = new Server({
         };
     });
     let all_notices = [{
-      title: "title 1",
-      content: "content 1"
+      id:1,
+      title: "title 1 超长标题等等等 测试标题对长标题的处理 无人爱苦，亦无人寻之欲之，乃因其苦...",
+      content: "Lorem Ipsum，也称乱数假文或者哑元文本， 是印刷及排版领域所常用的虚拟文字。由于曾经一台匿名的打印机刻意打乱了一盒印刷字体从而造出一本字体样品书，Lorem Ipsum从西元15世纪起就被作为此领域的标准文本使用。它不仅延续了五个世纪，还通过了电子排版的挑战，其雏形却依然保存至今。在1960年代，”Leatraset”公司发布了印刷着Lorem Ipsum段落的纸张，从而广泛普及了它的使用。最近，计算机桌面出版软件”Aldus PageMaker”也通过同样的方式使Lorem Ipsum落入大众的视野。",
+      time: moment().format()
     },
     {
+      id:2,
       title: "title 2",
       content: "content 2"
     },
     {
+      id:3,
       title: "title 3",
       content: "content 3"
     },
     {
+      id:4,
       title: "title 4",
       content: "content 4"
     },
     {
+      id:5,
       title: "title 5",
       content: "content 5"
     },
     {
+      id:6,
       title: "title 6",
       content: "content 6"
     },
     {
+      id:7,
       title: "title 7",
       content: "content 7"
     },
     {
+      id:8,
       title: "title 8",
       content: "content 8"
     },
     {
+      id:9,
       title: "title 9",
       content: "content 9"
     },
     {
+      id:10,
       title: "title 10",
       content: "content 10"
     }];

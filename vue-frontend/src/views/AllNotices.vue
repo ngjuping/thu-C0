@@ -10,11 +10,6 @@
                             </span>
                         </h1>
                     </div>
-                    <div class="col text-right pr-0">
-                        <span class="btn btn-danger" @click="$router.go(-1)">
-                            回到主页
-                        </span>
-                    </div>
                 </div>
             </div>
             
@@ -22,30 +17,23 @@
                 {{ err_msg }}
             </div>
             <ul class="pagination">
-                <li class="page-item"><a class="page-link" @click="back" v-if="current_page !== 1">前一页</a></li>
-                <li class="page-item"><a class="page-link">{{ current_page }}</a></li>
-                <li class="page-item"><a class="page-link" @click="updateNotices(current_page+1)" v-if="current_page<total/5">{{ current_page+1 }}</a></li>
-                <li class="page-item"><a class="page-link" @click="updateNotices(current_page+2)" v-if="current_page+1<total/5">{{ current_page+2 }}</a></li>
-                <li class="page-item"><a class="page-link" @click="next" v-if="current_page<total/5">下一页</a></li>
+                <li class="page-item" @click="$router.go(-1)"><a class="page-link bg-danger text-light">回到主页</a></li>
+                <li class="page-item" @click="back" v-if="current_page !== 1"><a class="page-link">前一页</a></li>
+                <li class="page-item" disabled><a class="page-link">{{ current_page }}</a></li>
+                <li class="page-item" @click="updateNotices(current_page+1)" v-if="current_page<total/5"><a class="page-link" >{{ current_page+1 }}</a></li>
+                <li class="page-item" @click="updateNotices(current_page+2)" v-if="current_page+1<total/5"><a class="page-link">{{ current_page+2 }}</a></li>
+                <li class="page-item" @click="next" v-if="current_page<total/5"><a class="page-link">下一页</a></li>
             </ul>
             <hr>
-            <div v-for="notice in all_notices" :key="notice.id" class="list-group-item shadow text-left mb-1">
-                <div class="w-75 d-inline-block ">
-                <h4><span class="bg-white title">{{ notice.title }}&nbsp;&nbsp;<span class="badge badge-pill badge-dark">New</span></span></h4>
-                <p class="lead content"><span class="bg-white">{{ notice.content }}</span></p>
-                </div>
-                <div class="d-inline-block w-25 h-100 display-4 text-right">
-                    <div class="d-inline-block w-100">
-                    <font-awesome-icon icon="arrow-circle-right" class="rightarrow"/>
-                    </div>
-                </div>
-            </div>
+            <Notice v-for="notice in all_notices" :key="notice.id" :notice="notice"></Notice>
             
         </div>
 </template>
 
 <script>
+import Notice from "@/components/Notice.vue"
 export default {
+    components:{Notice},
     props:['notices'],
     data(){
         return {

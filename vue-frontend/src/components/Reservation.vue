@@ -57,12 +57,16 @@ export default {
     },
     methods:{
         chineseTime(time){
-
-            let [year,month,day] = time.split("T")[0].split("-");
+            try{
+                let [year,month,day] = time.split("T")[0].split("-");
             
             let [hour,min] = time.split("T")[1].split("+")[0].split(":");
             
-            return `${year}年${month}月${day}日 ${hour}点 ${min}分`
+            return `${year}年${month}月${day}日 ${hour}点 ${min}分`;
+            }
+            catch(e){
+                return "没有时间";
+            }
         }
     },
 }

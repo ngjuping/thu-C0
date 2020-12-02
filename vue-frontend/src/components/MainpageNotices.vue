@@ -13,24 +13,16 @@
             </div>
             
             <hr>
-            <div v-for="notice in notices" :key="notice.id" class="list-group-item shadow text-left mb-1">
-                <div class="w-75 d-inline-block ">
-                <h4><span class="bg-white title">{{ notice.title }}&nbsp;&nbsp;<span class="badge badge-pill badge-dark">New</span></span></h4>
-                <p class="lead content"><span class="bg-white">{{ notice.content }}</span></p>
-                </div>
-                <div class="d-inline-block w-25 h-100 display-4 text-right">
-                    <div class="d-inline-block w-100">
-                    <font-awesome-icon icon="arrow-circle-right" class="rightarrow"/>
-                    </div>
-                </div>
-            </div>
+            <Notice v-for="notice in notices" :key="notice.id" :notice="notice"></Notice>
             
         </div>
 </template>
 
 <script>
+import Notice from '@/components/Notice.vue'
 export default {
     props:['notices'],
+    components:{Notice}
 }
 </script>
 

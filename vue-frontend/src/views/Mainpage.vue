@@ -3,7 +3,7 @@
         <div class="alert alert-danger" v-if="failedToGetNotices">
             无法获得通告
         </div>
-        <Notices :notices="notices"></Notices>
+        <MainpageNotices :notices="notices"></MainpageNotices>
         <br/>
         <br/>
         <div class="alert alert-danger" v-if="failedToGetVenues">
@@ -14,14 +14,13 @@
 </template>
 
 <script>
-//import moment from 'moment'
-import Notices from '@/components/Notices.vue'
+import MainpageNotices from '@/components/MainpageNotices.vue'
 import VenueDescribe from '@/components/VenueDescribe.vue'
 import Swal from 'sweetalert2'
 
 export default {
     components:{
-        Notices,
+        MainpageNotices,
         VenueDescribe
     },
     data(){
