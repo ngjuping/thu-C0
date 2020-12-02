@@ -255,11 +255,11 @@ let server = new Server({
     })
 
     this.post('/manage/share/create',()=>{
-      // return {
-      //   message:"ok",
-      //   share_id:1
-      //   }
-      return new Response(422, {}, { message: "系统繁忙" });
+      return {
+        message:"ok",
+        share_id:1
+        }
+      // return new Response(422, {}, { message: "系统繁忙" });
     })
 
     this.post('/manage/reservation/cancel',()=>{

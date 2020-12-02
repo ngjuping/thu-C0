@@ -81,7 +81,7 @@
         </div>
       </editor-menu-bar>
       <!--   Content Editor   -->
-      <editor-content class="p-3 pl-0 text-left border border-dark" :editor="editor"/>
+      <editor-content class="p-3 pl-0 text-left border border-dark" :editor="editor" autofocus/>
     </div>
 
     <!--  Custom buttons  -->
@@ -150,6 +150,7 @@ export default {
             showOnlyCurrent: true,
           }),
         ],
+        autoFocus:true,
         content: this.initialContent,
       }),
     }
