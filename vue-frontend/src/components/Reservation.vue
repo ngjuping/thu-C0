@@ -144,6 +144,7 @@ export default {
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
+                showLoaderOnConfirm: true,
                 cancelButtonText: '取消',
                 confirmButtonText: '确认',
                 preConfirm:()=> {
