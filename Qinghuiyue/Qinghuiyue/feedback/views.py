@@ -15,12 +15,13 @@ def create_feedback(request):
     img=request.FILES.get('img')
 
     ok,feedback_id=Feedback.create_feedback({"user_id":int(params['user_id']),"court_id":int(params['court_id']),
-                                             "stars":int(params['stars']),"content":params["content"],"img":img})
+                                             "stars":int(params['stars']),"content":params["content"],"img":img,
+                                             "reservation_id":int(params['reservation_id'])})
 
     if ok:
         return JsonResponse({"message":"ok","feedback_id":feedback_id})
     else:
-        return JsonResponse({"message":"创建反馈失败"},status=500)
+        return JsonResponse({"message":feedback_id},status=500)
 
 def get_all_feedback(request):
     '''
@@ -46,10 +47,41 @@ def get_all_feedback(request):
             "court_id":Court.objects(id=feedback.court)[0].court_id,
             "img":feedback.img,
             "reply":feedback.reply,
-            "solved":feedback.solved
+            "solved":feedback.solved,
+            "stars":feedback.stars
         }for feedback in feedbacks_page
     ]
-    return JsonResponse({"message":"ok","feedbacks":feedbacks})
+    return JsonResponse({"message":"ok","total":total,"feedbacks":feedbacks})
+def get_user_feedbacks(request):
+    '''
+    获取单个用户的反馈
+    :param request:
+    :return:
+    '''
+    page=int(request.GET['page'])
+    size=int(request.GET['size'])
+
+    user_id=int(request.GET['user_id'])
+    user=User.objects(user_id=user_id).first()
+    feedbacks_all=Feedback.objects(id__in=user.feedback).order_by("-time")
+    total = len(feedbacks_all)
+    if page * size > total:
+        feedbacks_page = feedbacks_all
+    else:
+        feedbacks_page = feedbacks_all[(page - 1) * size:page * size]
+    feedbacks=[
+        {
+            "feedback_id":feedback.feedback_id,
+            "content":feedback.content,
+            "publish_date":feedback.time,
+            "court_id":Court.objects(id=feedback.court)[0].court_id,
+            "img":feedback.img,
+            "reply":feedback.reply,
+            "solved":feedback.solved,
+            "stars":feedback.stars
+        }for feedback in feedbacks_page
+    ]
+    return JsonResponse({"message": "ok", "total": total, "feedbacks": feedbacks})
 
 def update_feedback(request):
     #图片还没处理

@@ -1,5 +1,5 @@
 from mongoengine import *
-from Qinghuiyue.models.models import Reservation
+from Qinghuiyue.reservation.models import Reservation
 from Qinghuiyue.models.models import Stat
 from Qinghuiyue.users.models import User
 import datetime

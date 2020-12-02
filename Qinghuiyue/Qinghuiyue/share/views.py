@@ -1,9 +1,8 @@
-from Qinghuiyue.venus.models import *
-from Qinghuiyue.users.models import User
 from Qinghuiyue.share.models import *
 from django.http import HttpResponse, JsonResponse
-from Qinghuiyue.models.models import Reservation
+from Qinghuiyue.reservation.models import Reservation
 import json
+
 
 def get_share_notifications(request):
     '''
@@ -11,26 +10,57 @@ def get_share_notifications(request):
     :param request: page:int size:int
     :return:
     '''
-    page=int(request.GET['page'])
-    size=int(request.GET['size'])
+    page = int(request.GET['page'])
+    size = int(request.GET['size'])
 
-    shares_all=Share_notification.objects().order_by("-time")
-    total=len(shares_all)
-    if page*size>total:
+    shares_all = Share_notification.objects().order_by("-time")
+    total = len(shares_all)
+    if page * size > total:
         shares_page = shares_all
     else:
-        shares_page = shares_all[(page-1)*size:page*size]
-    shares=[
+        shares_page = shares_all[(page - 1) * size:page * size]
+    shares = [
         {
-            "share_id":share.share_id,
-            "content":share.content,
-            "publish_time":share.time,
-            "reservation":Reservation.get_reservation_info(share.reservation),
-            "status":share.status
+            "share_id": share.share_id,
+            "content": share.content,
+            "publish_date": share.time,
+            "reservation": Reservation.get_reservation_info(share.reservation),
+            "status": share.status
         } for share in shares_page
     ]
 
-    return JsonResponse({"message":"ok","total":total,"shares":shares})
+    return JsonResponse({"message": "ok", "total": total, "shares": shares})
+
+
+def get_user_shares(request):
+    '''
+    获取单个用户所有拼场
+    :param request:
+    :return:
+    '''
+    page = int(request.GET['page'])
+    size = int(request.GET['size'])
+    user_id = int(request.GET['user_id'])
+    user = User.objects(user_id=user_id).first()
+    if not user:
+        return JsonResponse({"message": "找不到此用户"}, status=400)
+    shares_all = Share_notification.objects(id__in=user.invitation).order_by("-time")
+    total = len(shares_all)
+    if page * size > total:
+        shares_page = shares_all
+    else:
+        shares_page = shares_all[(page - 1) * size:page * size]
+    shares = [
+        {
+            "share_id": share.share_id,
+            "content": share.content,
+            "publish_date": share.time,
+            "reservation": Reservation.get_reservation_info(share.reservation),
+            "status": share.status
+        } for share in shares_page
+    ]
+    return JsonResponse({"message": "ok", "total": total, "shares": shares})
+
 
 def create_share(request):
     '''
@@ -39,11 +69,12 @@ def create_share(request):
     :return:
     '''
     params = json.loads(request.body)
-    ok,message=Share_notification.create(params)
+    ok, message = Share_notification.create(params)
     if ok:
         return JsonResponse(message)
     else:
-        return JsonResponse(message,status=400)
+        return JsonResponse(message, status=400)
+
 
 def update_share(request):
     '''
@@ -53,13 +84,14 @@ def update_share(request):
     '''
     try:
         params = json.loads(request.body)
-        share=Share_notification.objects(share_id=params['share_id']).first()
-        share.content=params['content']
-        share.time=datetime.datetime.now()
+        share = Share_notification.objects(share_id=params['share_id']).first()
+        share.content = params['content']
+        share.time = datetime.datetime.now()
         share.save()
-        return JsonResponse({"message":"ok"})
+        return JsonResponse({"message": "ok"})
     except Exception:
-        return JsonResponse({"message":"服务器内部错误"},status=500)
+        return JsonResponse({"message": "服务器内部错误"}, status=500)
+
 
 def delete_share(request):
     '''
@@ -69,8 +101,8 @@ def delete_share(request):
     '''
     params = json.loads(request.body)
     share = Share_notification.objects(share_id=params['share_id']).first()
-    user=User.objects(user_id=share.user_id).first()
+    user = User.objects(user_id=share.user_id).first()
     user.invitation.remove(share.id)
     user.save()
     share.delete()
-    return JsonResponse({"message":"ok"})
+    return JsonResponse({"message": "ok"})

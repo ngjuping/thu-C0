@@ -17,15 +17,17 @@ class Feedback(DynamicDocument):
     feedback_id = IntField()
     img = StringField()
     solved = BooleanField()
-
+    reservation_id=IntField()#对应的预定，一个预定只能反馈一次
     # 要不要根据打星进行一个自动回复
     @classmethod
     def create_feedback(cls, params):
         try:
-
+            feedback=cls.objects(reservation_id=params['reservation_id']).first()
+            if feedback:
+                return False,"已经反馈过啦！"
             feedback = cls.objects.create(user_id=params['user_id'], court=Court.objects(court_id=params['court_id'])[0].id,
                                           content=params['content'], stars=params['stars'], time=datetime.datetime.now(),
-                                          reply="等待管理员回复中", feedback_id=Stat.add_object("feedback"), solved=False)
+                                          reply="等待管理员回复中", feedback_id=Stat.add_object("feedback"), reservation_id=params['reservation_id'],solved=False)
             #img_name = settings.STATIC_URL + str(feedback.feedback_id) + params['img'].name
             img_name = "static/feedback/"+ str(feedback.feedback_id) + params['img'].name
             feedback.img = img_name
@@ -39,4 +41,4 @@ class Feedback(DynamicDocument):
             return True, feedback.feedback_id
         except Exception:
 
-            return False,-1
+            return False,"创建反馈失败！系统内部错误"
