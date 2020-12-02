@@ -1,14 +1,20 @@
 <template>
-    <div class="list-group-item text-left mb-1 notice" data-toggle="modal" :data-target="`#modal-${notice.id}`" data-backdrop="false">
-        <div class="w-75 d-inline-block ">
-        <h4><span class="title">{{ notice.title.slice(0,20) }}&nbsp;&nbsp;<span class="badge badge-pill badge-dark">New</span></span></h4>
-        <p class="lead content"><span class="text-secondary">{{ notice.content.slice(0,50) }}</span></p>
-        </div>
-        <div class="d-inline-block w-25 h-100 display-4 text-right">
-            <div class="d-inline-block w-100">
-            <font-awesome-icon icon="arrow-circle-right" class="rightarrow"/>
+    <div class="list-group-item text-left mb-1 notice rounded" data-toggle="modal" :data-target="`#modal-${notice.id}`" data-backdrop="false">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 col-md-10 pt-3">
+                    <h4><span class="title">{{ notice.title.slice(0,20) }}&nbsp;&nbsp;<span class="badge badge-pill badge-dark">New</span></span></h4>
+                    <p class="lead content"><span class="text-secondary">{{ notice.content.slice(0,50) }}</span></p>
+                </div>
+                <div class="col-12 col-md-2">
+                    <div class="d-inline-block w-100 h-100 d-flex align-items-center justify-content-end">
+                    <font-awesome-icon icon="arrow-circle-right" class="rightarrow w-50 h-50" style="max-width:50px;" />
+                    </div>
+                </div>
             </div>
         </div>
+        
+        
         <div class="modal fade" :id="`modal-${notice.id}`">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content shadow-lg">
@@ -51,5 +57,11 @@ export default {
 <style scoped>
 .notice:hover{
     background-color:lightgrey;
+}
+
+@media(max-width:600px){
+    .badge{
+        font-size:13px;
+    }
 }
 </style>
