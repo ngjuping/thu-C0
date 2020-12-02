@@ -12,6 +12,15 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/#/admin/bookingManage">场地管理</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#/admin/replyFeedback">回复反馈</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#/admin/noticeManager">通知管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#/admin/trainManager">培训课程管理</a>
+                    </li>
                 </ul>
             </div>
         </nav>
