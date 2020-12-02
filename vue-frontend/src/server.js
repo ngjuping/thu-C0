@@ -163,7 +163,7 @@ let server = new Server({
         message:"ok",
         courts:[
         {
-          id:1,
+          reservation_id:1,
           type:1,
           details:{
             name: "新林院羽球场01",
@@ -175,7 +175,7 @@ let server = new Server({
           status:1
         },
         {
-          id:2,
+          reservation_id:2,
           type:2,
           details:{
             name: "活动中心网球场03",
@@ -253,6 +253,21 @@ let server = new Server({
         notices: all_notices.slice((requested_page-1)*5,(requested_page)*5)
       }
     })
+
+    this.post('/manage/share/create',()=>{
+      // return {
+      //   message:"ok",
+      //   share_id:1
+      //   }
+      return new Response(422, {}, { message: "系统繁忙" });
+    })
+
+    this.post('/manage/reservation/cancel',()=>{
+
+      return new Response(422, {}, { message: "场地不存在" });
+    })
+
+    
 
     
   }

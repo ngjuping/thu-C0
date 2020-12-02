@@ -70,4 +70,19 @@ export default {
     opacity:1;
 }
 
+blockquote {
+    border-left: 3px solid rgba(0, 0, 0, .1);
+    color: rgba(0, 0, 0, .8);
+    padding-left: .8rem;
+    font-style: italic;
+}
+
+blockquote:first-child {
+    margin-top: 0;
+}
+
+blockquote:last-child {
+    margin-bottom: 0;
+}
+
 </style>
