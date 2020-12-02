@@ -16,7 +16,6 @@ class Notification(DynamicDocument):
     content=StringField()
     title=StringField()
     notice_id=IntField()
-
 class Queue_reservation(DynamicDocument):
     reservation_id=IntField()
     user_id=IntField()

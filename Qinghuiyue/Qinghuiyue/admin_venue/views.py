@@ -10,7 +10,6 @@ from pytz import utc
 from Qinghuiyue import settings
 
 def create_venue(request):
-
     venue_id = 1
     while True:
         if Venue.objects(venue_id=venue_id).first() != None:
