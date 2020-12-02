@@ -265,10 +265,123 @@ let server = new Server({
     this.post('/manage/reservation/cancel',()=>{
 
       return new Response(422, {}, { message: "场地不存在" });
+    });
+
+    let all_feedbacks = [
+      {
+        user_id:1,
+        feedback_id:1,
+        content:"场地不错",
+        publish_date: "2013-03-01T00:00:00+01:00",
+        court_id: 1,
+        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/220px-Image_created_with_a_mobile_phone.png",
+        reply: "非常感谢您",
+        solved: 1,
+        stars:5
+      },
+      {
+        user_id:2,
+        feedback_id:2,
+        content:"场地很好",
+        publish_date: "2013-03-01T00:00:00+01:00",
+        court_id: 1,
+        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/220px-Image_created_with_a_mobile_phone.png",
+        reply: "感谢.........",
+        solved: 0,
+        stars:4
+      },
+      {
+        user_id:1,
+        feedback_id:3,
+        content:"场地很好",
+        publish_date: "2013-03-01T00:00:00+01:00",
+        court_id: 2,
+        img: "https://cdn1.i-scmp.com/sites/default/files/styles/768x768/public/images/methode/2018/07/17/70a0b93a-8973-11e8-8608-b7163509a377_1280x720_161847.JPG?itok=CMLKUPWf",
+        solved: 0,
+        stars:1
+      },
+      {
+        user_id:1,
+        feedback_id:4,
+        content:"场地很好",
+        publish_date: "2013-03-01T00:00:00+01:00",
+        court_id: 2,
+        img: "https://news.cgtn.com/news/3049544e7751544f776b7a4e3249444f776b7a4e31457a6333566d54/img/dbc2bed8083940c4a70ca53dc7e784a2/dbc2bed8083940c4a70ca53dc7e784a2.jpg",
+        solved: 0,
+        stars:2
+      },
+      {
+        user_id:2,
+        feedback_id:5,
+        content:"场地不错",
+        publish_date: "2013-03-01T00:00:00+01:00",
+        court_id: 1,
+        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/220px-Image_created_with_a_mobile_phone.png",
+        reply: "非常感谢您",
+        solved: 1,
+        stars:1
+      },
+      {
+        user_id:1,
+        feedback_id:6,
+        content:"场地很好",
+        publish_date: "2013-03-01T00:00:00+01:00",
+        court_id: 1,
+        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/220px-Image_created_with_a_mobile_phone.png",
+        reply: "感谢.........",
+        solved: 0,
+        stars:4
+      },
+      {
+        user_id:1,
+        feedback_id:7,
+        content:"场地很好",
+        publish_date: "2013-03-01T00:00:00+01:00",
+        court_id: 2,
+        img: "https://cdn1.i-scmp.com/sites/default/files/styles/768x768/public/images/methode/2018/07/17/70a0b93a-8973-11e8-8608-b7163509a377_1280x720_161847.JPG?itok=CMLKUPWf",
+        solved: 0,
+        stars:1
+      },
+      {
+        user_id:1,
+        feedback_id:8,
+        content:"场地很好",
+        publish_date: "2013-03-01T00:00:00+01:00",
+        court_id: 2,
+        img: "https://news.cgtn.com/news/3049544e7751544f776b7a4e3249444f776b7a4e31457a6333566d54/img/dbc2bed8083940c4a70ca53dc7e784a2/dbc2bed8083940c4a70ca53dc7e784a2.jpg",
+        solved: 0,
+        stars:5
+      }
+      ];
+    this.get('manage/feedback',(schema,request)=>{
+      let requested_page = request.queryParams.page;
+      if(requested_page < 1 || (requested_page-1)*5 > all_feedbacks.length){
+        return new Response(422, {}, { message: "页面不存在" });
+      }
+      return {
+        message:"ok",
+        total:all_feedbacks.length,
+        feedbacks: all_feedbacks.slice((requested_page-1)*5,(requested_page)*5)
+      };
+      
+    });
+
+    this.get('manage/feedback/user',(schema,request)=>{
+      var requested_user_id = parseInt(request.queryParams.user_id);
+      var requested_page = parseInt(request.queryParams.page);
+      let final_feedbacks = [];
+      for(let i in all_feedbacks){
+        if(all_feedbacks[i].user_id === requested_user_id){
+          final_feedbacks.push(all_feedbacks[i]);
+        }
+      }
+        return {
+          message:"ok",
+          total:final_feedbacks.length,
+          feedbacks: final_feedbacks.slice((requested_page-1)*5,(requested_page)*5)
+        }
+      
     })
-
-    
-
     
   }
   

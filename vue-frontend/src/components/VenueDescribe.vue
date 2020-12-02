@@ -69,7 +69,7 @@
                             <h6 class="card-subtitle mb-2 text-muted"><font-awesome-icon icon="star" v-for="i in currentvenue.review.stars" :key="i"/></h6>
                             <p class="card-text">{{ currentvenue.review.content }}</p>
                             <p class="card-text" v-if="!loadingVenue">{{ now() }}</p>
-                            <button class="btn btn-primary">查看更多</button>
+                            <button class="btn btn-primary" @click="$router.push({name:'AllFeedbacks'})">查看更多</button>
                         </div>
                     </div>
                     <div class="alert alert-danger" v-else>
