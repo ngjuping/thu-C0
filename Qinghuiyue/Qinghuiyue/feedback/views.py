@@ -77,3 +77,17 @@ def delete_feedback(request):
     user.save()
     feedback.delete()
     return JsonResponse({"message":"ok"})
+
+def reply_feedback(request):
+    '''
+    管理员回复
+    :param request:
+    :return:
+    '''
+    params=json.loads(request.body)
+    feedback=Feedback.objects(feedback_id=params['feedback_id']).first()
+    feedback.reply=params['reply']
+    feedback.solved=params['solved']
+    feedback.save()
+
+    return JsonResponse({"message":"ok"})
