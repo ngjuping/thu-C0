@@ -10,10 +10,13 @@ from pytz import utc
 from Qinghuiyue import settings
 
 def create_venue(request):
-    try:
-        venue_id = 3
-    except:
-        return JsonResponse({"error": "error on server, cannot get venue id"}, status=500)
+
+    venue_id = 1
+    while True:
+        if Venue.objects(venue_id=venue_id).first() != None:
+            venue_id += 1
+        else:
+            break
     try:
         name = request.POST.get('name')
         assert type(name) == str
@@ -25,12 +28,22 @@ def create_venue(request):
     except:
         return JsonResponse({"error": "require venue description"}, status=401)
     try:
-        #img = request.FILES.get('img')
-        #if img.size < 128 or img.size > 2048 ** 2:
-        #    return JsonResponse({"error": "image size invalid"}, status=401)
-        img_name = 'test01.jpg'
-    except: ## 如果没有，启用默认图片
-        return JsonResponse({"error": "image fornat illegal"}, status=401)
+        img = request.FILES.get('img')
+        assert img.name.endswith(('.bmp', '.dib', '.png', '.jpg', '.jpeg', '.pbm', '.pgm', '.ppm', '.tif', '.tiff'))
+        if img.size < 128 or img.size > 2048 ** 2:
+            return JsonResponse({"error": "image size invalid"}, status=401)
+        Venue.objects(venue_id=venue_id).update_one(set__image=img.name)
+        try:
+            img_format = img.name.split('.')[1]
+            img_name = 'venue_' + str(venue_id) + '_img.' + img_format
+            with open(settings.STATIC_URL + img_name, 'wb+') as destination:
+                for chunk in img.chunks():
+                    destination.write(chunk)
+        except:
+            return JsonResponse({"error": "save image failed"}, status=500)
+
+    except:
+        return JsonResponse({"error": "image format illegal"}, status=401)
 
     Venue(name=name,
         intro=description,
@@ -45,7 +58,14 @@ def create_venue(request):
     })
 
 def create_court(request):
+
     params = json.loads(request.body)
+    court_id = 1
+    while True:
+        if Court.objects(court_id=court_id).first() != None:
+            court_id += 1
+        else:
+            break
     try:
         venue_id = params['venue_id']
         this_venue = Venue.objects(venue_id=int(venue_id)).first()  # the venue found with id in database
@@ -83,7 +103,8 @@ def create_court(request):
           rent_for_long = [],
           Status = all_status,
           status = '开放',
-          notices=[]).save()
+          court_id = court_id
+          ).save()
 
     courts_ls.append(new_court.id)
 
