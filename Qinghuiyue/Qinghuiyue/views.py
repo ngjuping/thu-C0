@@ -113,15 +113,23 @@ def transfer_reservation(request):
     reservation=Reservation.objects(reservation_id=params['reservation_id']).first()
     if not reservation:
         return JsonResponse({"message":"找不到订单"},status=400)
+    if reservation.status not in [1,2]:
+        return JsonResponse({"message":"该订单不可转让"},status=400)
     user_now=User.objects(user_id=reservation.details['user_id']).first()
     if user_now.user_id != request.session.get('user_id'):
         return JsonResponse({"message":"你没有转移权限！"},status=400)
     user_new=User.objects(user_id=params['new_user_id']).first()
     if not user_new:
         return JsonResponse({"message":"找不到目标用户"},status=400)
-    user_now.rent_now.remove(reservation.id)
-    user_new.rent_now.append(reservation.id)
-    reservation.details['user_id']=user_new.user_id
+    new_reservation=Reservation.objects.create(type=reservation.type, details=reservation.details,
+                                reservation_id=Stat.add_object("reservation"), status=reservation.status)
+
+
+
+    new_reservation.details['user_id']=user_new.user_id
+    new_reservation.save()
+    user_new.rent_now.append(new_reservation.id)
+    reservation.status=4
     user_new.save()
     user_now.save()
     reservation.save()
@@ -141,4 +149,23 @@ def cancel_reservation(request):
     :param request:
     :return:
     '''
-    pass
+    params = json.loads(request.body)
+    reservation = Reservation.objects(reservation_id=params['reservation_id']).first()
+    if not reservation:
+        return JsonResponse({"message": "找不到订单"}, status=400)
+    user = User.objects(user_id=reservation.details['user_id']).first()
+    if user.user_id != request.session.get('user_id'):
+        return JsonResponse({"message": "你没有取消权限！"}, status=400)
+
+    reservation.status=3
+    reservation.save()
+    court = Court.objects(id=reservation.details['court']).first()
+    for status in court.Status:
+        if status['start'] == reservation.details['start'] and \
+                status['end'] == reservation.details['end']:
+            status['user_id'] = -1
+            status['code']=1
+            break
+    court.save()
+
+    return JsonResponse({"message":"ok"})

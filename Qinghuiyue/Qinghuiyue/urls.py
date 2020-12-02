@@ -40,5 +40,6 @@ urlpatterns = [
                   path('api/manage/share', include('Qinghuiyue.share.urls')),
                   path('api/manage/feedback', include('Qinghuiyue.feedback.urls')),
                   path('api/admin/reply/feedback',Qinghuiyue.feedback.views.reply_feedback),
-                  path('api/manage/reservation/transfer',Qinghuiyue.views.transfer_reservation)
+                  path('api/manage/reservation/transfer',Qinghuiyue.views.transfer_reservation),
+                  path('api/manage/reservation/cancel',Qinghuiyue.views.cancel_reservation)
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
