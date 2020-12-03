@@ -16,7 +16,7 @@
                 {{ err_msg }}
             </div>
             <ul class="pagination">
-                <li class="page-item" @click="$router.go(-1)"><a class="page-link bg-danger text-light">回到主页</a></li>
+                <li class="page-item" @click="$router.go(-1)"><a class="page-link bg-danger text-light">回到前一页</a></li>
                 <li class="page-item" @click="back" v-if="current_page !== 1"><a class="page-link">前一页</a></li>
                 <li class="page-item" disabled><a class="page-link">{{ current_page }}</a></li>
                 <li class="page-item" @click="updateFeedbacks(current_page+1)" v-if="current_page<total/5"><a class="page-link" >{{ current_page+1 }}</a></li>

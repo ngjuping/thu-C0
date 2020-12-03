@@ -53,17 +53,20 @@
                     <Notice v-for="notice in currentvenue.notices" :notice="notice" :key="notice.id" class="list-group-item text-left mb-1"></Notice>
                 </div>
                 <div class="col-12 col-md-4  pl-0">
-                    <div class="card" v-if="hasReview">
+                    
+                    <div class="card  h-75" v-if="hasReview" >
                         <div class="card-body">
                             <h5 class="card-title">最新反馈</h5>
                             <h6 class="card-subtitle mb-2 text-muted"><font-awesome-icon icon="star" v-for="i in currentvenue.review.stars" :key="i"/></h6>
                             <p class="card-text">{{ currentvenue.review.content }}</p>
                             <p class="card-text" v-if="!loadingVenue">{{ now() }}</p>
-                            <button class="btn btn-primary" @click="$router.push({name:'AllFeedbacks'})">查看更多</button>
                         </div>
                     </div>
                     <div class="alert alert-danger" v-else>
                         没有找到回馈
+                    </div>
+                    <div class="w-100 text-right h-25 d-flex align-item-end justify-content-end py-2">
+                        <button class="btn btn-warning" @click="$router.push({name:'AllFeedbacks'})">查看所有反馈</button>
                     </div>
                 </div>
             </div>
