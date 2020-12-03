@@ -463,6 +463,10 @@ let server = new Server({
       
     })
     
+    this.post('/manage/feedback/create',(schema,request)=>{
+      
+      return {message:request,feedback_id:1};
+    });
   }
   
 })

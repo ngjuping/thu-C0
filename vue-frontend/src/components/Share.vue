@@ -1,10 +1,17 @@
 <template>
-    <div class="list-group-item text-left mb-1 share rounded" data-toggle="modal" :data-target="`#modal-${share.share_id}`" data-backdrop="false">
+    <div class="list-group-item text-left mb-1 share rounded"  data-backdrop="false" >
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12 pt-3">
-                    <h4><span class="title">{{ share.content.slice(0,20) }}&nbsp;&nbsp;<span class="badge badge-pill badge-dark">New</span></span></h4>
-                    <p class="lead content"><span class="text-secondary">场地：{{ share.reservation.details.name }}</span></p>
+                    <div class="row">
+                        <div class="col"  data-toggle="modal" :data-target="`#modal-${share.share_id}`">
+                            <h4><span class="title">{{ share.content.slice(0,20) }}&nbsp;&nbsp;<span class="badge badge-pill badge-dark">New</span></span></h4>
+                            <p class="lead content"><span class="text-secondary">场地：{{ share.reservation.details.name }}</span></p>
+                        </div>
+                        <div class="col-1 text-right" v-if="$store.state.logged_in_user_id === share.user_id">
+                            <div class="btn btn-info">修改帖子</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -20,7 +27,10 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        {{ share.content }}
+                        <small>他很有诚意的说：</small>
+                        <div class="jumbotron">
+                            {{ share.content }}
+                        </div>
                         <div class="text-left card mb-4">
                             <div class="card-header">
                                 邀请人订单

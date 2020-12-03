@@ -85,4 +85,8 @@ blockquote:last-child {
     margin-bottom: 0;
 }
 
+.modal-backdrop {
+   background: none !important;
+}
+
 </style>
