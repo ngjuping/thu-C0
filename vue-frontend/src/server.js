@@ -382,6 +382,86 @@ let server = new Server({
         }
       
     })
+
+    let all_shares = [
+      {
+        user_id:1,
+        share_id:1,
+        content: "来和我一起打球",
+        publish_date: "2020-12-01T8:00:00+01:00",
+        reservation:{
+        reservation_id:1,
+        type:1,
+        details:{
+        name: "羽球场01",
+        start: "2020-12-02T12:00:00+01:00",
+        end:"2020-12-02T13:00:00+01:00"
+        },
+        status:1
+        }
+      },
+      {
+        user_id:1,
+        share_id:2,
+        content: "^_^来和我一起打球",
+        publish_date: "2019-10-11T8:00:00+01:00",
+        reservation:{
+        reservation_id:2,
+        type:1,
+        details:{
+        name: "羽球场02",
+        start: "2020-12-02T12:00:00+01:00",
+        end:"2020-12-02T13:00:00+01:00"
+        },
+        status:2
+        }
+      },
+      {
+        user_id:2,
+        share_id:3,
+        content: "来和我一起打球",
+        publish_date: "2018-08-21T8:00:00+01:00",
+        reservation:{
+        reservation_id:1,
+        type:1,
+        details:{
+        name: "网球场01",
+        start: "2020-12-02T12:00:00+01:00",
+        end:"2020-12-02T13:00:00+01:00"
+        },
+        status:2
+        }
+      }
+    ]
+    this.get('manage/share',(schema,request)=>{
+      let requested_page = request.queryParams.page;
+      if(requested_page < 1 || (requested_page-1)*5 > all_shares.length){
+        return new Response(422, {}, { message: "页面不存在" });
+      }
+      return {
+        message:"ok",
+        total:all_shares.length,
+        shares: all_shares.slice((requested_page-1)*5,(requested_page)*5)
+      };
+      
+    });
+
+    this.get('manage/share/user',(schema,request)=>{
+      var requested_user_id = parseInt(request.queryParams.user_id);
+      var requested_page = parseInt(request.queryParams.page);
+      let final_shares = [];
+      for(let i in all_shares){
+        if(all_shares[i].user_id === requested_user_id){
+          final_shares.push(all_shares[i]);
+        }
+      }
+        return {
+          message:"ok",
+          total:final_shares.length,
+          shares: final_shares.slice((requested_page-1)*5,(requested_page)*5)
+        }
+      
+    })
     
   }
   
