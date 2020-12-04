@@ -1,19 +1,11 @@
 from mongoengine import *
-import bson
-import bcrypt
-from Qinghuiyue.venus.models import Court
-
-
-
 
 class Notification(DynamicDocument):
+
     time = DateTimeField()
     content = StringField()
     title = StringField()
     notice_id = IntField()
-
-
-
 
 
 class Course(DynamicDocument):
