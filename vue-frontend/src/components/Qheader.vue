@@ -9,7 +9,7 @@
                 <div class="btn btn-warning" @click="$router.push({name:'AllFeedbacks'})">反馈天地</div>
                 <button class="btn btn-danger" @click="logout">登出</button>
             </div>
-            <button class="btn btn-primary" v-else  @click="gotoLogin">登录</button>
+            <button class="btn btn-primary" v-if="!this.$store.state.logged_in"  @click="gotoLogin">登录</button>
             <br/>
             <!-- <small v-if="this.$store.state.logged_in">已上线：{{ now() }}</small> -->
         </div>
