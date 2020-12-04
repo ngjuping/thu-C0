@@ -114,7 +114,6 @@ export default {
             preConfirm: () => {
                 return this.$axios
                 .post('/api/book',{
-                    user_id: this.$store.state.logged_in_user,
                     court_id:this.info.id,
                     start:this.getBookStartTime(),
                     end:this.getBookEndTime(),
