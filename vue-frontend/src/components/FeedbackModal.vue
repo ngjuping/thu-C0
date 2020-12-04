@@ -83,15 +83,14 @@ export default {
 
             // 手动创造form请求参数
             let params = new FormData()
-            params.set('user_id', this.reservation.user_id)
-            console.log(params);
+            params.set('user_id', this.$store.state.logged_in_user_id)
             params.set('reservation_id', this.reservation.reservation_id)
             params.set('content', content)
             params.set('stars', this.stars)
             params.append('img', this.img_file)
 
-            //FormData私有类对象，访问不到，可以通过get判断值是否传进去
-            console.log(params.get('img'));
+            // FormData私有类对象，访问不到，可以通过get判断值是否传进去
+            // console.log(params.get('img'));
 
             this.$axios.request({
                 method: 'post',
