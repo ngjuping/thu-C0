@@ -124,7 +124,7 @@ export default {
       })
       this.$axios.request({
         method: 'post',
-        url: '/api/admin/modify/court',
+        url: '/api/admin/update/court',
         data: params
       }).then(() => {
         this.$emit('success-eidt')

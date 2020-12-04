@@ -75,8 +75,11 @@ export default {
       params.append('img', this.file)
       this.$axios.request({
         method: 'post',
-        url: '/api/admin/modify/venue',
-        data: params
+        url: '/api/admin/update/venue',
+        data: params,
+        headers: {
+          'Content-Type':'multipart/form-data'
+        }
       }).then(() => {
         this.$emit('edit-success')
       }).catch((error) => {

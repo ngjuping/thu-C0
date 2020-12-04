@@ -1,8 +1,6 @@
 <template>
   <div id="app" ref="app_top">
     <Qheader></Qheader>
-    <div id="nav">
-    </div>
     <router-view/>
     <Qfooter></Qfooter>
     <div id="gotoTop" class="shadow d-flex justify-content-center align-items-center" @click="scrollToTop()">
@@ -38,15 +36,6 @@ export default {
   background-size:100%;
   background-repeat:no-repeat;
   
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
 }
 
 #nav a.router-link-exact-active {

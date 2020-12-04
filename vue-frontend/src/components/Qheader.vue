@@ -3,7 +3,7 @@
         <img src="@/assets/logo.png" width="100" class="d-inline-block align-top" alt="" id="headerimg" @click="$router.push({name:'Mainpage'})">
         <div id="title">工会场地预定系统</div>
         <div>
-            <div class="btn-group" v-if="this.$store.state.logged_in">
+            <div class="btn-group" v-if="this.$store.state.logged_in && !this.$store.state.privilege">
                 <div class="btn btn-primary" @click="$router.push({name:'Manage'})">我的场地</div>
                 <div class="btn btn-success" @click="$router.push({name:'AllShares'})">拼场广场</div>
                 <div class="btn btn-warning" @click="$router.push({name:'AllFeedbacks'})">反馈天地</div>
