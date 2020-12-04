@@ -7,9 +7,10 @@
                 <div class="btn btn-primary" @click="$router.push({name:'Manage'})">我的场地</div>
                 <div class="btn btn-success" @click="$router.push({name:'AllShares'})">拼场广场</div>
                 <div class="btn btn-warning" @click="$router.push({name:'AllFeedbacks'})">反馈天地</div>
-                <button class="btn btn-danger" @click="logout">登出</button>
             </div>
+            
             <button class="btn btn-primary" v-if="!this.$store.state.logged_in"  @click="gotoLogin">登录</button>
+            <button class="btn btn-danger" v-else @click="logout">登出</button>
             <br/>
             <!-- <small v-if="this.$store.state.logged_in">已上线：{{ now() }}</small> -->
         </div>

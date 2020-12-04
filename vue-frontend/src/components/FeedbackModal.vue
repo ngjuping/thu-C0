@@ -46,7 +46,7 @@ import xss from 'xss';
 import WysiwygEditor from '@/components/WYSIWYG.vue';
 
 export default {
-    props:["reservation","feedbackModalInstance"],
+    props:["reservation"],
     components:{WysiwygEditor},
     data(){
         return {
@@ -56,11 +56,7 @@ export default {
             success:false,
             img_file:null,
             stars:5,
-            instance:null
         }
-    },
-    mounted(){
-        this.instance = this.feedbackModalInstance;
     },
     methods:{
         handleFileChange(e) {
@@ -90,7 +86,7 @@ export default {
             params.append('img', this.img_file)
 
             // FormData私有类对象，访问不到，可以通过get判断值是否传进去
-            // console.log(params.get('img'));
+            // console.log(params.get('reservation_id'));
 
             this.$axios.request({
                 method: 'post',

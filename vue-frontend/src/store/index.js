@@ -17,6 +17,7 @@ export default new Vuex.Store({
     privilege:-1, // use this variable to check user type
     reservationStatus:["成功预约未付款","已付款","已取消","已转让","未抽签","已抽签","队列中"],
     courtStatus:["无状态","空场地","已有人预定"],
+    reservationType:[null,'先到先得','抽签','长期预定','队列'],
     sportsType:["清除过滤","羽球","乒乓","网球","篮球"],
   },
   mutations: {

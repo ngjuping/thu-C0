@@ -16,11 +16,11 @@
                             <font-awesome-icon icon="exclamation-triangle" class="text-danger" v-if="court.status === 1"/>
                             <font-awesome-icon icon="check-circle" class="text-info" v-if="court.status === 2"/>
                             </label>
-                        <input type="text" class="form-control-plaintext" :placeholder="status_str[court.status]">
+                        <input type="text" class="form-control-plaintext" :placeholder="$store.state.reservationStatus[court.status]">
                         </div>
                         <div class="form-group">
                         <label><b>预定类型</b></label>
-                        <input type="text" class="form-control-plaintext" :placeholder="reservation_type_str[court.type]">
+                        <input type="text" class="form-control-plaintext" :placeholder="$store.state.reservationType[court.type]">
                         </div>
                     </fieldset>
                 </form>
@@ -32,53 +32,19 @@
 
                 <div class="btn-group">
                     <div class="btn btn-secondary" 
-                    v-if="court.details.end < today" data-toggle="modal" :data-target="`#feedback_modal`">反馈</div>
+                    v-if="court.details.end < today" data-toggle="modal" :data-target="`#feedback_modal-${this.court.reservation_id}`">反馈</div>
                     <div class="btn-group" v-else>
-                        <div class="btn btn-primary" data-toggle="modal" :data-target="`#share_modal`">拼场</div>
+                        <div class="btn btn-primary" data-toggle="modal" :data-target="`#share_modal-${this.court.reservation_id}`">拼场</div>
                         <div class="btn btn-danger" @click="confirmQuit">退场</div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="share_modal">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content shadow-lg">
-                    <div class="modal-header">
-                        <h4 class="modal-title">发出拼场邀请</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        
-                        <div class="alert alert-danger" v-if="failedToSubmit">
-                            无法提交... {{ share_err_msg }}
-                        </div>
-                        <div class="alert alert-success" v-if="success">
-                            提交成功
-                        </div>
-                        <div class="pt-1">
-                            <WysiwygEditor  ref="share-editor"
-                                            placeholder="邀请信息"
-                                            initial-content="" >
-
-                                
-                            </WysiwygEditor>
-                            <div class="mt-1 pb-2 mx-2 flex justify-end">
-                                
-                                <div class="spinner-border" v-if="submitting"><span class="sr-only"></span></div>
-                                <button class="btn btn-primary" v-else @click="shareCourtPost(sharePostContent)" :disabled="success">
-                                    提交
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <ShareModal :reservation="court"
+                    class="modal fade" :id="`share_modal-${court.reservation_id}`"
+                    @hide-modal="hideShareModal"></ShareModal>
         <FeedbackModal :reservation="court" 
-                       :instance="feedbackModalInstance" 
-                       class="modal fade" id="feedback_modal"
+                       class="modal fade" :id="`feedback_modal-${court.reservation_id}`"
                        @hide-modal="hideFeedbackModal"></FeedbackModal>
             
     
@@ -87,24 +53,17 @@
 
 <script>
 import moment from 'moment';
-import WysiwygEditor from '@/components/WYSIWYG.vue';
+import FeedbackModal from'@/components/FeedbackModal.vue'
+import ShareModal from'@/components/ShareModal.vue'
 import $ from 'jquery';
 import Swal from 'sweetalert2'
-import xss from 'xss';
-import FeedbackModal from'@/components/FeedbackModal.vue'
 
 export default {
     props:["court"],
-    components:{WysiwygEditor,FeedbackModal},
+    components:{FeedbackModal,ShareModal},
     data(){
         return {
             today:moment().format(),
-            reservation_type_str:[null,'先到先得','抽签','长期预定','队列'],
-            status_str:[null,'成功预约未付款','已付款','已取消','已转让','未抽签','已抽签','队列中'],
-            failedToSubmit:false,
-            share_err_msg:"默认错误",
-            submitting:false,
-            success:false,
         }
     },
     methods:{
@@ -120,49 +79,7 @@ export default {
                 return "没有时间";
             }
         },
-        shareCourtPost(content){
-            // XSS 过滤
-            content = xss(content);
-
-            // 去掉html tags 之后检查长度
-            if(this.sharePostRawContent.length < 10){
-                this.failedToSubmit = true;
-                this.share_err_msg = "内容过短(少于10字)";
-                return;
-            }
-
-            // 设置UI控制变量
-            this.failedToSubmit = false;
-            this.submitting = true;
-
-            // 创建拼场帖子
-            this.$axios
-            .post('/api/manage/share/create',{
-                user_id: this.$store.state.logged_in_user_id,
-                content,
-                reservation_id:this.court.reservation_id
-            }
-            )
-            .then(() => 
-            {
-                // 设置UI控制变量,获取成功
-                this.failedToSubmit = false;
-                this.success = true;
-
-                // 关闭弹窗
-                setTimeout(() => {
-                    $("#share_modal").modal('hide');
-                    this.success = false;
-                },1000);
-            })
-            .catch((err)=>{
-                this.failedToSubmit = true;
-                this.share_err_msg = err.response.data.message;
-                
-            })
-            .finally(()=>{this.submitting = false;})
-            
-        },
+        
         // 退场函数
         confirmQuit(){
             Swal.fire({
@@ -201,27 +118,11 @@ export default {
                 })
         },
         hideFeedbackModal(){
-            $("#feedback_modal").modal('hide');
-        }
-        
-    },
-    computed:{
-        // 获取WYSIWYG文本框对象
-        sharePostEditor () {
-        return this.$refs['share-editor'].editor
+            $(`#feedback_modal-${this.court.reservation_id}`).modal('hide');
         },
-        // 获取WYSIWYG文本框对象的纯html文本
-        sharePostContent () {
-            return this.sharePostEditor.getHTML().replace(/<p>\s*<\/p>/g, '<br>')
+        hideShareModal(){
+            $(`#share_modal-${this.court.reservation_id}`).modal('hide');
         },
-        // 获取WYSIWYG文本框对象的无html文本
-        sharePostRawContent () {
-            let regex = /(<([^>]+)>)/ig;
-            return this.sharePostEditor.getHTML().replace(regex, "");
-        },
-        feedbackModalInstance(){
-            return $("#feedback_modal");
-        }
     }
 }
 </script>
