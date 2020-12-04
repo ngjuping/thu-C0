@@ -10,13 +10,12 @@ class Feedback(DynamicDocument):
     feedback=ListField()
     court=ObjectIdField()
     feedback_id=IntField()
-
+    img=StringField()
 class Notification(DynamicDocument):
     time=DateTimeField()
     content=StringField()
     title=StringField()
     notice_id=IntField()
-
 class Queue_reservation(DynamicDocument):
     reservation_id=IntField()
     user_id=IntField()

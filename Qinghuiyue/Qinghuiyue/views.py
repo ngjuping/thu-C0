@@ -18,8 +18,10 @@ def get_notices(request):
     try:
         notices_raw = Notification.objects().order_by("-time")[:3]  # 排序且只取前三个
         notices = []
+        #print(request.session['user_id'])
         for notice in notices_raw:
             notices.append({"title": notice.title, "content": notice.content, "time": notice.time})
+
         return JsonResponse({
             "message": "ok",
             "notices": notices
@@ -34,12 +36,13 @@ def get_reservations(request):
     :param request:
     :return:
     '''
-    user_id = request.GET['user_id']
-    user = User.objects(user_id=user_id)[0]
+    print(request.session.get('user_id'))
+    user_id = str(request.GET['user_id'])
+    user = User.objects(api_id=user_id)[0]
     rent_now_id = user.rent_now
     rent_now = Reservation.objects(id__in=rent_now_id)
     courts = [{
-        "id": rent.reservation_id,
+        "reservation_id": rent.reservation_id,
         "type": rent.type,
         "status": rent.status,
         "details": {
@@ -63,15 +66,15 @@ def book_first_come(request):
     book_info = json.loads(request.body)
 
     court = Court.objects(court_id=book_info['court_id']).first()
-    print(court.name)
+    #print(court.name)
     court_status = court.Status
-    print(court_status)
+    #print(court_status)
     book_info['start'] = str2datetime(book_info['start'])
     book_info['end'] = str2datetime(book_info['end'])
-    print(book_info)
+    #print(book_info)
     user = User.objects(api_id=book_info['user_id']).first()
     for status in court_status:
-        print(status['start'], status['end'])
+        #print(status['start'], status['end'])
         if status['start'] == book_info['start'] \
                 and status['end'] == book_info['end'] and status['code'] == 2:
             if status["user_id"] == -1:  # 此时用户就是第一个到的，时间段和场地状态都符合要求，直接预定成功

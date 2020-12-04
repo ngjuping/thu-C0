@@ -20,8 +20,12 @@ from Qinghuiyue import views
 import Qinghuiyue.users.views
 from Qinghuiyue import venus
 import Qinghuiyue.venus.views
-from Qinghuiyue import adminapi
-import Qinghuiyue.adminapi.views
+from Qinghuiyue import admin_venue
+import Qinghuiyue.admin_venue.views
+from Qinghuiyue import admin_notice
+import Qinghuiyue.admin_notice.views
+from Qinghuiyue import admin_course
+import Qinghuiyue.admin_course.views
 
 
 urlpatterns = [
@@ -31,10 +35,23 @@ urlpatterns = [
     path('api/signup', Qinghuiyue.users.views.signup),
     path('api/login', Qinghuiyue.users.views.login),
     path('api/logout', Qinghuiyue.users.views.logout),
+
     path('api/main/venues',Qinghuiyue.venus.views.get_venues_info),
     path('api/main/venues/list',Qinghuiyue.venus.views.get_venues_list),
     path('api/manage/courts',views.get_reservations),
     path('api/book',views.book_first_come),
-    path('api/adminapi/modify/court', Qinghuiyue.adminapi.views.modify_court),
-    path('api/adminapi/modify/venue', Qinghuiyue.adminapi.views.modify_venue)
+
+    path('api/admin/create/venue', Qinghuiyue.admin_venue.views.create_venue),
+    path('api/admin/create/court', Qinghuiyue.admin_venue.views.create_court),
+    path('api/admin/update/court', Qinghuiyue.admin_venue.views.update_court),
+    path('api/admin/update/venue', Qinghuiyue.admin_venue.views.update_venue),
+
+    path('api/admin/create/notice', Qinghuiyue.admin_notice.views.create_notice),
+    path('api/admin/delete/notice', Qinghuiyue.admin_notice.views.delete_notice),
+    path('api/admin/update/notice', Qinghuiyue.admin_notice.views.update_notice),
+
+    path('api/admin/create/course', Qinghuiyue.admin_course.views.create_course),
+    path('api/admin/update/course', Qinghuiyue.admin_course.views.update_course),
+    path('api/admin/delete/course', Qinghuiyue.admin_course.views.delete_course),
+
 ]
