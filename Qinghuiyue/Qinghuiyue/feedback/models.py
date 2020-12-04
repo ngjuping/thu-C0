@@ -5,6 +5,7 @@ from Qinghuiyue.venus.models import Court
 from Qinghuiyue.models.models import Stat
 from Qinghuiyue.users.models import User
 from Qinghuiyue import settings
+from Qinghuiyue.reservation.models import Reservation
 
 
 class Feedback(DynamicDocument):
@@ -25,7 +26,8 @@ class Feedback(DynamicDocument):
             feedback=cls.objects(reservation_id=params['reservation_id']).first()
             if feedback:
                 return False,"已经反馈过啦！"
-            feedback = cls.objects.create(user_id=params['user_id'], court=Court.objects(court_id=params['court_id'])[0].id,
+            reservation=Reservation.objects(reservation_id=params['reservation_id']).first()
+            feedback = cls.objects.create(user_id=params['user_id'], court=reservation.details['court'],
                                           content=params['content'], stars=params['stars'], time=datetime.datetime.now(),
                                           reply="等待管理员回复中", feedback_id=Stat.add_object("feedback"), reservation_id=params['reservation_id'],solved=False)
             #img_name = settings.STATIC_URL + str(feedback.feedback_id) + params['img'].name

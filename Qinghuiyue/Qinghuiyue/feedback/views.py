@@ -14,7 +14,7 @@ def create_feedback(request):
     params=request.POST
     img=request.FILES.get('img')
 
-    ok,feedback_id=Feedback.create_feedback({"user_id":int(params['user_id']),"court_id":int(params['court_id']),
+    ok,feedback_id=Feedback.create_feedback({"user_id":int(params['user_id']),
                                              "stars":int(params['stars']),"content":params["content"],"img":img,
                                              "reservation_id":int(params['reservation_id'])})
 
@@ -48,7 +48,8 @@ def get_all_feedback(request):
             "img":feedback.img,
             "reply":feedback.reply,
             "solved":feedback.solved,
-            "stars":feedback.stars
+            "stars":feedback.stars,
+            "user_id": feedback.user_id
         }for feedback in feedbacks_page
     ]
     return JsonResponse({"message":"ok","total":total,"feedbacks":feedbacks})
@@ -78,7 +79,8 @@ def get_user_feedbacks(request):
             "img":feedback.img,
             "reply":feedback.reply,
             "solved":feedback.solved,
-            "stars":feedback.stars
+            "stars":feedback.stars,
+            "user_id":feedback.user_id
         }for feedback in feedbacks_page
     ]
     return JsonResponse({"message": "ok", "total": total, "feedbacks": feedbacks})

@@ -21,6 +21,7 @@ def get_share_notifications(request):
         shares_page = shares_all[(page - 1) * size:page * size]
     shares = [
         {
+            "user_id": share.user_id,
             "share_id": share.share_id,
             "content": share.content,
             "publish_date": share.time,
@@ -52,6 +53,7 @@ def get_user_shares(request):
         shares_page = shares_all[(page - 1) * size:page * size]
     shares = [
         {
+            "user_id":share.user_id,
             "share_id": share.share_id,
             "content": share.content,
             "publish_date": share.time,
