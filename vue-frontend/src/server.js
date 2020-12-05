@@ -130,7 +130,13 @@ let server = new Server({
       return schema.venues.all();
     
     });
-
+    // 创建场馆
+    this.post("/admin/create/venue", (schema, request) => {
+      let attrs = JSON.parse(request.requestBody);
+      console.log(schema.venues, 'schema');
+      schema.venues.create(attrs);
+      return { message:"ok" }
+    })
     //access data: this.currentvenue = res.data.venue;
     this.get("/main/venues",(schema,request)=>{
       let selected_venue = schema.venues.findBy({id:request.queryParams.id});

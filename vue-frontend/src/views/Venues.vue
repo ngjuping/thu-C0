@@ -1,5 +1,13 @@
 <template>
   <div class="venues">
+    <button
+        type="button"
+        class="btn btn-primary"
+        data-toggle="modal" 
+        data-target="#editVenueModal"
+        style="float: left; margin-bottom: 5px"
+        @click="handleShowEditModal(item, 'add')"
+    >新增</button>
     <table class="table">
       <thead class="thead-dark">
         <tr>
@@ -24,14 +32,14 @@
               class="btn btn-primary btn-sm" 
               data-toggle="modal" 
               data-target="#editVenueModal" 
-              @click="handleShowEditModal(item)">
+              @click="handleShowEditModal(item, 'edit')">
               编辑
             </button>
           </td>
         </tr>
       </tbody>
     </table>
-    <venue-edit-modal :venue-detail="venueDetail" @edit-success="handleGetVenues"/>
+    <venue-edit-modal :venue-detail="venueDetail" @edit-success="handleGetVenues" :status="status" />
     <venue-detail-modal :venue-id="venueId" />
   </div>
 </template>
@@ -46,12 +54,14 @@ export default {
     return {
       venuesList: [],
       venueId: '',
-      venueDetail: {}
+      venueDetail: {},
+      status: 'add'
     }
   },
   methods: {
-    handleShowEditModal(item) {
-      this.venueDetail = item
+    handleShowEditModal(item, status) {
+      this.status = status;
+      this.venueDetail = item;
     },
     handleShowDetailModal(item) {
       this.venueId = item.id
