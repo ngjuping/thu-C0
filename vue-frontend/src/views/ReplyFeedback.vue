@@ -69,7 +69,7 @@
             :status="status"
             @edit-success="getFeedBack"
         />
-        <reply-detail-modal :reply-id="replyId" />
+        <reply-detail-modal :reply="reply" />
         <reply-modal
             :feedback-id="feedbackId"
             @reply-success="getFeedBack"    
@@ -94,7 +94,7 @@ export default {
             },
             total: 0,
             replyDetail: {},
-            replyId: '',
+            reply: {},
             status: 'add',
             feedbackId: '',  // 管理员回复的反馈id
         }
@@ -124,7 +124,7 @@ export default {
         },
         handleShowDetailModal(item) {
             // 展示详情
-            this.replyId = item.user_id;
+            this.reply = item;
         },
         goPage(type) {
             if (type == 0) {
