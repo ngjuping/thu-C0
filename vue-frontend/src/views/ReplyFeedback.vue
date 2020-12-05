@@ -13,7 +13,7 @@
             </thead>
             <tbody>
                 <tr v-for="(item, index) in replyList" :key="index">
-                    <th scope="row">{{index + 1}}</th>
+                    <th scope="row">{{item.feedback_id}}</th>
                     <td>
                         <a
                             href="javascript:void(0)" 
@@ -23,7 +23,15 @@
                             @click="handleShowDetailModal(item)"
                         >{{item.content}}</a>
                     </td>
-                    <td>{{item.stars}}</td>
+                    <td>
+                        <img
+                            src="../assets/star.png"
+                            width="16"
+                            height="16"
+                            v-for="(item2, index2) in item.stars"
+                            :key="index2"
+                        />
+                    </td>
                     <td>{{item.reply}}</td>
                     <td>{{item.solved ? '已回复' : '未回复'}}</td>
                     <td>

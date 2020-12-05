@@ -62,6 +62,7 @@ export default {
         url: '/api/manage/feedback/user',
         params
       }).then(res => {
+        console.log(res.data.feedbacks[0], '111000')
         this.replyDetail = res.data.feedbacks[0]
       }).catch(err => {
         console.log(err)
