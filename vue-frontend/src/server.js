@@ -479,6 +479,68 @@ let server = new Server({
       
       return {message:request,feedback_id:1};
     });
+
+    
+    let users = [
+      {
+        user_id: 1,
+        api_id: 'qiuyuhan-18',
+        real_name: '邱俣涵'
+      },
+      {
+        user_id: 2,
+        api_id: 'huangzubin-19',
+        real_name: '黄祖斌'
+      },
+      {
+        user_id: 3,
+        api_id: 'wangxuan-20',
+        real_name: '王璇'
+      },
+      {
+        user_id: 4,
+        api_id: 'panbo-20',
+        real_name: '潘嶓'
+      },
+      {
+        user_id: 5,
+        api_id: 'huangzhubin-18',
+        real_name: '黄朱斌'
+      },
+      {
+        user_id: 6,
+        api_id: 'huangzubin-18',
+        real_name: '黄祖斌'
+      },
+    ]
+
+    this.post('manage/reservation/transfer',(schema,request)=>{
+      let attrs = JSON.parse(request.requestBody);
+      let target_user_id = parseInt(attrs.new_user_id);
+      for(let i in users){
+        if(users[i].user_id === target_user_id){
+          return {
+            message:"ok",
+          }
+        }
+      }
+      return new Response(422, {}, { message: "找不到用户" });
+    })
+    
+    this.get('manage/getuserids',(schema,request)=>{
+      var req_user_name = request.queryParams.user_name;
+      let temp = [];
+      for (let i in users){
+        if(users[i].real_name.includes(req_user_name)){
+          temp.push(users[i]);
+        }
+      } 
+      return {
+        message:"ok",
+        users:temp
+      }
+      
+    })
   }
   
 })

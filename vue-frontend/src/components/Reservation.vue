@@ -33,8 +33,9 @@
                 <div class="btn-group">
                     <div class="btn btn-secondary" 
                     v-if="court.details.end < today" data-toggle="modal" :data-target="`#feedback_modal-${this.court.reservation_id}`">反馈</div>
-                    <div class="btn-group" v-else>
+                    <div class="btn-group shadow" v-else>
                         <div class="btn btn-primary" data-toggle="modal" :data-target="`#share_modal-${this.court.reservation_id}`">拼场</div>
+                        <div class="btn btn-warning" data-toggle="modal" :data-target="`#transfer_modal-${this.court.reservation_id}`">转让</div>
                         <div class="btn btn-danger" @click="confirmQuit">退场</div>
                     </div>
                 </div>
@@ -46,6 +47,9 @@
         <FeedbackModal :reservation="court" 
                        class="modal fade" :id="`feedback_modal-${court.reservation_id}`"
                        @hide-modal="hideFeedbackModal"></FeedbackModal>
+        <TransferModal :reservation="court" 
+                       class="modal fade" :id="`transfer_modal-${court.reservation_id}`"
+                       @hide-modal="hideTransferModal"></TransferModal>
             
     
     </div>
@@ -55,12 +59,13 @@
 import moment from 'moment';
 import FeedbackModal from'@/components/FeedbackModal.vue'
 import ShareModal from'@/components/ShareModal.vue'
+import TransferModal from'@/components/TransferModal.vue'
 import $ from 'jquery';
 import Swal from 'sweetalert2'
 
 export default {
     props:["court"],
-    components:{FeedbackModal,ShareModal},
+    components:{FeedbackModal,ShareModal,TransferModal},
     data(){
         return {
             today:moment().format(),
@@ -117,11 +122,17 @@ export default {
                 }
                 })
         },
+        transferCourt(){
+            
+        },
         hideFeedbackModal(){
             $(`#feedback_modal-${this.court.reservation_id}`).modal('hide');
         },
         hideShareModal(){
             $(`#share_modal-${this.court.reservation_id}`).modal('hide');
+        },
+        hideTransferModal(){
+            $(`#transfer_modal-${this.court.reservation_id}`).modal('hide');
         },
     }
 }
