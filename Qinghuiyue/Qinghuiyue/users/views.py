@@ -42,3 +42,16 @@ def logout(request):
     # print(request.session['user_id'])
     request.session.delete()
     return JsonResponse({"message": "ok", "content": "logout success"})
+def get_name_by_id(request):
+    '''
+    通过用户名获取id
+    :param request:
+    :return:
+    '''
+    params=json.loads(request.body)
+    users_raw=User.objects(name=params['user_name'])
+    users=[{
+        "user_id":user.user_id,
+        "api_id":user.api_id
+    } for user in users_raw]
+    return JsonResponse({"message":"ok","users":users})
