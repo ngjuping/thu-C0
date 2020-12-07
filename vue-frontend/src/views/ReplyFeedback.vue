@@ -1,13 +1,5 @@
 <template>
     <div class="reply-feedback">
-        <button
-            type="button"
-            class="btn btn-primary"
-            data-toggle="modal" 
-            data-target="#editReplyModal"
-            style="float: left; margin-bottom: 5px"
-            @click="handleShowEditModal(item, 'add')"
-        >新增</button>
         <table class="table">
             <thead class="thead-dark">
                 <tr>
@@ -15,12 +7,13 @@
                 <th scope="col">内容</th>
                 <th scope="col">星级</th>
                 <th scope="col">回复</th>
+                <th scope="col">状态</th>
                 <th scope="col">操作</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(item, index) in replyList" :key="index">
-                    <th scope="row">{{index + 1}}</th>
+                    <th scope="row">{{item.feedback_id}}</th>
                     <td>
                         <a
                             href="javascript:void(0)" 
@@ -30,8 +23,17 @@
                             @click="handleShowDetailModal(item)"
                         >{{item.content}}</a>
                     </td>
-                    <td>{{item.stars}}</td>
+                    <td>
+                        <img
+                            src="../assets/star.png"
+                            width="16"
+                            height="16"
+                            v-for="(item2, index2) in item.stars"
+                            :key="index2"
+                        />
+                    </td>
                     <td>{{item.reply}}</td>
+                    <td>{{item.solved ? '已回复' : '未回复'}}</td>
                     <td>
                         <button 
                             type="button" 
@@ -41,10 +43,12 @@
                             style="margin-right: 5px"
                             @click="handleShowEditModal(item, 'delete')"
                         >删除</button>
-                        <button 
+                        <button v-if="!item.solved"
                             type="button" 
                             class="btn btn-info btn-sm"
-                            @click="handleShowEditModal(item, 'reply')"
+                            data-toggle="modal" 
+                            data-target="#ReplyModal"
+                            @click="handleReplyModal(item, 'reply')"
                         >回复</button>
                     </td>
                 </tr>
@@ -65,7 +69,11 @@
             :status="status"
             @edit-success="getFeedBack"
         />
-        <reply-detail-modal :reply-id="replyId" />
+        <reply-detail-modal :reply="reply" />
+        <reply-modal
+            :feedback-id="feedbackId"
+            @reply-success="getFeedBack"    
+        />
     </div>
 </template>
 
@@ -73,9 +81,10 @@
 // import moment from 'moment'
 import ReplyDetailModal from '../components/ReplyDetailModal'
 import ReplyDelModal from '../components/ReplyDelModal'
+import ReplyModal from '../components/ReplyModal'
 export default {
     name: 'ReplyFeedback',
-    components: { ReplyDetailModal, ReplyDelModal },
+    components: { ReplyDetailModal, ReplyDelModal, ReplyModal },
     data() {
         return {
             replyList: [],
@@ -85,8 +94,9 @@ export default {
             },
             total: 0,
             replyDetail: {},
-            replyId: '',
-            status: 'add'
+            reply: {},
+            status: 'add',
+            feedbackId: '',  // 管理员回复的反馈id
         }
     },
     mounted() {
@@ -96,6 +106,10 @@ export default {
         handleShowEditModal(item, status) {
             this.status = status;
             this.replyDetail = item;
+        },
+        handleReplyModal(item) {
+            // 管理员回复反馈
+            this.feedbackId = item.feedback_id;
         },
         getFeedBack() {
             this.$axios.request({
@@ -110,7 +124,7 @@ export default {
         },
         handleShowDetailModal(item) {
             // 展示详情
-            this.replyId = item.user_id;
+            this.reply = item;
         },
         goPage(type) {
             if (type == 0) {

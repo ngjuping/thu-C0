@@ -19,7 +19,7 @@
             </thead>
             <tbody>
                 <tr v-for="(item, index) in trainList" :key="index">
-                    <th scope="row">{{index + 1}}</th>
+                    <th scope="row">{{item.id}}</th>
                     <td>
                         <a
                             href="javascript:void(0)" 

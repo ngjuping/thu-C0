@@ -130,7 +130,13 @@ let server = new Server({
       return schema.venues.all();
     
     });
-
+    // 创建场馆
+    this.post("/admin/create/venue", (schema, request) => {
+      let attrs = JSON.parse(request.requestBody);
+      console.log(schema.venues, 'schema');
+      schema.venues.create(attrs);
+      return { message:"ok" }
+    })
     //access data: this.currentvenue = res.data.venue;
     this.get("/main/venues",(schema,request)=>{
       let selected_venue = schema.venues.findBy({id:request.queryParams.id});
@@ -265,6 +271,27 @@ let server = new Server({
         notices: all_notices.slice((requested_page-1)*5,(requested_page)*5)
       }
     })
+    this.post("/admin/update/notice", (schema, request) => {
+      let attrs = JSON.parse(request.requestBody);
+      const index = all_notices.findIndex(item => item.id == attrs.id);
+      all_notices[index] = attrs;
+      return { message: 'ok' }
+  })
+
+  this.post("/admin/delete/notice", (schema, request) => {
+      let attrs = JSON.parse(request.requestBody);
+      const index = all_notices.findIndex(item => item.id == attrs.id);
+      all_notices.splice(index, 1);
+      return { message: 'ok' }
+  })
+
+  this.post("/admin/create/notice", (schema, request) => {
+      let attrs = JSON.parse(request.requestBody);
+      attrs.id = all_notices.length + 2;
+      all_notices.push(attrs);
+      console.log(all_notices, 'all_notices')
+      return { message: 'ok' }
+  })
 
     this.post('/manage/share/create',()=>{
       return {
@@ -299,7 +326,7 @@ let server = new Server({
         court_id: 1,
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/220px-Image_created_with_a_mobile_phone.png",
         reply: "感谢.........",
-        solved: 0,
+        solved: 1,
         stars:4
       },
       {
@@ -394,6 +421,83 @@ let server = new Server({
         }
       
     })
+    this.post("/manage/feedback/delete", (schema, request) => {
+      let attrs = JSON.parse(request.requestBody);
+      const index = all_feedbacks.findIndex(item => item.feedback_id == attrs.feedback_id);
+      all_feedbacks.splice(index, 1);
+      return { message: 'ok' }
+  })
+
+  this.post("manage/feedback/create", (schema, request) => {
+      let attrs = JSON.parse(request.requestBody);
+      attrs.feedback_id = all_feedbacks.length + 2;
+      attrs.user_id = all_feedbacks.length + 2;
+      all_feedbacks.push(attrs);
+      console.log(all_feedbacks, 'all_feedbacks')
+      return { message: 'ok' }
+  })
+
+  this.post("/admin/reply/feedback", (schema, request) => {
+      let attrs = JSON.parse(request.requestBody);
+      const index = all_feedbacks.findIndex(item => item.feedback_id == attrs.feedback_id);
+      console.log(index, 'index')
+      all_feedbacks[index].reply = attrs.reply;
+      all_feedbacks[index].solved = true;
+      return { message: 'ok' }
+  })
+  let all_course = [
+    {
+        id: 1,
+        name: 'qhy羽球课',
+        price: '15元/hr'
+    },
+    {
+        id: 2,
+        name: 'qhy羽球课',
+        price: '30元/hr'
+    },
+    {
+        id: 3,
+        name: 'qhy羽球课',
+        price: '45元/hr'
+    },
+]
+
+this.get('/courses',(schema,request)=>{
+    let requested_page = request.queryParams.page;
+    if(requested_page < 1 || (requested_page-1)*5 > all_course.length){
+      return new Response(422, {}, { message: "页面不存在" });
+    }
+    return {
+      message:"ok",
+      total:all_course.length,
+      courses: all_course.slice((requested_page-1)*5,(requested_page)*5)
+    };
+    
+  });
+  
+  this.post("/admin/update/course", (schema, request) => {
+    let attrs = JSON.parse(request.requestBody);
+    const index = all_course.findIndex(item => item.id == attrs.id);
+    all_course[index] = attrs;
+    return { message: 'ok' }
+  })
+
+  this.post("/admin/delete/course", (schema, request) => {
+      let attrs = JSON.parse(request.requestBody);
+      const index = all_course.findIndex(item => item.id == attrs.id);
+      all_course.splice(index, 1);
+      return { message: 'ok' }
+  })
+
+  this.post("/admin/create/course", (schema, request) => {
+      let attrs = JSON.parse(request.requestBody);
+      attrs.id = all_course.length + 2;
+      all_course.push(attrs);
+      console.log(all_course, 'all_course')
+      return { message: 'ok' }
+  })
+
 
     let all_shares = [
       {

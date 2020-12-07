@@ -41,9 +41,7 @@
 export default {
   name: 'ReplyDetailModal',
   props: {
-    replyId: {
-      type: String,
-      required: true
+    reply: {
     }
   },
   data () {
@@ -52,20 +50,22 @@ export default {
     }
   },
   watch: {
-    replyId(val) {
-      const params = {
-        user_id: val,
-        page: 1
-      }
-      this.$axios.request({
-        method: 'get',
-        url: '/api/manage/feedback/user',
-        params
-      }).then(res => {
-        this.replyDetail = res.data.feedbacks[0]
-      }).catch(err => {
-        console.log(err)
-      })
+    reply(val) {
+      this.replyDetail = val;
+      // const params = {
+      //   feedback_id: val,
+      //   page: 1
+      // }
+      // this.$axios.request({
+      //   method: 'get',
+      //   url: '/api/manage/feedback/user',
+      //   params
+      // }).then(res => {
+      //   console.log(res.data.feedbacks[0], '111000')
+      //   this.replyDetail = res.data.feedbacks[0]
+      // }).catch(err => {
+      //   console.log(err)
+      // })
     }
   }
 }

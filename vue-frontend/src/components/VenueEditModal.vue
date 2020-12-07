@@ -35,7 +35,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-            <button type="button" class="btn btn-primary" @click="handleSave">保存</button>
+            <button type="button" class="btn btn-primary" @click="handleSave" data-dismiss="modal">保存</button>
           </div>
         </div>
       </div>
@@ -52,6 +52,12 @@ export default {
       default() {
         return {}
       }
+    },
+    status: {
+        type: String,
+        default() {
+            return {}
+        }
     }
   },
   data() {
@@ -73,18 +79,26 @@ export default {
       params.append('name', this.formMessage.name)
       params.append('description', this.formMessage.description)
       params.append('img', this.file)
-      this.$axios.request({
-        method: 'post',
-        url: '/api/admin/update/venue',
-        data: params,
-        headers: {
-          'Content-Type':'multipart/form-data'
-        }
-      }).then(() => {
-        this.$emit('edit-success')
-      }).catch((error) => {
-        console.log(error)
-      })
+      this.formMessage.img = this.file;
+      if (this.status == 'add') {
+        // 新增
+        this.$axios.post('/api/admin/create/venue', this.formMessage).then((res) => {
+            console.log(res, 'res')
+            this.$emit('edit-success');
+        }).catch(err => {
+            console.log(err);
+        })
+      } else {
+        this.$axios.request({
+            method: 'post',
+            url: '/api/admin/update/venue',
+            data: params
+        }).then(() => {
+            this.$emit('edit-success')
+        }).catch((error) => {
+            console.log(error)
+        })
+      }
     }
   },
   watch: {

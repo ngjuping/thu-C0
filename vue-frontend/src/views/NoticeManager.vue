@@ -19,7 +19,7 @@
             </thead>
             <tbody>
                 <tr v-for="(item,index) in noticeList" :key="index">
-                <th scope="row">{{index + 1}}</th>
+                <th scope="row">{{item.id}}</th>
                 <td data-class="xd-table-th">
                     <!-- <a
                         href="javascript:void(0)" 
