@@ -4,8 +4,8 @@
             <div class="row">
                 <div class="col-12 pt-3">
                     <div class="row">
-                        <div class="col"  data-toggle="modal" :data-target="`#modal-${share.share_id}`">
-                            <h4><span class="title">{{ share.content.slice(0,20) }}&nbsp;&nbsp;<span class="badge badge-pill badge-dark">New</span></span></h4>
+                        <div class="col"  data-toggle="modal" :data-target="`#share-${share.share_id}`">
+                            <h4><span class="title">{{ parsedShare }}&nbsp;&nbsp;<span class="badge badge-pill badge-dark">New</span></span></h4>
                             <p class="lead content"><span class="text-secondary">场地：{{ share.reservation.details.name }}</span></p>
                         </div>
                         <div class="col-1 text-right" v-if="$store.state.logged_in_user_id === share.user_id">
@@ -17,7 +17,7 @@
         </div>
         
         
-        <div class="modal fade" :id="`modal-${share.share_id}`">
+        <div class="modal fade" :id="`share-${share.share_id}`">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content shadow-lg">
                     <div class="modal-header">
@@ -28,8 +28,7 @@
                     </div>
                     <div class="modal-body">
                         <small>他很有诚意的说：</small>
-                        <div class="jumbotron">
-                            {{ share.content }}
+                        <div class="jumbotron" v-html="share.content">
                         </div>
                         <div class="text-left card mb-4">
                             <div class="card-header">
@@ -72,8 +71,17 @@ export default {
         },
         getReservationStr(index){
             return this.$store.state.reservationStatus[index];
+        },
+        getRawContent(content){
+            let regex = /(<([^>]+)>)/ig;
+            return content.replace(regex, "");
         }
     },
+    computed:{
+        parsedShare(){
+            return this.getRawContent(this.share.content).slice(0,20);
+        }
+    }
 }
 </script>
 <style scoped>
