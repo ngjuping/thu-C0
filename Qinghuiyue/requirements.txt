@@ -2,3 +2,4 @@ mongoengine
 bcrypt
 django-cors-headers
 python-dateutil
+pycryptodome

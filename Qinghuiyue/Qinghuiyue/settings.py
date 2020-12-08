@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
 
@@ -66,15 +66,17 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
 ]
+
+
 # 支持跨域配置,在最后应该要删除
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 ROOT_URLCONF = 'Qinghuiyue.urls'
-
+ALLOWED_HOSTS=['58.87.86.11']
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'Qinghuiyue/alipay/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -148,7 +150,7 @@ SESSION_SAVE_EVERY_REQUEST = False  # 是否每次请求都保存Session，默�
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-import os
+
 STATIC_URL = '/static/'
 #STATIC_ROOT=os.path.join(BASE_DIR,'static')
 STATICFILES_DIRS = (
@@ -159,3 +161,7 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.AppDirectoriesFinder"
 )
 
+# 支付设置--支付宝alipay
+ALIPAY_PUBLIC = os.path.join(BASE_DIR,'Qinghuiyue','alipay','alipay_keys','alipay_public.txt')
+APP_PUBLIC = os.path.join(BASE_DIR,'Qinghuiyue','alipay','alipay_keys','app_public.txt')
+APP_PRIVATE = os.path.join(BASE_DIR,'Qinghuiyue','alipay','alipay_keys','app_private.txt')
