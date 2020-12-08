@@ -9,7 +9,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faArrowCircleRight,faStar,faAngleUp,faExclamationTriangle,faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import VCalendar from 'v-calendar';
 
+// Use v-calendar & v-date-picker components
+Vue.use(VCalendar, {
+  componentPrefix: 'vc',  // Use <vc-calendar /> instead of <v-calendar />
+});
 library.add(faArrowCircleRight,faStar,faAngleUp,faExclamationTriangle,faCheckCircle);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);

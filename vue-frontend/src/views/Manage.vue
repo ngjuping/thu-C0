@@ -5,15 +5,31 @@
         <div class="alert alert-danger" v-if="!loadCourtsSuccess">
             无法加载您的场地信息
         </div>
-        <div class="container text-left pl-0 mb-3">
-            <div class="btn-group">
+        <div class="container mb-3">
+            <div class="row">
+                <div class="col text-left">
                     <div class="btn btn-danger" @click="$router.go(-1)">前一页</div>
+                </div>
+                <div class="col text-right">
+                    <div class="btn btn-info" @click="show_calendar = !show_calendar">打开日历</div>
+                </div>
             </div>
         </div>
-        <div class="cotainer">
+        <div class="container">
+            <div class="row text-right mb-4">
+                <div class="col"></div>
+                <div class="col">
+                    
+                </div>
+            </div>
+            <div class="row mb-4" v-if="show_calendar">
+                <div class="col">
+                    <vc-calendar :attributes="attributes" mode="range" is-expanded class="shadow"></vc-calendar>
+                </div>
+            </div>
             <div class="row">
                 
-                    <Reservation  v-for="court in courts" :key="court.reservation_id" :court="court"></Reservation>
+                    <Reservation  v-for="court in courts" :key="court.reservation_id" :resv="court"></Reservation>
                     
             </div>
         </div>
@@ -26,12 +42,28 @@ import Swal from 'sweetalert2';
 import Reservation from '@/components/Reservation.vue';
 
 export default {
-    components:{Reservation},
+    components:{
+        Reservation,
+    },
     data(){
         return {
             loadCourtsSuccess:false,
             courts:[],
+            show_calendar:false
         }
+    },
+    methods:{
+        chineseTime(time){
+            try{
+            
+                let [hour,min] = time.split("T")[1].split("+")[0].split(":");
+                
+                return `${hour}点 ${min}分`;
+            }
+            catch(e){
+                return "没有时间";
+            }
+        },
     },
     mounted(){
         if(!this.$store.state.logged_in)
@@ -52,6 +84,20 @@ export default {
         .catch(()=>{
             this.loadCourtsSuccess = false;
         })
+    },
+    computed:{
+        attributes(){
+            return [...this.courts.map(court => ({
+                    key: 'today',
+                    highlight: 'purple',
+                    dates: court.details.start,
+                    popover: {
+                        label: `${this.chineseTime(court.details.start)} to ${this.chineseTime(court.details.end)}`,
+                        hideIndicator: true,
+                    },
+                }))]
+            
+        }
     }
 }
 </script>
