@@ -23,7 +23,10 @@
                                         placeholder="反馈信息"
                                         initial-content="" >                                
                         </WysiwygEditor>
-                        
+                        <!-- 打星 -->
+                        <div class="bg-light p-2 my-4 d-flex justify-content-center">
+                            <star-rating v-model="stars" />
+                        </div>
                         <!-- 可上传一张图片 -->
                         <input type="file" class="form-control-file" @change="handleFileChange">
 
@@ -44,10 +47,11 @@
 <script>
 import xss from 'xss';
 import WysiwygEditor from '@/components/WYSIWYG.vue';
+import StarRating from 'vue-star-rating'
 
 export default {
     props:["reservation","mode"],
-    components:{WysiwygEditor},
+    components:{WysiwygEditor,StarRating},
     data(){
         return {
             failedToSubmit:false,
