@@ -194,7 +194,7 @@ let server = new Server({
             },
           status:2,
           reviewed:1,
-          shared:1
+          shared:10
         },
         {
           reservation_id:3,
@@ -208,7 +208,21 @@ let server = new Server({
             },
           status:2,
           reviewed:0,
-          shared:1
+          shared:11
+        },
+        {
+          reservation_id:4,
+          type:1,
+          details:{
+            name: "活动中心乒乓球场05",
+            start:"2020-12-29T12:00:00+01:00",
+            end:"2021-12-29T00:13:00+01:00",
+            created: "2020-02-29T13:00:00+01:00",
+            paid_at: "2020-02-29T13:10:00+01:00"
+            },
+          status:2,
+          reviewed:0,
+          shared:0
         },
         ]
         };
@@ -307,9 +321,39 @@ let server = new Server({
       // return new Response(422, {}, { message: "系统繁忙" });
     })
 
+    this.post('/manage/share/update',()=>{
+      return {
+        message:"ok",
+        }
+      // return new Response(422, {}, { message: "系统繁忙" });
+    })
+    
+    this.post('/manage/share/delete',()=>{
+      return {
+        message:"ok",
+        }
+      // return new Response(422, {}, { message: "系统繁忙" });
+    })
+
+
     this.post('/manage/reservation/cancel',()=>{
 
       return new Response(422, {}, { message: "场地不存在" });
+    });
+
+    this.post('/manage/feedback/create',(schema,request)=>{
+      
+      return {message:request,feedback_id:1};
+    });
+
+    this.post('/manage/feedback/update',()=>{
+      
+      return {message:"ok"};
+    });
+
+    this.post('/manage/feedback/delete',()=>{
+      
+      return {message:"ok"};
     });
 
     let all_feedbacks = [
@@ -584,11 +628,7 @@ this.get('/courses',(schema,request)=>{
         }
       
     })
-    
-    this.post('/manage/feedback/create',(schema,request)=>{
-      
-      return {message:request,feedback_id:1};
-    });
+
 
     
     let users = [

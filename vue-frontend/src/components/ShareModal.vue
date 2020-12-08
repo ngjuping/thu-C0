@@ -41,7 +41,7 @@ import xss from 'xss';
 import WysiwygEditor from '@/components/WYSIWYG.vue';
 
 export default {
-    props:["reservation"],
+    props:["reservation","mode"],
     components:{WysiwygEditor},
     data(){
         return {
@@ -70,13 +70,25 @@ export default {
 
             // 创建拼场帖子
             
+            let api_data = {
+                content
+            }
+            // determine whether to create or to update share post
+            if(this.mode === "create"){
+                api_data["user_id"] = this.$store.state.logged_in_user_id,
+                api_data["reservation_id"] = this.reservation.reservation_id
+            }
+            else if(this.mode === "update"){
+                api_data["share_id"] = this.reservation.shared;
+            }
+            else{
+                console.log("Mode error")
+                return;
+            }
+            let url_by_mode = `/api/manage/share/${this.mode}`;
+
             this.$axios
-            .post('/api/manage/share/create',{
-                    user_id: this.$store.state.logged_in_user_id,
-                    content,
-                    reservation_id:this.reservation.reservation_id
-                }
-            )
+            .post(url_by_mode,api_data)
             .then(() => 
             {
                 // 设置UI控制变量,获取成功

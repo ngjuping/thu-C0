@@ -46,7 +46,7 @@ import xss from 'xss';
 import WysiwygEditor from '@/components/WYSIWYG.vue';
 
 export default {
-    props:["reservation"],
+    props:["reservation","mode"],
     components:{WysiwygEditor},
     data(){
         return {
@@ -79,8 +79,7 @@ export default {
 
             // 手动创造form请求参数
             let params = new FormData()
-            params.set('user_id', this.$store.state.logged_in_user_id)
-            params.set('reservation_id', this.reservation.reservation_id)
+            
             params.set('content', content)
             params.set('stars', this.stars)
             params.append('img', this.img_file)
@@ -88,9 +87,25 @@ export default {
             // FormData私有类对象，访问不到，可以通过get判断值是否传进去
             // console.log(params.get('reservation_id'));
 
+            // determine whether to create or to update feedback
+            if(this.mode === "create"){
+                params.set('user_id', this.$store.state.logged_in_user_id)
+                params.set('reservation_id', this.reservation.reservation_id)
+            }
+            else if(this.mode === "update"){
+                params.set('feedback_id', this.reservation.reviewed);
+            }
+            else{
+                console.log("Mode error")
+                return;
+            }
+            console.log(params.get('reservation_id'));
+
+            let url_by_mode = `/api/manage/feedback/${this.mode}`;
+
             this.$axios.request({
                 method: 'post',
-                url: '/api/manage/feedback/create',
+                url: url_by_mode,
                 data: params,
                 headers: {
                     'Content-Type':'multipart/form-data'

@@ -34,26 +34,32 @@
                 <small v-if="resv.details.paid_at">支付于 &nbsp; {{ chineseTime(resv.details.paid_at) }}</small>
                 <div class="m-3"></div>
 
+                <!-- 反馈操作界面 -->
+                <div class="btn-group mr-3" v-if="resv.reviewed && outDated">
+                    <div class="input-group-prepend">
+                    <div class="input-group-text">反馈菜单</div>
+                    </div>
+                    <div class="btn-group">
+                        <div class="btn btn-dark" 
+                        @click="feedback_mode = 'update'"
+                        data-toggle="modal" 
+                        :data-target="`#feedback_modal-${this.resvId}`">修改</div>
+                        <div class="btn btn-dark" @click="deleteFeedback">删除</div>
+                    </div>
+                </div>
+                <div class="mb-3" v-if="resv.shared"></div>
+
                 <!-- 拼场操作界面 -->
                 <div class="btn-group mr-3" v-if="resv.shared">
                     <div class="input-group-prepend">
                     <div class="input-group-text">拼场菜单</div>
                     </div>
                     <div class="btn-group">
-                        <div class="btn btn-dark">修改</div>
+                        <div class="btn btn-dark" 
+                        data-toggle="modal" 
+                        :data-target="`#share_modal-${this.resvId}`"
+                        @click="share_mode = 'update'">修改</div>
                         <div class="btn btn-dark" @click="deleteShare">删除</div>
-                    </div>
-                </div>
-                <div class="mb-3" v-if="resv.shared"></div>
-
-                <!-- 反馈操作界面 -->
-                <div class="btn-group mr-3" v-if="resv.reviewed">
-                    <div class="input-group-prepend">
-                    <div class="input-group-text">反馈菜单</div>
-                    </div>
-                    <div class="btn-group">
-                        <div class="btn btn-dark">修改</div>
-                        <div class="btn btn-dark" @click="deleteFeedback">删除</div>
                     </div>
                 </div>
                 <div class="mb-3" v-if="resv.reviewed"></div>
@@ -61,9 +67,10 @@
                 <div class="btn-group">
                     <!-- 反馈按钮只能在订单过期后显示 -->
                     <div class="btn btn-secondary" 
+                        @click="feedback_mode = 'create'"
                         v-if="outDated && !resv.reviewed" 
                         data-toggle="modal" 
-                        :data-target="`#feedback_modal-${this.resvStatus}`">
+                        :data-target="`#feedback_modal-${this.resvId}`">
                         反馈
                     </div>
                     
@@ -71,15 +78,16 @@
                     <div class="btn-group shadow" v-else>
 
                         <!-- 如果还没拼过场，显示该按钮 -->
-                        <div class="btn btn-primary" 
+                        <div class="btn btn-primary"
+                            @click="share_mode = 'create'"
                             data-toggle="modal" 
-                            :data-target="`#share_modal-${this.resvStatus}`"
+                            :data-target="`#share_modal-${this.resvId}`"
                             v-if="!resv.shared">拼场</div>
 
                         <!-- 根据订单状态，如果可以转让，显示该按钮 -->
                         <div class="btn btn-warning" 
                             data-toggle="modal" 
-                            :data-target="`#transfer_modal-${this.resvStatus}`"
+                            :data-target="`#transfer_modal-${this.resvId}`"
                             v-if="transferrable">转让</div>
 
                         <!-- 根据订单状态，如果可以退场，显示该按钮 -->
@@ -89,12 +97,14 @@
             </div>
         </div>
         <ShareModal :reservation="resv"
+                    :mode="share_mode"
                     class="modal fade" :id="`share_modal-${resv.reservation_id}`"
                     @hide-modal="hideShareModal"></ShareModal>
-        <FeedbackModal :reservation="resv" 
+        <FeedbackModal :reservation="resv"
+                       :mode="feedback_mode"
                        class="modal fade" :id="`feedback_modal-${resv.reservation_id}`"
                        @hide-modal="hideFeedbackModal"></FeedbackModal>
-        <TransferModal :reservation="resv" 
+        <TransferModal :reservation="resv"
                        class="modal fade" :id="`transfer_modal-${resv.reservation_id}`"
                        @hide-modal="hideTransferModal"></TransferModal>
     
@@ -117,6 +127,8 @@ export default {
     data(){
         return {
             today:moment().format(),
+            share_mode:'create',
+            feedback_mode:'create'
         }
     },
     methods:{
@@ -231,7 +243,7 @@ export default {
                 preConfirm:()=> {
                     return this.$axios
                     .post('/api/manage/reservation/cancel',{
-                        reservation_id:this.resvStatus
+                        reservation_id:this.resvId
                         }
                     )
                     .then(() => 
@@ -260,18 +272,21 @@ export default {
             })
         },
         hideFeedbackModal(){
-            $(`#feedback_modal-${this.resvStatus}`).modal('hide');
+            $(`#feedback_modal-${this.resvId}`).modal('hide');
         },
         hideShareModal(){
-            $(`#share_modal-${this.resvStatus}`).modal('hide');
+            $(`#share_modal-${this.resvId}`).modal('hide');
         },
         hideTransferModal(){
-            $(`#transfer_modal-${this.resvStatus}`).modal('hide');
+            $(`#transfer_modal-${this.resvId}`).modal('hide');
         },
     },
     computed:{
         outDated(){
             return this.resv.details.end < this.today;
+        },
+        resvId(){
+            return this.resv.reservation_id;
         },
         resvStatus(){
             return this.resv.status;
