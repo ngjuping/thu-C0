@@ -75,3 +75,20 @@ def update_notice(request):
     Notification.objects(notice_id=notice_id).update_one(set__time=datetime.datetime.now())
 
     return JsonResponse({"message": "ok"})
+
+def get_notice(request):
+    try:
+        page = int(request.GET.get('page'))
+        size = int(request.GET.get('size'))
+        assert page > 0
+        assert size > 0
+    except:
+        return JsonResponse({"error": "requires correct page and size"}, status=401)
+
+    notice = Notification.objects().all()  # all notices in db
+    total = len(notice)
+    begin = size * (page - 1)   # included
+    end = size * page           # not included
+    notices = [{"id":iter['notice_id'], "title":iter['title'], "content":iter['content']} for iter in notice[begin:end]]
+
+    return JsonResponse({"message": "ok", "total":total, "notices": notices})

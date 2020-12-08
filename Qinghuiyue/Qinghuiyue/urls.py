@@ -50,6 +50,8 @@ urlpatterns = [
     path('api/admin/delete/notice', Qinghuiyue.admin_notice.views.delete_notice),
     path('api/admin/update/notice', Qinghuiyue.admin_notice.views.update_notice),
 
+    path('api/notices', Qinghuiyue.admin_notice.views.get_notice),
+
     path('api/admin/create/course', Qinghuiyue.admin_course.views.create_course),
     path('api/admin/update/course', Qinghuiyue.admin_course.views.update_course),
     path('api/admin/delete/course', Qinghuiyue.admin_course.views.delete_course),
