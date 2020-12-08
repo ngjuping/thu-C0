@@ -41,13 +41,13 @@ def get_reservations(request):
     for rent in rent_now:
         feedback=Feedback.objects(reservation_id=rent.reservation_id).first()
         if feedback:
-            reviewed=1
+            reviewed=feedback.feedback_id
         else:
             reviewed=0
 
         share=Share_notification.objects(reservation=rent.id).first()
         if share:
-            shared=1
+            shared=share.share_id
         else:
             shared=0
         court = {
