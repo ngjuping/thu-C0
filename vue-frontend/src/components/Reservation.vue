@@ -41,7 +41,7 @@
                     </div>
                     <div class="btn-group">
                         <div class="btn btn-dark">修改</div>
-                        <div class="btn btn-dark">删除</div>
+                        <div class="btn btn-dark" @click="deleteShare">删除</div>
                     </div>
                 </div>
                 <div class="mb-3" v-if="resv.shared"></div>
@@ -53,7 +53,7 @@
                     </div>
                     <div class="btn-group">
                         <div class="btn btn-dark">修改</div>
-                        <div class="btn btn-dark">删除</div>
+                        <div class="btn btn-dark" @click="deleteFeedback">删除</div>
                     </div>
                 </div>
                 <div class="mb-3" v-if="resv.reviewed"></div>
@@ -132,7 +132,90 @@ export default {
                 return "没有时间";
             }
         },
-        
+        deleteShare(){
+            Swal.fire({
+                title: '是否确定删除拼场',
+                text: "该行动将无法撤回！",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                showLoaderOnConfirm: true,
+                cancelButtonText: '取消',
+                confirmButtonText: '确认',
+                preConfirm:()=> {
+                    return this.$axios
+                    .post('/api/manage/share/delete',{
+                        share_id:this.resv.shared
+                        }
+                    )
+                    .then(() => 
+                    {
+                        Swal.fire({
+                        title:'删除拼场成功!',
+                        text:'已将帖子删除',
+                        icon:'success',
+                        timer:1000}
+                        )
+                    })
+                    .catch((err)=>{
+                        try{
+                            Swal.showValidationMessage(
+                            `请求失败: ${err.response.data.message}`
+                            )
+                        }
+                        catch(e){
+                            Swal.showValidationMessage(
+                            `无法解析错误信息`
+                            )
+                        }
+                    })
+                    
+                }
+            })
+        },
+        deleteFeedback(){
+            Swal.fire({
+                title: '是否确定删除反馈',
+                text: "该行动将无法撤回！",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                showLoaderOnConfirm: true,
+                cancelButtonText: '取消',
+                confirmButtonText: '确认',
+                preConfirm:()=> {
+                    return this.$axios
+                    .post('/api/manage/feedback/delete',{
+                        feedback_id:this.resv.reviewed
+                        }
+                    )
+                    .then(() => 
+                    {
+                        Swal.fire({
+                        title:'删除反馈成功!',
+                        text:'已将帖子删除',
+                        icon:'success',
+                        timer:1000}
+                        )
+                    })
+                    .catch((err)=>{
+                        try{
+                            Swal.showValidationMessage(
+                            `请求失败: ${err.response.data.message}`
+                            )
+                        }
+                        catch(e){
+                            Swal.showValidationMessage(
+                            `无法解析错误信息`
+                            )
+                        }
+                    })
+                    
+                }
+            })
+        },
         // 退场函数
         confirmQuit(){
             Swal.fire({
@@ -161,14 +244,20 @@ export default {
                         )
                     })
                     .catch((err)=>{
-                        console.log(err);
-                        Swal.showValidationMessage(
-                        `请求失败: ${err.response.data.message}`
-                        )
+                        try{
+                            Swal.showValidationMessage(
+                            `请求失败: ${err.response.data.message}`
+                            )
+                        }
+                        catch(e){
+                            Swal.showValidationMessage(
+                            `无法解析错误信息`
+                            )
+                        }
                     })
                     
                 }
-                })
+            })
         },
         hideFeedbackModal(){
             $(`#feedback_modal-${this.resvStatus}`).modal('hide');

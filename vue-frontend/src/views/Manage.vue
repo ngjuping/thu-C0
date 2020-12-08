@@ -11,7 +11,7 @@
                     <div class="btn btn-danger" @click="$router.go(-1)">前一页</div>
                 </div>
                 <div class="col text-right">
-                    <div class="btn btn-info" @click="show_calendar = !show_calendar">打开日历</div>
+                    <div class="btn btn-info" @click="show_calendar = !show_calendar">日历</div>
                 </div>
             </div>
         </div>
