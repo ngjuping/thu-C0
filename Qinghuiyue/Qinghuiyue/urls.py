@@ -51,5 +51,7 @@ urlpatterns = [
                   path('api/admin/create/course', Qinghuiyue.admin_course.views.create_course),
                   path('api/admin/update/course', Qinghuiyue.admin_course.views.update_course),
                   path('api/admin/delete/course', Qinghuiyue.admin_course.views.delete_course),
+
+                  path('api/courses', Qinghuiyue.admin_course.views.get_course),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
