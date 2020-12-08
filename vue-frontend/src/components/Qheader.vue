@@ -2,10 +2,11 @@
     <nav class="navbar bg-white shadow">
         <img src="@/assets/logo.png" width="100" class="d-inline-block align-top" alt="" id="headerimg" @click="$router.push({name:'Mainpage'})">
         <div>
-            <div class="btn-group" v-if="this.$store.state.logged_in && !this.$store.state.privilege">
+            <div class="btn-group mr-2" v-if="this.$store.state.logged_in && !this.$store.state.privilege">
                 <div class="btn btn-primary" @click="$router.push({name:'Manage'})">我的场地</div>
                 <div class="btn btn-success" @click="$router.push({name:'AllShares'})">拼场广场</div>
                 <div class="btn btn-warning" @click="$router.push({name:'AllFeedbacks'})">反馈天地</div>
+                <div class="btn btn-info" @click="$router.push({name:'AllCourses'})">培训武馆</div>
             </div>
             
             <button class="btn btn-primary" v-if="!this.$store.state.logged_in"  @click="gotoLogin">登录</button>
