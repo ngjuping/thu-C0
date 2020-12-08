@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'Qinghuiyue.users',
     'corsheaders',
     'Qinghuiyue.utils',
+
 ]
 
 MONGODB_DATABASES={
@@ -147,4 +148,14 @@ SESSION_SAVE_EVERY_REQUEST = False  # 是否每次请求都保存Session，默�
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = 'C:/Users/pb/Desktop/ubuntu16.04share/'
+import os
+STATIC_URL = '/static/'
+#STATIC_ROOT=os.path.join(BASE_DIR,'static')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
+STATICFILES_FINDERS = (
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder"
+)
+

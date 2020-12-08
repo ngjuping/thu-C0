@@ -1,3 +1,4 @@
+from Qinghuiyue.feedback.models import Feedback
 from Qinghuiyue.venus.models import *
 from Qinghuiyue.models.models import *
 from django.http import HttpResponse, JsonResponse
