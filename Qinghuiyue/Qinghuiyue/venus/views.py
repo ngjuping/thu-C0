@@ -68,14 +68,12 @@ def get_courts_info(request):
    except:
       pass
 
-
    try:
       month = request.GET['month']
       times_filtered = [item for item in court_json[0]['status'] if str(item['start'].month) == str(month)]
       court_json[0]['status'] = times_filtered
    except:
       pass
-
 
    try:
       day = request.GET['day']

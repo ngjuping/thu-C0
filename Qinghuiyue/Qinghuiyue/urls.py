@@ -26,6 +26,7 @@ from Qinghuiyue import admin_course
 import Qinghuiyue.admin_course.views
 import Qinghuiyue.feedback.views
 from Qinghuiyue import venus
+
 urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('api/main/notices', views.get_notices),
@@ -36,23 +37,11 @@ urlpatterns = [
                   path('api/manage/feedback', include('Qinghuiyue.feedback.urls')),
                   path('api/admin/reply/feedback',Qinghuiyue.feedback.views.reply_feedback),
                   path('api/',include('Qinghuiyue.reservation.urls')),
-                  path('api/admin/create/venue', Qinghuiyue.admin_venue.views.create_venue),
-                  path('api/admin/create/court', Qinghuiyue.admin_venue.views.create_court),
-                  path('api/admin/update/court', Qinghuiyue.admin_venue.views.update_court),
-                  path('api/admin/update/venue', Qinghuiyue.admin_venue.views.update_venue),
 
-                  path('api/admin/create/notice', Qinghuiyue.admin_notice.views.create_notice),
-                  path('api/admin/delete/notice', Qinghuiyue.admin_notice.views.delete_notice),
-                  path('api/admin/update/notice', Qinghuiyue.admin_notice.views.update_notice),
-
-                  path('api/admin/create/course', Qinghuiyue.admin_course.views.create_course),
-                  path('api/admin/update/course', Qinghuiyue.admin_course.views.update_course),
-                  path('api/admin/delete/course', Qinghuiyue.admin_course.views.delete_course),
-
+                  path('api',include('Qinghuiyue.admin_notice.urls')),
+                  path('api',include('Qinghuiyue.admin_course.urls')),
+                  path('api',include('Qinghuiyue.admin_venue.urls')),
                   path('api/pay/',include('Qinghuiyue.alipay.urls'))
+
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-
-
-
 

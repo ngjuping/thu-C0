@@ -90,4 +90,21 @@ def delete_course(request):
     })
 
 
+def get_course(request):
+    try:
+        page = int(request.GET.get('page'))
+        size = int(request.GET.get('size'))
+        assert page > 0
+        assert size > 0
+    except:
+        return JsonResponse({"error": "requires correct page and size"}, status=401)
+
+    course = Course.objects().all()  # all courses in db
+    total = len(course)
+    begin = size * (page - 1)   # included
+    end = size * page           # not included
+    courses = [{"id":iter['course_id'], "name":iter['name'], "price":iter['price']} for iter in course[begin:end]]
+
+    return JsonResponse({"message": "ok", "total":total, "courses": courses})
+
 
