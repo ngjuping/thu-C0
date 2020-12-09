@@ -50,7 +50,7 @@ def get_name_by_id(request):
     '''
     #params=json.loads(request.body)
     #users_raw=User.objects(name=params['user_name'])
-    users_raw = User.objects(name=request.GET['user_name'])
+    users_raw = User.objects(name__contains=request.GET['user_name'])
     users=[{
         "user_id":user.user_id,
         "api_id":user.api_id
