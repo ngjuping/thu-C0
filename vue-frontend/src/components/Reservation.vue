@@ -35,7 +35,7 @@
                 <div class="m-3"></div>
 
                 <!-- 反馈操作界面 -->
-                <div class="btn-group mr-3" v-if="resv.reviewed && outDated">
+                <div class="btn-group mr-3" v-if="resv.reviewed && outDated && resvStatus === 2">
                     <div class="input-group-prepend">
                     <div class="input-group-text">反馈菜单</div>
                     </div>
@@ -50,7 +50,7 @@
                 <div class="mb-3" v-if="resv.shared"></div>
 
                 <!-- 拼场操作界面 -->
-                <div class="btn-group mr-3" v-if="resv.shared">
+                <div class="btn-group mr-3" v-if="resv.shared && resvStatus === 2 && outDated">
                     <div class="input-group-prepend">
                     <div class="input-group-text">拼场菜单</div>
                     </div>
@@ -68,7 +68,7 @@
                     <!-- 反馈按钮只能在订单过期后显示 -->
                     <div class="btn btn-secondary" 
                         @click="feedback_mode = 'create'"
-                        v-if="outDated && !resv.reviewed" 
+                        v-if="outDated && !resv.reviewed && resvStatus === 2" 
                         data-toggle="modal" 
                         :data-target="`#feedback_modal-${this.resvId}`">
                         反馈
@@ -299,8 +299,8 @@ export default {
             return this.resvStatus === 2 && !this.outDated;
         },
         cancellable(){
-            // 如果已付款且还没过期
-            return this.resvStatus === 2 && !this.outDated;
+            // 如果还没过期
+            return (this.resvStatus === 1 || this.resvStatus === 2) && !this.outDated;
         },
         shareable(){
             // 如果已付款且还没过期且没有发布过拼场帖子
