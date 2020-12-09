@@ -17,6 +17,8 @@ class Share_notification(DynamicDocument):
         if reservation:
             if reservation.status !=2:
                 return False,{"message":"场地不符合拼场要求"}
+            if reservation.details['start'] < datetime.datetime.now():
+                return False,{"message": "该订单已经过期了"}
             if len(cls.objects(reservation=reservation.id)):
                 return False,{"message":"该预定已经发布拼场通知"}
             user = User.objects(user_id=params['user_id']).first()

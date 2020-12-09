@@ -109,7 +109,10 @@ def update_feedback(request):
 def delete_feedback(request):
     params=json.loads(request.body)
     feedback=Feedback.objects(feedback_id=params['feedback_id']).first()
+    if not feedback:
+        return JsonResponse({"message": "这条反馈已经不存在了..."},status=500)
     user=User.objects(user_id=feedback.user_id).first()
+
     user.feedback.remove(feedback.id)
     user.save()
     feedback.delete()

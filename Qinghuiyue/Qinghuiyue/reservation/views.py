@@ -9,7 +9,7 @@ from Qinghuiyue.share.models import Share_notification
 from Qinghuiyue.users.models import User
 from Qinghuiyue.utils.time import str2datetime
 from Qinghuiyue.venus.models import Court
-
+import datetime
 
 def get_reservations(request):
     '''
@@ -129,6 +129,8 @@ def transfer_reservation(request):
         return JsonResponse({"message": "找不到订单"}, status=400)
     if reservation.status not in [1, 2]:
         return JsonResponse({"message": "该订单不可转让"}, status=400)
+    if reservation.details['start']<datetime.datetime.now():
+        return JsonResponse({"message": "该订单已经过期了"},status=400)
     user_now = User.objects(user_id=reservation.details['user_id']).first()
     if user_now.user_id != request.session.get('user_id'):
         return JsonResponse({"message": "你没有转移权限！"}, status=400)
