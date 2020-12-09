@@ -13,7 +13,7 @@
             </small>
             <div class="text-right">
                 <br/>
-                <div class="btn btn-info shadow">
+                <div class="btn btn-info shadow" @click.stop="$emit('show-feedback-modal',feedback.feedback_id)">
                     修改
                 </div>
             </div>

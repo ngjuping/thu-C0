@@ -27,14 +27,24 @@
             </ul>
             <hr>
             <div class="d-flex justify-content-around w-100 flex-wrap">
-                    <Feedback v-for="feedback in all_feedbacks" :key="feedback.feedback_id" :feedback="feedback"></Feedback>
+                    <Feedback v-for="feedback in all_feedbacks" 
+                    :key="feedback.feedback_id" 
+                    :feedback="feedback"
+                    @show-feedback-modal="showFeedbackModal(feedback.feedback_id)"></Feedback>
             </div>
-            
+            <FeedbackModal
+                       :reservation="fake_resv"
+                       mode="update"
+                       class="modal fade" id="all_feedbacks_modal"
+                       @hide-modal="hideFeedbackModal"></FeedbackModal>
         </div>
 </template>
 
 <script>
 import Feedback from '@/components/Feedback.vue'
+import FeedbackModal from '@/components/FeedbackModal.vue'
+import $ from 'jquery'
+
 export default {
     data(){
         return {
@@ -44,11 +54,22 @@ export default {
             loading:false,
             failToLoad:false,
             err_msg:"",
-            getmycourts:false
+            getmycourts:false,
+            fake_resv:null
         }
     },
-    components: {Feedback},
+    components: {Feedback,FeedbackModal},
     methods:{
+        showFeedbackModal(feedback_id){
+            console.log("ID:" + feedback_id);
+            this.fake_resv = {
+                reviewed:feedback_id
+            }
+            $('#all_feedbacks_modal').modal('show');
+        },
+        hideFeedbackModal(){
+            $('#all_feedbacks_modal').modal('hide')
+        },
         getFeedbacks(){
             let url = `/api/manage/feedback?page=${this.current_page}&size=5`;
             if(this.getmycourts){
