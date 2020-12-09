@@ -112,7 +112,7 @@ def book_first_come(request):
                 user.save()
                 stat.save()
 
-                return JsonResponse({"message": "ok"})
+                return JsonResponse({"message": "ok","reservation_id":reservation.reservation_id})
     return JsonResponse({"message": "error"}, status=400)
 
 

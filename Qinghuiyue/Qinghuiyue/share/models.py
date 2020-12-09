@@ -26,7 +26,7 @@ class Share_notification(DynamicDocument):
                                time=datetime.datetime.now(),reservation=reservation.id,
                                status=1,share_id=Stat.add_object("share_notification"))
 
-            user.invitation.append(share)
+            user.invitation.append(share.id)
             user.save()
             return True,{"message":"ok","share_id":share.share_id}
         else:
