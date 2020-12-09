@@ -26,14 +26,25 @@
                 <li class="page-item" @click="toggleGetShares" v-else><a class="page-link">查看全部</a></li>
             </ul>
             <hr>
-            <Share v-for="share in all_shares" :key="share.share_id" :share="share"></Share>
-            
+            <Share 
+            v-for="share in all_shares" 
+            :key="share.share_id" 
+            :share="share"
+            @show-share-modal="showShareModal(share.share_id)"></Share>
+
+            <ShareModal :reservation="fake_resv"
+                    mode="update"
+                    class="modal fade" id="all_shares_modal"
+                    @hide-modal="hideShareModal"></ShareModal>
             
         </div>
 </template>
 
 <script>
 import Share from '@/components/Share.vue'
+import ShareModal from '@/components/ShareModal.vue'
+import $ from 'jquery'
+
 export default {
     data(){
         return {
@@ -43,11 +54,22 @@ export default {
             loading:false,
             failToLoad:false,
             err_msg:"",
-            getmyshares:false
+            getmyshares:false,
+            fake_resv:null
         }
     },
-    components: {Share},
+    components: {Share,ShareModal},
     methods:{
+        showShareModal(share_id){
+            console.log("ID:" + share_id);
+            this.fake_resv = {
+                shared:share_id
+            }
+            $('#all_shares_modal').modal('show');
+        },
+        hideShareModal(){
+            $('#all_shares_modal').modal('hide');
+        },
         getShares(){
             let url = `/api/manage/share?page=${this.current_page}&size=5`;
             if(this.getmyshares){

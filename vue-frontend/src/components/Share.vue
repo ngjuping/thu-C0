@@ -8,7 +8,7 @@
                             <h4><span class="title">{{ parsedShare }}&nbsp;&nbsp;<span class="badge badge-pill badge-dark">New</span></span></h4>
                             <p class="lead content"><span class="text-secondary">场地：{{ share.reservation.details.name }}</span></p>
                         </div>
-                        <div class="col-1 text-right" v-if="$store.state.logged_in_user_id === share.user_id">
+                        <div class="col-1 text-right" v-if="$store.state.logged_in_user_id === share.user_id" @click.stop="$emit('show-share-modal')">
                             <div class="btn btn-info">修改帖子</div>
                         </div>
                     </div>
