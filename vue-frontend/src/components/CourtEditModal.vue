@@ -173,8 +173,29 @@ export default {
     }
   },
   watch: {
+    courtInfo(val) {
+        const timeInfoList = []
+        if (this.courtInfo.status.length > 0) {
+            this.courtInfo.status.forEach(item => {
+                timeInfoList.push({
+                    start: item.start,
+                    end: item.end,
+                    code: item.code ? item.code : 0
+                })
+            })
+        } else {
+            timeInfoList.push({
+                start: '',
+                end: '',
+                code: 0
+            })
+        }
+        this.formMessage = {
+          type: val.type,
+          timeInfoList
+        }
+    },
     show(val) {
-      console.log(val,this.courtInfo)
       if (val) {
         const type = this.courtInfo.type
         const timeInfoList = []
