@@ -86,17 +86,20 @@ def get_user_feedbacks(request):
     return JsonResponse({"message": "ok", "total": total, "feedbacks": feedbacks})
 
 def update_feedback(request):
-    #图片还没处理
+    #目前上传新的图片会更改图片的名字，但是原来的图片没有删除。删除反馈的图片时候也没有删除
     try:
         params = request.POST
         feedback=Feedback.objects(feedback_id=int(params['feedback_id'])).first()
         feedback.content=params['content']
         feedback.stars=int(params['stars'])
         img=request.FILES.get("img")
-        img_name=feedback.img
-        with open(img_name, 'wb+') as img_file:
-            for chunk in img:
-                img_file.write(chunk)
+        if img:
+            img_name="static/feedback/"+ str(feedback.feedback_id) + params['img'].name
+            feedback.img = img_name
+            feedback.save()
+            with open(img_name, 'wb+') as img_file:
+                for chunk in img:
+                    img_file.write(chunk)
         feedback.time=datetime.datetime.now()
         feedback.save()
         return JsonResponse({"message":"ok"})

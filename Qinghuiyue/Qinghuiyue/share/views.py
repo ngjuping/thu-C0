@@ -104,7 +104,11 @@ def delete_share(request):
     params = json.loads(request.body)
     share = Share_notification.objects(share_id=params['share_id']).first()
     user = User.objects(user_id=share.user_id).first()
-    user.invitation.remove(share.id)
+    try:
+        user.invitation.remove(share.id)
+    except Exception:
+        #可能由于某些原因用户对这条记录没有引用，那么直接删除即可
+        pass
     user.save()
     share.delete()
     return JsonResponse({"message": "ok"})

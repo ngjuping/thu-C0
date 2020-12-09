@@ -25,6 +25,7 @@ class Share_notification(DynamicDocument):
                                status=1,share_id=Stat.add_object("share_notification"))
 
             user.invitation.append(share)
+            user.save()
             return True,{"message":"ok","share_id":share.share_id}
         else:
             return False,{"message":"找不到此预定"}

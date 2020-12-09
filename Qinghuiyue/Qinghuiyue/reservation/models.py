@@ -1,6 +1,10 @@
 from mongoengine import *
 import bson
 import bcrypt
+
+from Qinghuiyue.venus.models import Court
+
+
 class Queue_reservation(DynamicDocument):
     reservation_id = IntField()
     user_id = IntField()

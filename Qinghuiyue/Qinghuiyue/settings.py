@@ -72,7 +72,7 @@ MIDDLEWARE = [
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 ROOT_URLCONF = 'Qinghuiyue.urls'
-ALLOWED_HOSTS=['58.87.86.11']
+ALLOWED_HOSTS+=['58.87.86.11','127.0.0.1']
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
