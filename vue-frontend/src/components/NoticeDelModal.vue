@@ -42,7 +42,7 @@ export default {
     data() {
         return {
             formMessage: {
-                id: '',
+                notice_id: '',
                 title: '',
                 content: '',
             },
@@ -62,7 +62,7 @@ export default {
     watch: {
         noticeDetail(val) {
             this.formMessage = {
-                id: val.id,
+                notice_id: val.id,
                 title: val.title,
                 content: val.content
             }

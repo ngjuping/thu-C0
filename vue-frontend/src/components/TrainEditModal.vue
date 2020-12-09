@@ -56,7 +56,7 @@ export default {
     data() {
         return {
             formMessage: {
-                id: '',
+                course_id: '',
                 name: '',
                 price: '',
             },
@@ -95,7 +95,7 @@ export default {
         trainDetail(val) {
             console.log(val, 'trainDetail-watch');
             this.formMessage = {
-                id: val.id,
+                course_id: val.id,
                 name: val.name,
                 price: val.price
             }
