@@ -44,7 +44,7 @@ export default {
     data() {
         return {
             formMessage: {
-                feedback_id: '',
+                feedback_id: 0,
                 reply: '',
                 solved:'',
             },

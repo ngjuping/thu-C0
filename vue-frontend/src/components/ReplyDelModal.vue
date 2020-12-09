@@ -43,7 +43,7 @@ export default {
         return {
             formMessage: {
                 user_id: '',
-                feedback_id: '',
+                feedback_id: 0,
                 content: '',
                 stars: '',
                 img: '',
