@@ -46,6 +46,7 @@ export default {
             formMessage: {
                 feedback_id: '',
                 reply: '',
+                solved:'',
             },
         }
     },
@@ -62,6 +63,7 @@ export default {
     watch: {
         feedbackId(val) {
             this.formMessage.feedback_id = val;
+            this.formMessage.solved = true;
         }
     },
 }
