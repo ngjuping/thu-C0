@@ -95,8 +95,7 @@ export default {
         noticeDetail(val) {
             console.log(val, 'noticeDetail-watch');
             this.formMessage = {
-                id: val.id,
-                notice_id: val.notice_id,
+                notice_id: val.id,
                 title: val.title,
                 content: val.content,
             }
