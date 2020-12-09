@@ -82,7 +82,7 @@
                             @click="share_mode = 'create'"
                             data-toggle="modal" 
                             :data-target="`#share_modal-${this.resvId}`"
-                            v-if="!resv.shared">拼场</div>
+                            v-if="shareable">拼场</div>
 
                         <!-- 根据订单状态，如果可以转让，显示该按钮 -->
                         <div class="btn btn-warning" 
@@ -301,6 +301,10 @@ export default {
         cancellable(){
             // 如果已付款且还没过期
             return this.resvStatus === 2 && !this.outDated;
+        },
+        shareable(){
+            // 如果已付款且还没过期且没有发布过拼场帖子
+            return this.resvStatus === 2 && !this.resv.shared && !this.outDated
         }
     }
 }
