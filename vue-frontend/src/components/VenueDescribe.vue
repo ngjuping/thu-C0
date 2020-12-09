@@ -1,7 +1,7 @@
 <template>
 
 <div class="row p-3 shadow" id="venue_panel">
-    <div class="col-12 col-md-4 pt-4 shadow" id="venue_select_panel">
+    <div class="col-12 col-lg-4 pt-4 shadow" id="venue_select_panel">
         <h1>选择场馆</h1>
         <div class="spinner-border" v-if="loadingVenue">
             <span class="sr-only">Loading...</span>
@@ -17,7 +17,7 @@
         
         </div>
     </div>
-    <div class="col-12 col-md-8">
+    <div class="col-12 col-lg-8">
         <div class="container">
             <div class="row mb-4">
                 <div class="col container">
@@ -25,10 +25,10 @@
                         无法获得场地信息...
                     </div>
                     <div class="row">
-                        <div class="col-12 col-md-6 p-4">
+                        <div class="col-12 col-lg-6 p-4">
                             <h1>{{ currentvenue.name }}</h1>
                         </div>
-                        <div class="col-12 col-md-6 d-flex align-items-center">
+                        <div class="col-12 col-lg-6 d-flex align-items-center">
                             <div class="btn-group shadow w-100">
                                 <button type="button" class="btn btn-light h-100">导航</button>
                                 <button type="button" class="btn btn-light h-100" @click="goBooking(currentvenue.id)">前往订场</button>
@@ -49,23 +49,26 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 col-md-8 list-group">
-                    <Notice v-for="notice in currentvenue.notices" :notice="notice" :key="notice.id" class="list-group-item text-left mb-1"></Notice>
+                <div class="col-12 col-lg-8 list-group">
+                    <Notice v-for="notice in currentvenue.notices" :notice="notice" :key="notice.id" class="list-group-item text-left mb-3"></Notice>
                 </div>
-                <div class="col-12 col-md-4  pl-0">
+                <div class="col-12 col-lg-4  pl-0">
                     
-                    <div class="card  h-75" v-if="hasReview" >
-                        <div class="card-body">
-                            <h5 class="card-title">最新反馈</h5>
+                    <div class="card" v-if="hasReview" >
+                        <h5 class="card-header">最新反馈</h5>
+                        <div class="card-body overflow-auto" id="feedback_body">
                             <h6 class="card-subtitle mb-2 text-muted"><font-awesome-icon icon="star" v-for="i in currentvenue.review.stars" :key="i"/></h6>
-                            <p class="card-text">{{ currentvenue.review.content }}</p>
-                            <p class="card-text" v-if="!loadingVenue">{{ now() }}</p>
+                            <p class="card-text" v-html="currentvenue.review.content"></p>
+                        </div>
+                        <div class="card-footer">
+                            <p v-if="!loadingVenue" class="mb-0">{{ now() }}</p>
+                            
+                            <div class="alert alert-danger" v-else>
+                                没有找到回馈
+                            </div>
                         </div>
                     </div>
-                    <div class="alert alert-danger" v-else>
-                        没有找到回馈
-                    </div>
-                    <div class="w-100 text-right h-25 d-flex align-item-end justify-content-end py-2">
+                    <div class="w-100 text-right d-flex align-item-end justify-content-end py-2">
                         <button class="btn btn-warning" @click="$router.push({name:'AllFeedbacks'})">查看所有反馈</button>
                     </div>
                 </div>
@@ -173,6 +176,9 @@ export default {
     background-color:rgb(73, 136, 190);
 }
 
+#feedback_body{
+    height:200px;
+}
 @media(max-width:600px){
     .noticetitle{
         font-size:20px;
