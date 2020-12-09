@@ -65,7 +65,8 @@ export default {
       formMessage: {
         name: '',
         description: '',
-        img: ''
+        img: '',
+        id: ''
       },
       file: null
     }
@@ -80,6 +81,7 @@ export default {
       params.append('description', this.formMessage.description)
       params.append('img', this.file)
       this.formMessage.img = this.file;
+      console.log(this.formMessage, 'firmem')
       if (this.status == 'add') {
         // 新增
         this.$axios.post('/api/admin/create/venue', this.formMessage).then((res) => {
@@ -92,7 +94,7 @@ export default {
         this.$axios.request({
             method: 'post',
             url: '/api/admin/update/venue',
-            data: params
+            data: this.formMessage
         }).then(() => {
             this.$emit('edit-success')
         }).catch((error) => {
@@ -107,7 +109,8 @@ export default {
       this.formMessage = {
         name: val.name,
         description: val.description,
-        img: val.img
+        img: val.img,
+        id: val.id
       }
     }
   }

@@ -4,7 +4,7 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">编辑场地</h5>
+            <h5 class="modal-title" id="exampleModalLabel">{{status=='add'?'新增':'编辑'}}场地</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModal">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -14,7 +14,14 @@
               <div class="row form-group">
                 <label class="col-sm-2">场地</label>
                 <div class="col-sm-10">
-                  {{sports[formMessage.type]}}
+                  <select v-model="formMessage.type" v-if="status=='add'" class="form-control" style="width: 100px">
+                      <option
+                        v-for="(item, index) in sports"
+                        :value="index+1"
+                        :key="index"
+                      >{{item}}</option>
+                  </select>
+                  <span v-else>{{sports[formMessage.type]}}</span>
                 </div>
               </div>
               <div class="row form-group">
@@ -36,7 +43,7 @@
                 </div>
                 <div class="col-sm-3">
                   <select v-model="item.code" class="form-control">
-                    <option :value="''" disabled>状态</option>
+                    <!-- <option :value="''" disabled>状态</option> -->
                     <option :value="0">可预定</option>
                     <option :value="1">已预定</option>
                   </select>
@@ -49,7 +56,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="closeModal">取消</button>
-            <button type="button" class="btn btn-primary" @click="handleSave">保存</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" @click="handleSave">保存</button>
           </div>
         </div>
       </div>
@@ -69,7 +76,13 @@ export default {
     show: {
       type: Boolean,
       default: false
-    }
+    },
+    status: {
+        type: String,
+        default() {
+            return {}
+        }
+    },
   },
   data() {
     return {
@@ -90,7 +103,7 @@ export default {
       temp.push({
         start: '',
         end: '',
-        code: ''
+        code: 0
       })
       this.formMessage.timeInfoList = temp
     },
@@ -104,7 +117,7 @@ export default {
         court: [
           {
             id: this.courtInfo.id,
-            type: this.courtInfo.type,
+            type: this.status == 'add' ? this.formMessage.type-1 : this.courtInfo.type,
             status: []
           }
         ]
@@ -122,15 +135,27 @@ export default {
           code: item.code
         })
       })
-      this.$axios.request({
-        method: 'post',
-        url: '/api/admin/update/court',
-        data: params
-      }).then(() => {
-        this.$emit('success-eidt')
-      }).catch(error => {
-        console.log(error)
-      })
+      if (this.status == 'add') {
+        this.$axios.request({
+            method: 'post',
+            url: '/api/admin/create/court',
+            data: params
+        }).then(() => {
+            this.$emit('success-edit')
+        }).catch(error => {
+            console.log(error)
+        })
+      } else {
+        this.$axios.request({
+            method: 'post',
+            url: '/api/admin/update/court',
+            data: params
+        }).then(() => {
+            this.$emit('success-edit')
+        }).catch(error => {
+            console.log(error)
+        })
+      }
     }
   },
   mounted() {
@@ -153,13 +178,21 @@ export default {
       if (val) {
         const type = this.courtInfo.type
         const timeInfoList = []
-        this.courtInfo.status.forEach(item => {
-          timeInfoList.push({
-            start: item.start,
-            end: item.end,
-            code: item.code
-          })
-        })
+        if (this.courtInfo.status.length > 0) {
+            this.courtInfo.status.forEach(item => {
+                timeInfoList.push({
+                    start: item.start,
+                    end: item.end,
+                    code: item.code ? item.code : 0
+                })
+            })
+        } else {
+            timeInfoList.push({
+                start: '',
+                end: '',
+                code: 0
+            })
+        }
         this.formMessage = {
           type,
           timeInfoList
@@ -170,7 +203,8 @@ export default {
           timeInfoList: []
         }
       }
-    }
+    },
+
   }
 }
 </script>

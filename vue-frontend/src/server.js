@@ -137,6 +137,13 @@ let server = new Server({
       schema.venues.create(attrs);
       return { message:"ok" }
     })
+    // 编辑场馆
+    this.post("/admin/update/venue", (schema, request) => {
+      let attrs = JSON.parse(request.requestBody);
+      let selected_venues = schema.venues.findBy({id: attrs.id});
+      selected_venues.update(attrs);
+      return { message: 'ok' }
+    })
     //access data: this.currentvenue = res.data.venue;
     this.get("/main/venues",(schema,request)=>{
       let selected_venue = schema.venues.findBy({id:request.queryParams.id});
@@ -148,6 +155,31 @@ let server = new Server({
       let selected_venue = schema.venues.findBy({id:request.queryParams.id});
       
       return {venue_name:selected_venue.attrs.name,courts:selected_venue.attrs.courts};
+    })
+    // 增加新场地
+    this.post('/admin/create/court', (schema, request) => {
+      let attrs = JSON.parse(request.requestBody);
+      let selected_venue = schema.venues.findBy({id: attrs.court[0].id});
+      selected_venue.courts.push({
+          id: selected_venue.courts.length + 1,
+          status: attrs.court[0].status,
+          type: attrs.court[0].type
+      });
+      console.log(selected_venue.courts, 'selected_venue')
+      return { message:"ok" }
+    })
+
+    // 编辑场地
+    this.post('/admin/update/court', (schema, request) => {
+      let attrs = JSON.parse(request.requestBody);
+      let selected_venue = schema.venues.findBy({id: attrs.court[0].id});
+      selected_venue.courts = {
+          id: attrs.court[0].id,
+          status: attrs.court[0].status,
+          type: attrs.court[0].type
+      };
+      console.log(selected_venue.courts, 'selected_venue')
+      return { message:"ok" }
     })
 
     this.post("/book", (schema,request) => {
