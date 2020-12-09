@@ -139,6 +139,7 @@ export default {
                 setTimeout(() => {
                     this.success = false;
                     this.$emit('hide-modal');
+                    this.$router.go()
                 },1000);
             })
             .catch((err)=>{

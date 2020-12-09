@@ -169,6 +169,9 @@ export default {
                         icon:'success',
                         timer:1000}
                         )
+                        .then(() => {
+                            this.$router.go()
+                        })
                     })
                     .catch((err)=>{
                         try{
@@ -211,6 +214,9 @@ export default {
                         icon:'success',
                         timer:1000}
                         )
+                        .then(() => {
+                            this.$router.go()
+                        })
                     })
                     .catch((err)=>{
                         try{
@@ -254,6 +260,9 @@ export default {
                         icon:'success',
                         timer:1000}
                         )
+                        .then(() => {
+                            this.$router.go()
+                        })
                     })
                     .catch((err)=>{
                         try{

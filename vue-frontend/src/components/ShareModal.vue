@@ -94,12 +94,13 @@ export default {
                 // 设置UI控制变量,获取成功
                 this.failedToSubmit = false;
                 this.success = true;
-
                 // 关闭弹窗
                 setTimeout(() => {
                     this.success = false;
                     this.$emit('hide-modal');
+                    this.$router.go()
                 },1000);
+    
             })
             .catch((err)=>{
                 this.failedToSubmit = true;

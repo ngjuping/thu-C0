@@ -119,13 +119,13 @@ export default {
                 // 设置UI控制变量,获取成功
                 this.failedToSubmit = false;
                 this.success = true;
-
                  // 关闭弹窗
                 setTimeout(() => {
                     this.success = false;
 
                     // 发送信号让parent关闭本弹窗
                     this.$emit('hide-modal');
+                    this.$router.go()
                 },1000);
 
             })
