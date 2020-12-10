@@ -66,7 +66,7 @@ export default {
         name: '',
         description: '',
         img: '',
-        id: ''
+        venue_id:''
       },
       file: null
     }
@@ -77,28 +77,32 @@ export default {
     },
     handleSave() {
       const params = new FormData()
-      params.append('name', this.formMessage.name)
-      params.append('description', this.formMessage.description)
+      params.set('name', this.formMessage.name)
+      params.set('description', this.formMessage.description)
       params.append('img', this.file)
       this.formMessage.img = this.file;
       console.log(this.formMessage, 'firmem')
       if (this.status == 'add') {
         // 新增
-        this.$axios.post('/api/admin/create/venue', this.formMessage).then((res) => {
+        this.$axios.post('/api/admin/create/venue', this.formMessage,{headers:{'Content-Type':'multipart/form-data'}}).then((res) => {
             console.log(res, 'res')
             this.$emit('edit-success');
         }).catch(err => {
-            console.log(err);
+            console.log(err.response.data);
+
         })
       } else {
         this.$axios.request({
             method: 'post',
             url: '/api/admin/update/venue',
-            data: this.formMessage
+            data: this.formMessage,
+            headers: {
+                    'Content-Type':'multipart/form-data'
+                }
         }).then(() => {
             this.$emit('edit-success')
         }).catch((error) => {
-            console.log(error)
+            console.log(error.response.data.message)
         })
       }
     }
@@ -110,7 +114,7 @@ export default {
         name: val.name,
         description: val.description,
         img: val.img,
-        id: val.id
+        venue_id: val.id
       }
     }
   }

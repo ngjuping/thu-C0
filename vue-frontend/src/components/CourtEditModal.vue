@@ -116,7 +116,7 @@ export default {
       const params = {
         court: [
           {
-            id: this.courtInfo.id,
+            venue_id: this.courtInfo.id,
             type: this.status == 'add' ? this.formMessage.type-1 : this.courtInfo.type,
             status: []
           }
@@ -139,11 +139,12 @@ export default {
         this.$axios.request({
             method: 'post',
             url: '/api/admin/create/court',
-            data: params
+            data: params,
         }).then(() => {
             this.$emit('success-edit')
         }).catch(error => {
-            console.log(error)
+            console.log(error);
+            console.log(params);
         })
       } else {
         this.$axios.request({
