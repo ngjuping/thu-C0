@@ -1,16 +1,18 @@
+import json
 import time
 from urllib.parse import parse_qs
 from django.conf import settings
 from django.shortcuts import render, redirect, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from Qinghuiyue.alipay.alipay import AliPay
-
-
+from Qinghuiyue.reservation.models import Reservation
+from Qinghuiyue.venus.models import Court
+from django.http import JsonResponse
 def aliPay():
     obj = AliPay(
-        appid="2021000116664022",                              # 支付宝沙箱里面的APPID，需要改成你自己的
+        appid="2021000116664022",                              # 支付宝沙箱里面的APPI
         app_notify_url="http://58.87.86.11:8000/api/pay/update_order/",  # 如果支付成功，支付宝会向这个地址发送POST请求（校验是否支付已经完成），此地址要能够在公网进行访问，需要改成你自己的服务器地址
-        return_url="http://58.87.86.11:8000/api/pay/result/",            # 如果支付成功，重定向回到你的网站的地址。需要你自己改，这里是我的服务器地址
+        return_url="http://58.87.86.11:8000/api/pay/result/",            # 如果支付成功，重定向回到网站的地址。
         alipay_public_key_path=settings.ALIPAY_PUBLIC,  # 支付宝公钥
         app_private_key_path=settings.APP_PRIVATE,      # 应用私钥
         debug=True,  # 默认False,True表示使用沙箱环境测试
@@ -52,6 +54,21 @@ def index(request):
 
     return redirect(pay_url)
 
+@csrf_exempt
+def pay_for_reservation(request):
+    params=json.loads(request.body)
+    alipay=aliPay()
+    reservation=Reservation.objects(reservation_id=params['reservation_id']).first()
+    subject=Court.objects(id=reservation.details['court']).first().name
+    if not reservation:
+        return JsonResponse({"message":"找不到订单"},status=400)
+    query_params=alipay.direct_pay(
+        subject=subject,
+        out_trade_no=str(reservation.reservation_id)+str(time.time()),
+        total_amount=params['price'],
+    )
+    pay_url="https://openapi.alipaydev.com/gateway.do?{}".format(query_params)
+    return redirect(pay_url)
 
 @csrf_exempt
 def update_order(request):
@@ -61,6 +78,8 @@ def update_order(request):
     :return:
     """
     if request.method == 'POST':
+        params=json.loads(request.body)
+        print(params)
         body_str = request.body.decode('utf-8')
         post_data = parse_qs(body_str)
 

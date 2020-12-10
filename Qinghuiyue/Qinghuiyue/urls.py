@@ -18,14 +18,8 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from Qinghuiyue import views
-from Qinghuiyue import admin_venue
-import Qinghuiyue.admin_venue.views
-from Qinghuiyue import admin_notice
-import Qinghuiyue.admin_notice.views
-from Qinghuiyue import admin_course
-import Qinghuiyue.admin_course.views
 import Qinghuiyue.feedback.views
-from Qinghuiyue import venus
+
 
 urlpatterns = [
                   path('admin/', admin.site.urls),
