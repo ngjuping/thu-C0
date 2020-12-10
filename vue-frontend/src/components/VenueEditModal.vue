@@ -79,12 +79,13 @@ export default {
       const params = new FormData()
       params.set('name', this.formMessage.name)
       params.set('description', this.formMessage.description)
+      params.set('venue_id',this.formMessage.venue_id)
       params.append('img', this.file)
       this.formMessage.img = this.file;
       console.log(this.formMessage, 'firmem')
       if (this.status == 'add') {
         // 新增
-        this.$axios.post('/api/admin/create/venue', this.formMessage,{headers:{'Content-Type':'multipart/form-data'}}).then((res) => {
+        this.$axios.post('/api/admin/create/venue', params,{headers:{'Content-Type':'multipart/form-data'}}).then((res) => {
             console.log(res, 'res')
             this.$emit('edit-success');
         }).catch(err => {
@@ -95,7 +96,7 @@ export default {
         this.$axios.request({
             method: 'post',
             url: '/api/admin/update/venue',
-            data: this.formMessage,
+            data: params,
             headers: {
                     'Content-Type':'multipart/form-data'
                 }
