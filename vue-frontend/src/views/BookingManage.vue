@@ -168,7 +168,8 @@ export default {
         this.info = {
             type: 1,
             status: [],
-            id: this.venueId
+            //id: this.venueId,
+            venue_id:this.venueId
         };
         this.status = 'add';
     },

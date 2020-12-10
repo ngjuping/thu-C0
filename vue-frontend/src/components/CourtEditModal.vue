@@ -14,14 +14,13 @@
               <div class="row form-group">
                 <label class="col-sm-2">场地</label>
                 <div class="col-sm-10">
-                  <select v-model="formMessage.type" v-if="status=='add'" class="form-control" style="width: 100px">
+                  <select v-model="formMessage.type" class="form-control" style="width: 100px">
                       <option
                         v-for="(item, index) in sports"
                         :value="index+1"
                         :key="index"
                       >{{item}}</option>
                   </select>
-                  <span v-else>{{sports[formMessage.type]}}</span>
                 </div>
               </div>
               <div class="row form-group">
@@ -113,11 +112,17 @@ export default {
       this.formMessage.timeInfoList = temp
     },
     handleSave() {
-      const params = {
-        court: [
+      const params_add = {
+          venue_id:this.courtInfo.venue_id,
+          type: this.formMessage.type-1,
+          name: this.sports[this.formMessage.type-1] + "场地",
+          status: []
+      }
+      const params_update = {
+        court:[
           {
-            venue_id: this.courtInfo.id,
-            type: this.status == 'add' ? this.formMessage.type-1 : this.courtInfo.type,
+            id:this.courtInfo.id,
+            type:this.formMessage.type,
             status: []
           }
         ]
@@ -126,10 +131,19 @@ export default {
         const startDate = moment()
         const startHour = parseInt(item.start.substr(0,2))
         startDate.hour(startHour)
+        startDate.minute(0)
+        startDate.second(0)
         const endDate = moment()
         const endHour = parseInt(item.end.substr(0,2))
         endDate.hour(endHour)
-        params.court[0].status.push({
+        endDate.minute(0)
+        endDate.second(0)
+        params_add.status.push({
+          start: startDate.format(),
+          end: endDate.format(),
+          code: item.code
+        })
+        params_update.court[0].status.push({
           start: startDate.format(),
           end: endDate.format(),
           code: item.code
@@ -139,22 +153,24 @@ export default {
         this.$axios.request({
             method: 'post',
             url: '/api/admin/create/court',
-            data: params,
+            data: params_add,
         }).then(() => {
             this.$emit('success-edit')
         }).catch(error => {
             console.log(error);
-            console.log(params);
+            console.log(params_add);
         })
       } else {
         this.$axios.request({
             method: 'post',
             url: '/api/admin/update/court',
-            data: params
+            data: params_update
         }).then(() => {
             this.$emit('success-edit')
         }).catch(error => {
-            console.log(error)
+            console.log(error);
+            console.log(params_update);
+            //console.log(error.response.data.message);
         })
       }
     }
@@ -198,6 +214,7 @@ export default {
     },
     show(val) {
       if (val) {
+        //const id = this.courtInfo.id
         const type = this.courtInfo.type
         const timeInfoList = []
         if (this.courtInfo.status.length > 0) {
