@@ -128,12 +128,12 @@ export default {
         ]
       }
       this.formMessage.timeInfoList.forEach(item => {
-        const startDate = moment()
+        const startDate = moment().utc()
         const startHour = parseInt(item.start.substr(0,2))
         startDate.hour(startHour)
         startDate.minute(0)
         startDate.second(0)
-        const endDate = moment()
+        const endDate = moment().utc()
         const endHour = parseInt(item.end.substr(0,2))
         endDate.hour(endHour)
         endDate.minute(0)
