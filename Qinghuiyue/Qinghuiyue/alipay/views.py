@@ -4,10 +4,11 @@ from urllib.parse import parse_qs
 from django.conf import settings
 from django.shortcuts import render, redirect, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 from Qinghuiyue.alipay.alipay import AliPay
 from Qinghuiyue.reservation.models import Reservation
 from Qinghuiyue.venus.models import Court
-from django.http import JsonResponse
+from Qinghuiyue.reservation.models import Reservation
 def aliPay():
     obj = AliPay(
         appid="2021000116664022",                              # 支付宝沙箱里面的APPI
@@ -32,6 +33,7 @@ def aliPay():
 
 @csrf_exempt
 def index(request):
+    #假的index用于在没有前端的情况下测试2
     if request.method == "GET":
         return render(request, 'index.html')
 
@@ -39,15 +41,22 @@ def index(request):
     alipay = aliPay()
 
     # 对购买的数据进行加密
-    money = float(request.POST.get('price'))  # 保留俩位小数  前端传回的数据
-    out_trade_no = "x2" + str(time.time())  # 商户订单号   # 订单号可以有多中生成方式，可以百度一下
+    reservation_id = int(request.POST.get('reservation_id'))  # 保留俩位小数  前端传回的数据
 
+    out_trade_no = str(reservation_id) + str(time.time())  # 商户订单号   # 订单号可以有多中生成方式，可以百度一下
+
+    reservation=Reservation.objects(reservation_id=reservation_id).first()
+    if not reservation:
+        return JsonResponse({"message":"该订单不存在！"},status=500)
     # 1. 在数据库创建一条数据：状态（待支付）
+    court=Court.objects(id=reservation.details['court']).first()
+    if not court:
+        return JsonResponse({"message":"该场地不存在！"},status=501)
 
     query_params = alipay.direct_pay(
-        subject="充气式Saber",  # 商品简单描述 这里一般是从前端传过来的数据
+        subject=court.name+"支付",  # 商品简单描述 这里一般是从前端传过来的数据
         out_trade_no=out_trade_no,  # 商户订单号  这里一般是从前端传过来的数据
-        total_amount=money,  # 交易金额(单位: 元 保留俩位小数)   这里一般是从前端传过来的数据
+        total_amount=court.price,  # 交易金额(单位: 元 保留俩位小数)   这里一般是从前端传过来的数据
     )
     # 拼接url，转到支付宝支付页面
     pay_url = "https://openapi.alipaydev.com/gateway.do?{}".format(query_params)
@@ -78,7 +87,7 @@ def update_order(request):
     :return:
     """
     if request.method == 'POST':
-
+        print(request.POST.get('notify_time'))
         body_str = request.body.decode('utf-8')
         print(body_str)
         post_data = parse_qs(body_str)

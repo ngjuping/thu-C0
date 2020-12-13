@@ -22,21 +22,6 @@ def get_reservations(request):
     user = User.objects(user_id=user_id)[0]
     rent_now_id = user.rent_now
     rent_now = Reservation.objects(id__in=rent_now_id)
-    # print(len(rent_now))
-    # print(rent_now[0].details['court'])
-    '''
-    courts = [{
-        "reservation_id": rent.reservation_id,
-        "type": rent.type,
-        "status": rent.status,
-        "details": {
-            "name": Court.objects(id=rent.details['court'])[0].name,
-            "start": rent.details['start'],
-            "end": rent.details['end'],
-            "created":rent.details['created'],
-            "paid_at":rent.details['paid']
-        }
-    } for rent in rent_now]'''
     courts = []
     for rent in rent_now:
         feedback=Feedback.objects(reservation_id=rent.reservation_id).first()
@@ -72,12 +57,45 @@ def get_reservations(request):
     })
 
 
+def book_draw(request):
+    '''
+    用户抽签预定
+    params:user_id,court_id,start,end
+    '''
+    book_info = json.loads(request.body)
+    court = Court.objects(court_id=book_info['court_id']).first()
+    court_status = court.Status
+    book_info['start'] = str2datetime(book_info['start'])
+    book_info['end'] = str2datetime(book_info['end'])
+    user = User.objects(user_id=request.session.get("user_id")).first()
+    if not user:
+        return JsonResponse({"message":"用户不存在或登陆过期，请重新登陆"},status=400)
+    for status in court_status:
+        if status['start'] == book_info['start'] \
+                and status['end'] == book_info['end']:
+            if status['code'] == 3:  # 可供抽签
+                status["users_id"].append(user.user_id)
+                reservation = Reservation(type=court.enum_id, details={
+                    "court": court.id,
+                    "user_id": user.user_id,
+                    "start": book_info["start"],
+                    "end": book_info["end"]
+                }, reservation_id=Stat.add_object("reservation"), status=5)#5是等待抽签
+                reservation.save()  # 应该先保存，不然会导致读取不出id
+                user.rent_now.append(reservation.id)
+                court.save()
+                user.save()
+
+                return JsonResponse({"message": "ok","reservation_id":reservation.reservation_id})
+    return JsonResponse({"message": "找不到需要预定的时间段"}, status=400)
+
 def book_first_come(request):
+
     '''
-    先到先得预定，接受用户id和要预定的场馆和时间段
-    :param request:
-    :return:
-    '''
+     先到先得预定，接受用户id和要预定的场馆和时间段
+     :param request:
+     :return:
+     '''
     book_info = json.loads(request.body)
     print(book_info)
     court = Court.objects(court_id=book_info['court_id']).first()
@@ -87,9 +105,9 @@ def book_first_come(request):
     book_info['start'] = str2datetime(book_info['start'])
 
     book_info['end'] = str2datetime(book_info['end'])
-    # print(book_info)
-    print(request.session.get("user_id"))
     user = User.objects(user_id=request.session.get("user_id")).first()
+    if not user:
+        return JsonResponse({"message":"用户不存在或登陆过期，请重新登陆"},status=400)
     for status in court_status:
         # print(status['start'], status['end'])
         if status['start'] == book_info['start'] \
@@ -114,7 +132,6 @@ def book_first_come(request):
 
                 return JsonResponse({"message": "ok","reservation_id":reservation.reservation_id})
     return JsonResponse({"message": "error"}, status=400)
-
 
 def transfer_reservation(request):
     '''
