@@ -3,3 +3,4 @@ bcrypt
 django-cors-headers
 python-dateutil
 pycryptodome
+alipay

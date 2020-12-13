@@ -78,9 +78,9 @@ def update_order(request):
     :return:
     """
     if request.method == 'POST':
-        params=json.loads(request.body)
-        print(params)
+
         body_str = request.body.decode('utf-8')
+        print(body_str)
         post_data = parse_qs(body_str)
 
         post_dict = {}
