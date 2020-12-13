@@ -139,7 +139,7 @@ def transfer_reservation(request):
     :param request:
     :return:
     '''
-    # 疑问，是直接把订单转移，还是新建一个订单，原来的状态改为已经转移
+    #是新建一个订单，原来的状态改为已经转移,只有已经预定成功（含未付款）才能转让
     params = json.loads(request.body)
     reservation = Reservation.objects(reservation_id=params['reservation_id']).first()
     if not reservation:
@@ -178,7 +178,10 @@ def transfer_reservation(request):
 
 def cancel_reservation(request):
     '''
-    取消订单，把订单状态改为3，并且在场馆处修改状态。当多种方式混合预定的时候再增加条件判断。
+    取消订单，把订单状态改为3，并且在场馆处修改状态。
+    对于未付款(1)的，将对应场地状态制空，可供先到先得
+    对于已付款的，认为不能取消了（退款功能没有实现，可以转让）
+    对于未抽签(5)的，将其从队列里面删除
     :param request:
     :return:
     '''
@@ -189,16 +192,29 @@ def cancel_reservation(request):
     user = User.objects(user_id=reservation.details['user_id']).first()
     if user.user_id != request.session.get('user_id'):
         return JsonResponse({"message": "你没有取消权限！"}, status=400)
-
-    reservation.status = 3
-    reservation.save()
     court = Court.objects(id=reservation.details['court']).first()
-    for status in court.Status:
-        if status['start'] == reservation.details['start'] and \
-                status['end'] == reservation.details['end']:
-            status['user_id'] = -1
-            status['code'] = 1
-            break
-    court.save()
-
+    if reservation.status==1:
+        reservation.status = 3
+        reservation.save()
+        for status in court.Status:
+            if status['start'] == reservation.details['start'] and \
+                    status['end'] == reservation.details['end']:
+                status['user_id'] = -1
+                status['code'] = 1
+                break
+        court.save()
+    elif reservation.status==5:
+        reservation.status=3
+        reservation.save()
+        for status in court.Status:
+            if status['start'] == reservation.details['start'] and \
+                    status['end'] == reservation.details['end']:
+                try:
+                    status['users_id'].remove(user.user_id)
+                except:
+                    return JsonResponse({"message":"您已经从抽签中退出"},status=400)
+                break
+        court.save()
+    else:
+        return JsonResponse({"message":"当前状态不可取消预定"},status=400)
     return JsonResponse({"message": "ok"})

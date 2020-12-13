@@ -174,3 +174,27 @@ def update_venue(request):
     })
 
 
+def make_schedule(request):
+    '''
+    学期场地预定，接受
+    {
+    price: 15,
+    court_id:1,
+    matrix:[
+    [1,2,3,1,2,2,3],
+    [1,2,3,1,2,2,3],
+    ...
+    ]#大小7*15，15代表十五个时间段，7-8,8-9...21-22
+    }
+    '''
+    if request.session.get('privilege')!=1:
+        return JsonResponse({"message":"你没有权限"},status=401)
+    params=json.loads(request.body)
+    court=Court.objects(court_id=params['court_id']).first()
+    if not court:
+        return JsonResponse({"message":"该场地不存在"},status=501)
+    court.price=params['price']
+    court.matrix=params['matrix']
+    court.save()
+    court.set_schedule()
+    return JsonResponse({"message":"ok"})

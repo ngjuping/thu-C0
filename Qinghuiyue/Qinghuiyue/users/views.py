@@ -30,6 +30,7 @@ def login(request):
 
     if user and user.authenticate(params['pwd']):
         request.session['user_id'] = user.user_id
+        request.session['privilege']=user.privilege
         return JsonResponse(
             {"message": "ok", "user_info": {'user_id': user.user_id, 'name': user.name, 'privilege': user.privilege}})
     else:
