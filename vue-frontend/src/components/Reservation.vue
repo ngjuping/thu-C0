@@ -93,6 +93,7 @@
                         <!-- 根据订单状态，如果可以退场，显示该按钮 -->
                         <div class="btn btn-danger" @click="confirmQuit" v-if="cancellable">退场</div>
                     </div>
+                    <div class="btn btn-primary" @click="pay" v-if="hastoPay">支付订单</div>
                 </div>
             </div>
         </div>
@@ -132,6 +133,63 @@ export default {
         }
     },
     methods:{
+        pay(){
+            let chosenPaymentMethod;
+            Swal.fire({
+                title: `支付订单`,
+                icon:"question",
+                showCloseButton:true,
+                showConfirmButton:true,
+                confirmButtonText:"支付",
+                showLoaderOnConfirm: true,
+                text:`服务器返回信息：die`,
+                html:`
+                <br/>
+                选择您的支付方式：
+                <select name="payments">
+                    <option value="alipay">支付宝</option>
+                    <option value="wepay">微信支付</option>
+                    <option value="offline">线下支付</option>
+                </select>
+                <hr/>`,
+                preConfirm: () => {
+                    
+                    // 获取选择的支付方式
+                    let content = Swal.getContent();
+                    chosenPaymentMethod = content.querySelector('select').value;
+                    
+                    
+                    // 根据支付方式发出支付请求
+                    return this.$axios.post(`/api/pay/${chosenPaymentMethod}`,{
+                        reservation_id: this.resv.reservation_id
+                    })
+                    .then(() => {
+                        // axios只允许200-299状态码进入then
+                        // 线下支付选择后会，请求成功就会进入这里
+                        if(chosenPaymentMethod === 'offline'){
+                            Swal.fire({
+                                title: `请持学生证到柜台支付！`,
+                                icon:"info",
+                                showCloseButton:true,
+                                showConfirmButton:true,
+                                confirmButtonText:"我知道了"
+                            })
+                        }
+                    })
+                    .catch((err) => {
+                        // 判断是否是跳转状态码，属于线上支付
+                        if(err.response.status === 302){
+                            // 跳转
+                            window.location.href = err.response.headers.location;
+                            return;
+                        }
+                        Swal.showValidationMessage(
+                            `支付失败: ${err.response.data.message}`
+                        )
+                    })
+                }
+            })
+        },
         chineseTime(time){
             try{
                 let [year,month,day] = time.split("T")[0].split("-");
@@ -323,6 +381,9 @@ export default {
         },
         shareUpdateable(){
             return this.resv.shared && this.resvStatus === 2 && !this.outDated;
+        },
+        hastoPay(){
+            return this.resvStatus === 1 && !this.outDated;
         }
     }
 }

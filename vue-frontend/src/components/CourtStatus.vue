@@ -112,31 +112,84 @@ export default {
             showLoaderOnConfirm: true,
             icon:"info",
             preConfirm: () => {
+
+                // 根据场地状态调整api路径, switch提升可扩展性
+                let api_url = '/api/book';
+                switch(this.selectedCourt.code){
+                    case '3':
+                        api_url = '/api/draw';
+                    break;
+                }
+
+                // 发出订场POST请求
                 return this.$axios
-                .post('/api/book',{
+                .post(api_url,{
                     court_id:this.info.id,
                     start:this.getBookStartTime(),
                     end:this.getBookEndTime(),
                     }
                 )
                 .then((res) => {
-                   Swal.fire({
-                    title: `预定成功`,
-                    icon:"success",
-                    showCloseButton:true,
-                    showConfirmButton:true,
-                    confirmButtonText:"查看我的预约详情",
-                    text:`服务器返回信息：${res.data.message}`,
-                    timer: 3000,
-                    })
-                    .then((result) => {
-                        if(result.isConfirmed){
-                            this.$router.push({name:'Manage'});
+
+                    let chosenPaymentMethod;
+
+                    // 订场成功
+                    Swal.fire({
+                        title: `预定成功`,
+                        icon:"success",
+                        showCloseButton:true,
+                        showConfirmButton:true,
+                        confirmButtonText:"支付",
+                        showDenyButton: true,
+                        denyButtonText:"继续预定",
+                        denyButtonColor: 'grey',
+                        showLoaderOnConfirm: true,
+                        text:`服务器返回信息：${res.data.message}`,
+                        html:`<div class="lead">您可以待会儿支付。</div>
+                        <br/>
+                        选择您的支付方式：
+                        <select name="payments">
+                            <option value="alipay">支付宝</option>
+                            <option value="wepay">微信支付</option>
+                            <option value="offline">线下支付</option>
+                        </select><hr/>`,
+                        preConfirm: () => {
+                            
+                            let content = Swal.getContent();
+                            chosenPaymentMethod = content.querySelector('select').value;
+                            console.log(chosenPaymentMethod);
+
+                            // 进一步支付
+                            return this.$axios.post(`/api/pay/${chosenPaymentMethod}`,{
+                                reservation_id: res.data.reservation_id
+                            })
+                            .then(() => {
+                                // axios只允许200-299状态码进入then
+                                // 线下支付选择后会，请求成功就会进入这里
+                                if(chosenPaymentMethod === 'offline'){
+                                    Swal.fire({
+                                        title: `请持学生证到柜台支付！`,
+                                        icon:"info",
+                                        showCloseButton:true,
+                                        showConfirmButton:true,
+                                        confirmButtonText:"我知道了"
+                                    })
+                                }
+                            })
+                            .catch((err) => {
+                                // 判断是否是跳转状态码
+                                if(err.response.status === 302){
+                                    // 跳转
+                                    window.location.href = err.response.headers.location;
+                                    return;
+                                }
+                                Swal.showValidationMessage(
+                                    `跳转失败: ${err.response.data.message}`
+                                )
+                            })
                         }
-                    
+                    })
                 })
-                })
-                
                 .catch((err) => {
                     Swal.showValidationMessage(
                     `请求失败: ${err.response.data.message}`

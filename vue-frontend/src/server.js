@@ -191,7 +191,7 @@ let server = new Server({
       {
         return new Response(422, {}, { message: "场地已被预定" });
       }
-      return {message:"ok"};
+      return {message:"ok",reservation_id:1};
       
     });
 
@@ -238,7 +238,7 @@ let server = new Server({
             created: "2020-02-29T13:00:00+01:00",
             paid_at: "2020-02-29T13:10:00+01:00"
             },
-          status:2,
+          status:1,
           reviewed:0,
           shared:11
         },
@@ -723,6 +723,27 @@ this.get('/courses',(schema,request)=>{
       }
       
     })
+
+  this.post('pay/alipay',()=>{
+    return new Response(404, {}, {message:"支付宝崩溃！不如试试微信支付？"});
+    // return {
+    //   message:"ok",
+    // }
+  })
+
+  this.post('pay/wepay',()=>{
+    return new Response(302, {'Location':'http://www.ngjuping.com'}, {});
+    // return {
+    //   message:"ok",
+    // }
+  })
+
+  this.post('pay/offline',()=>{
+    // return new Response(302, {'Location':'http://www.ngjuping.com'}, {});
+    return {
+      message:"ok",
+    }
+  })
   }
   
 })
