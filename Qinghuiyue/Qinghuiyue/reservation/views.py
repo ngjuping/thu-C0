@@ -76,7 +76,8 @@ def book_draw(request):
         if status['start'] == book_info['start'] \
                 and status['end'] == book_info['end']:
             if status['code'] == 3:  # 可供抽签
-                status["users_id"].append(user.user_id)
+                if user.user_id in status['users_id']:
+                    return JsonResponse({"message":"您已经预定过这个场地了"},status=400)
                 reservation = Reservation(type=court.enum_id, details={
                     "court": court.id,
                     "user_id": user.user_id,
@@ -85,6 +86,11 @@ def book_draw(request):
                     "created": datetime.datetime.now()
                 }, reservation_id=Stat.add_object("reservation"), status=5)  # 5是等待抽签
                 reservation.save()  # 应该先保存，不然会导致读取不出id
+
+                if 'reservation_ids' not in status.keys():
+                    status['reservation_ids']=[]
+                status['reservation_ids'].append(reservation.id)
+                status['users_id'].append(user.user_id)
                 user.rent_now.append(reservation.id)
                 court.save()
                 user.save()
@@ -215,7 +221,8 @@ def cancel_reservation(request):
             if status['start'] == reservation.details['start'] and \
                     status['end'] == reservation.details['end']:
                 try:
-                    status['users_id'].remove(user.user_id)
+                    status['reservation_ids'].remove(reservation.id)
+                    return status['users_id'].remove(user.user_id)
                 except:
                     return JsonResponse({"message": "您已经从抽签中退出"}, status=400)
                 break
