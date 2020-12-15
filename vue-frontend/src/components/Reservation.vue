@@ -1,19 +1,22 @@
 <template>
-    <div class="col-12 col-lg-6 mb-3 ">
+    <div class="col-12 mb-3" :id="`resv-${resvId}`">
         
         <div class="card h-100 border border-dark">
             <div class="card-header bg-dark text-light">
                 {{ resv.details.name }}
             </div>
-            <div class="card-body text-left">
+            <div class="card-body text-left sports" :class="`sports-${this.resv.type}`">
                 
                 <!-- 订单信息 -->
-                <form>
+                <form class="bg-light shadow p-3">
                     <fieldset>
                         <div class="form-group">
                         <label><b>预定日期</b></label>
                         <input type="text" class="form-control-plaintext" 
-                        :placeholder="`${chineseTime(resv.details.start)} 到 ${chineseTime(resv.details.end)}`">
+                        :placeholder="`${chineseTime(resv.details.start)}`">
+                        到
+                        <input type="text" class="form-control-plaintext" 
+                        :placeholder="`${chineseTime(resv.details.end)}`">
                         </div>
                         <div class="form-group">
                         <label><b>场地状态</b>&nbsp;
@@ -27,9 +30,7 @@
                         <input type="text" class="form-control-plaintext" :placeholder="$store.state.reservationType[resv.type]">
                         </div>
                     </fieldset>
-                </form>
-
-                <small>下单于 &nbsp; {{ chineseTime(resv.details.created) }}</small>
+                    <small>下单于 &nbsp; {{ chineseTime(resv.details.created) }}</small>
                 <hr>
                 <small v-if="resv.details.paid_at">支付于 &nbsp; {{ chineseTime(resv.details.paid_at) }}</small>
                 <div class="m-3"></div>
@@ -95,6 +96,9 @@
                     </div>
                     <div class="btn btn-primary" @click="pay" v-if="hastoPay">支付订单</div>
                 </div>
+                </form>
+
+                
             </div>
         </div>
         <ShareModal :reservation="resv"
@@ -388,3 +392,56 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+
+.sports{
+    position:relative;
+    background-color:transparent;
+    z-index:0;
+}
+
+.sports::after{
+    content:"";
+    position:absolute;
+    display:block;
+    top:0px;
+    left:0px;
+    height:100%;
+    width:100%;
+    opacity: 0.5;
+    z-index:-1;
+    background-size: cover;
+}
+.sports-1::after{
+    background-image:url('../assets/badminton.jpeg');
+}
+
+.sports-2::after{
+    background-image:url('../assets/tabletennis.jpeg');
+}
+
+.sports-3::after{
+    background-image:url('../assets/tennis.jpeg');
+}
+
+.sports-4::after{
+    background-image:url('../assets/basketball.jpeg');
+}
+
+form{
+    width:70%;
+}
+
+@media(max-width:800px){
+    form{
+        width:80%;
+    }
+}
+
+@media(max-width:600px){
+    form{
+        width:100%;
+    }
+}
+</style>
