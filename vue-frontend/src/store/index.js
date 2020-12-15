@@ -16,7 +16,7 @@ export default new Vuex.Store({
     logged_in_user_name:"no-name",
     privilege:-1, // use this variable to check user type
     reservationStatus:['订单状态未知',"成功预约未付款","已付款","已取消","已转让","未抽签","已抽签","队列中"],
-    courtStatus:["未开放","空场地","已有人预定"],
+    courtStatus:["未开放","空场地","已有人预定","可抽签"],
     reservationType:['未知预定类型','先到先得','抽签','长期预定','队列'],
     sportsType:["清除过滤","羽球","乒乓","网球","篮球"],
   },

@@ -1,6 +1,6 @@
 <template>
     <div class="jumbotron text-left shadow p-3">
-        <span id="title">{{ sports[info.type] }}场地{{ info.id }}</span>
+        <span id="title">{{ this.sportsType }}场地{{ info.id }}</span>
             <div class="container">
                 <div class="row">
                     <div class="col-12 col-md-12">
@@ -9,7 +9,7 @@
                             :class="[`courtstatus-${status.code} border border-success rounded`]"
                             :id="selectedCourt && selectedCourt.start === status.start?'activeCourt':'notActive'"
                             :key="`range${status.start}`"
-                            :title="statustext[status.code]"
+                            :title="courtState(status)"
                             @click="selectCourt(status)"
                             data-toggle="tooltip" 
                             data-placement="top">
@@ -52,15 +52,21 @@ export default {
     props:["info","date"],
     data(){
         return {
-            sports:["清除过滤","羽球","乒乓","网球","篮球"],
-            statustext:["无状态","空场地","已有人预定"],
             selectedCourt:null
         }
     },
     mounted(){
         $('[data-toggle="tooltip"]').tooltip();
     },
+    computed:{
+        sportsType(){
+            return this.$store.state.sportsType[parseInt(this.info.type)];
+        },
+    },
     methods:{
+        courtState(status){
+            return this.$store.state.courtStatus[parseInt(status.code)];
+        },
         selectCourt(courtinfo){
             this.selectedCourt = courtinfo
         },
@@ -100,7 +106,7 @@ export default {
                     您的订单
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">${ this.sports[this.info.type] } 场地 ${ this.info.id }</h5>
+                    <h5 class="card-title">${ this.sportsType } 场地 ${ this.info.id }</h5>
                     <p class="card-text">${this.date.join("/")}
                     <hr>
                     ${this.getTimeOnly(this.selectedCourt.start)} 到 ${this.getTimeOnly(this.selectedCourt.end)}</p>
@@ -115,8 +121,9 @@ export default {
 
                 // 根据场地状态调整api路径, switch提升可扩展性
                 let api_url = '/api/book';
+                
                 switch(this.selectedCourt.code){
-                    case '3':
+                    case 3:
                         api_url = '/api/draw';
                     break;
                 }
@@ -130,6 +137,17 @@ export default {
                     }
                 )
                 .then((res) => {
+                    if(this.selectedCourt.code === 3){
+                        Swal.fire({
+                        title: `预定成功`,
+                        icon:"success",
+                        text:"您已经加入抽签队列，本周日将进行抽签。您可以随时到“我的场地”查看结果。",
+                        showCloseButton:true,
+                        showConfirmButton:true,
+                        confirmButtonText:"明白"
+                        });
+                        return;
+                    }
 
                     let chosenPaymentMethod;
 
@@ -192,7 +210,7 @@ export default {
                 })
                 .catch((err) => {
                     Swal.showValidationMessage(
-                    `请求失败: ${err.response.data.message}`
+                    `订场失败: ${err.response.data.message}`
                     )
                 })
             },
@@ -219,6 +237,11 @@ export default {
 
 .courtstatus-2{
     background-color:red;
+    opacity:0.5;
+}
+
+.courtstatus-3{
+    background-color:orange;
     opacity:0.5;
 }
 

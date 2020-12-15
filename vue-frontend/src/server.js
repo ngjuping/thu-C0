@@ -37,7 +37,7 @@ let server = new Server({
             status:[
               {start:"2020-11-26T10:00:00+01:00",end:"2020-11-26T11:00:00+01:00",code:1},
               {start:"2020-11-26T11:00:00+01:00",end:"2020-11-26T12:00:00+01:00",code:1},
-              {start:"2020-11-26T12:00:00+01:00",end:"2020-11-26T13:00:00+01:00",code:1}]
+              {start:"2020-11-26T12:00:00+01:00",end:"2020-11-26T13:00:00+01:00",code:3}]
           }
         ]
       });
@@ -936,6 +936,13 @@ this.get('/courses',(schema,request)=>{
 
   this.post('pay/offline',()=>{
     // return new Response(302, {'Location':'http://www.ngjuping.com'}, {});
+    return {
+      message:"ok",
+    }
+  })
+
+  this.post('draw',()=>{
+    //return new Response(302, {'Location':'http://www.ngjuping.com'}, {});
     return {
       message:"ok",
     }
