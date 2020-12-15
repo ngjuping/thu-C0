@@ -36,7 +36,7 @@ class Court(DynamicDocument):
 
         while now.weekday()!=0:
             now+=timedelta(days=1)
-        time=now.replace(hour=7,minute=0,second=0)
+        time=now.replace(hour=7,minute=0,second=0,microsecond=0)
         time_end=time+timedelta(days=6,hours=15)
         i=0
         while i <len(self.Status):
