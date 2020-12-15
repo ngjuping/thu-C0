@@ -39,7 +39,7 @@
 
             <ul class="pagination pagination-lg">
                     <li class="page-item"  v-for="(resv,index) in courts" :key="resv.reservation_id">
-                        <a class="page-link" :class="`resvStatus-${resv.status}`" :href="`#resv-${resv.reservation_id}`" tabindex="-1">{{ index+1 }}</a></li>
+                        <a class="page-link px-2" :class="`resvStatus-${resv.status}`" @click="scrollToTarget(`resv-${resv.reservation_id}`)">{{ index+1 }}</a></li>
             </ul>
         </div>
         <div class="container">
@@ -54,9 +54,10 @@
                     <vc-calendar :attributes="attributes" mode="range" is-expanded class="shadow"></vc-calendar>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" v-for="court in courts" :key="court.reservation_id" :ref="`resv-${court.reservation_id}`">
                 
-                    <Reservation  v-for="court in courts" :key="court.reservation_id" :resv="court"></Reservation>
+                    <Reservation  :resv="court" ></Reservation>
+                    
             </div>
             
                     <div class="alert alert-dark" v-if="!courts.length">
@@ -71,6 +72,7 @@
 import Swal from 'sweetalert2';
 import Reservation from '@/components/Reservation.vue';
 import moment from 'moment';
+import smoothScroll from 'smoothscroll'
 
 export default {
     components:{
@@ -86,6 +88,9 @@ export default {
         }
     },
     methods:{
+        scrollToTarget(target){
+            smoothScroll(this.$refs[target][0]);
+        },
         between(data,x,y){
             return parseInt(data) >= x && parseInt(data) <= y;
         },

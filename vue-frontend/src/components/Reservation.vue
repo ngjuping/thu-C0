@@ -1,5 +1,5 @@
 <template>
-    <div class="col-12 mb-3" :id="`resv-${resvId}`">
+    <div class="col-12 mb-3">
         
         <div class="card h-100 border border-dark">
             <div class="card-header bg-dark text-light">
