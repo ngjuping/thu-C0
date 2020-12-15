@@ -61,6 +61,8 @@
                 </div>
             </div>
         </div>
+        <vc-calendar mode="range" is-expanded @dayclick='updateByCalendarClick' :attributes="attributes"></vc-calendar>
+        <br/>
         <div v-if="courts">
             <CourtStatus v-for="court in filteredcourts" :key="court.id" :info="court" :date="selected_date"></CourtStatus>
         </div>
@@ -85,13 +87,20 @@ export default {
             failedToLoadCourts:false,
             loadingCourts:false,
             selected_date:this.today(),
-            timer:0
+            timer:0,
         };
     },
     components:{
         CourtStatus
     },
     methods:{
+        updateByCalendarClick(dayEvent){
+            let parsed_date = dayEvent.id.split("-");
+            let day = parsed_date[2];
+            let month = parsed_date[1];
+            let year = parsed_date[0];
+            this.updateCourts([day,month,year]);
+        },
         setFilter(x){
             this.filter_type = x;
         },
@@ -155,6 +164,23 @@ export default {
                 return this.courts;
             }
             return this.courts.filter((court)=>{return court.type === this.filter_type});
+        },
+        attributes(){
+            // selected_date 格式 = [day,month,year]
+            let date = this.selected_date;
+
+            // 需要返回一个数组的对象
+            return [{
+                key: 'today',
+                highlight: 'purple',
+
+                // 月份从0开始
+                dates: new Date(date[2],date[1]-1,date[0]),
+                popover: {
+                    label: "选择这天",
+                    hideIndicator: true,
+                }
+            }]
         }
     }
 }
