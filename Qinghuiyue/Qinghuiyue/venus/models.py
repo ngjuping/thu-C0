@@ -36,6 +36,8 @@ class Court(DynamicDocument):
         根据这个矩阵把下一周的场地全部安排好
         注意，0是代表周一
          """
+        if not self.matrix:
+            return
         # 先获取下一周周一的日期
         now = datetime.now() + timedelta(days=1)  # 防止今天是周一
 
@@ -81,6 +83,7 @@ class Court(DynamicDocument):
                         reservation.status = 6
                         reservation.save()
                     status.pop('reservation_ids', None)
+                    status.pop('users_id',None)
                     status['code'] = 2
                 else:
                     status['code'] = 1

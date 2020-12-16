@@ -44,9 +44,13 @@ INSTALLED_APPS = [
     'Qinghuiyue.users',
     'corsheaders',
     'Qinghuiyue.utils',
-
+    'django_crontab',
 ]
-
+#定时任务,在周日12点预置场地，13点抽签
+CRONJOBS=[
+    ('0 12 * * 6','Qinghuiyue.cronjobs.cronjobs.set_court_next_week'),
+    ('0 13 * * 6','Qinghuiyue.cronjobs.cronjobs.start_draw'),
+]
 MONGODB_DATABASES={
     "default":{
         "name":"qhy",
