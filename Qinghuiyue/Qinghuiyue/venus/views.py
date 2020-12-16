@@ -49,13 +49,13 @@ def get_courts_info(request):
     :return:
     '''
    try:
-      venue_id = request.GET['id']
+      venue_id = int(request.GET['id'])
       venue = Venue.objects(venue_id=venue_id).first()
       courts_id = venue.courts
    except:
       return JsonResponse({"error":"venue id required"}, status=400)
 
-   courts = [Court.objects(_id=i)[0] for i in courts_id]
+   courts = [Court.objects(id=i)[0] for i in courts_id]
    #print(courts)
    court_json = [{"id": i.court_id, "type": i.enum_id,
                "status":[j for j in i.Status]
