@@ -132,7 +132,7 @@ def update_court(request):
                     Court.objects(court_id=court['id']).update_one(set__Status=this_court.Status)
                     flag = True
             if not flag:
-                return JsonResponse({"error": "start time or end time not matched"}, status=401)
+                return JsonResponse({"message": "start time or end time not matched"}, status=401)
 
     return JsonResponse({
         "message": "ok"
@@ -158,14 +158,14 @@ def update_venue(request):
         img = request.FILES.get('img')
         #print(img.size)
         if img.size < 128 or img.size > 2048**2:
-            return JsonResponse({"error": "image size invalid"}, status=401)
+            return JsonResponse({"message": "image size invalid"}, status=401)
         Venue.objects(venue_id=venue_id).update_one(set__image=img.name)
         try:
             with open(settings.STATIC_URL + img.name, 'wb+') as destination:
                 for chunk in img.chunks():
                     destination.write(chunk)
         except:
-            return JsonResponse({"error": "save image failed"}, status=500)
+            return JsonResponse({"message": "save image failed"}, status=500)
 
     except:
         pass

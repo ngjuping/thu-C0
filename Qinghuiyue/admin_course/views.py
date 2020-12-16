@@ -24,12 +24,12 @@ def create_course(request):
         name = params['name']
         assert len(name) > 0
     except:
-        return JsonResponse({"error": "requires correct course name"}, status=401)
+        return JsonResponse({"message": "requires correct course name"}, status=401)
     try:
         price = params['price']
         assert len(price) > 0
     except:
-        return JsonResponse({"error": "requires correct price"}, status=401)
+        return JsonResponse({"message": "requires correct price"}, status=401)
 
     course = Course(
           course_id = course_id,
@@ -49,14 +49,14 @@ def update_course(request):
         course = Course.objects(course_id=course_id).first()
         assert course != None
     except:
-        return JsonResponse({"error": "requires correct course id"}, status=401)
+        return JsonResponse({"message": "requires correct course id"}, status=401)
 
     try:
         name = params['name']
         try:
             assert len(name) > 0
         except:
-            return JsonResponse({"error": "requires correct course name"}, status=401)
+            return JsonResponse({"message": "requires correct course name"}, status=401)
         Course.objects(course_id=course_id).update_one(set__name=name)
     except:
         pass
@@ -66,7 +66,7 @@ def update_course(request):
         try:
             assert len(price) > 0
         except:
-            return JsonResponse({"error": "requires correct price"}, status=401)
+            return JsonResponse({"message": "requires correct price"}, status=401)
         Course.objects(course_id=course_id).update_one(set__price=price)
     except:
         pass
@@ -83,7 +83,7 @@ def delete_course(request):
         assert Course.objects(course_id=course_id).first() != None
         Course.objects(course_id=course_id).delete()
     except:
-        return JsonResponse({"error": "requires correct course id"}, status=401)
+        return JsonResponse({"message": "requires correct course id"}, status=401)
 
     return JsonResponse({
         "message": "ok"
@@ -97,7 +97,7 @@ def get_course(request):
         assert page > 0
         assert size > 0
     except:
-        return JsonResponse({"error": "requires correct page and size"}, status=401)
+        return JsonResponse({"message": "requires correct page and size"}, status=401)
 
     course = Course.objects().all()  # all courses in db
     total = len(course)

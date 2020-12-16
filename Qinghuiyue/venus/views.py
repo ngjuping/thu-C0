@@ -53,7 +53,7 @@ def get_courts_info(request):
       venue = Venue.objects(venue_id=venue_id).first()
       courts_id = venue.courts
    except:
-      return JsonResponse({"error":"venue id required"}, status=400)
+      return JsonResponse({"message":"venue id required"}, status=400)
 
    courts = [Court.objects(_id=i)[0] for i in courts_id]
    #print(courts)
