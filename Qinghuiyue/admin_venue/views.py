@@ -276,6 +276,22 @@ def delete_court(request):
         "message": "ok"
     })
 
+def list_court(request):
+    courts = Court.objects().all()
+    courts_ret = []
+    for court in courts:
+        court_ret = {
+            "id":court.court_id,
+            "name":court.name,
+            "type":court.enum_id,
+            "venue":Venue.objects(id=court.venue).first().name
+        }
+        courts_ret.append(court_ret)
+    return JsonResponse({
+        "message": "ok",
+        "courts": courts_ret
+    })
+
 
 def make_schedule(request):
     '''
