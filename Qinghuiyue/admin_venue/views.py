@@ -174,6 +174,109 @@ def update_venue(request):
     })
 
 
+def create_court(request):
+
+    params = json.loads(request.body)
+    court_id = 1
+    while True:
+        if Court.objects(court_id=court_id).first() != None:
+            court_id += 1
+        else:
+            break
+    try:
+        venue_id = params['venue_id']
+        this_venue = Venue.objects(venue_id=int(venue_id)).first()  # the venue found with id in database
+        courts_ls = this_venue.courts
+    except:
+        return JsonResponse({"message": "venue id error"}, status=401)
+    try:
+        name = params['name']
+    except:
+        return JsonResponse({"message": "requires court name"}, status=401)
+    try:
+        type = params['type']
+        # assert type(type) == int
+        assert 0 <= type <= 5     # 需要改
+    except:
+        return JsonResponse({"message": "venue sport type error"}, status=401)
+    try:
+        param_status = params['status'] # from parameters
+        all_status = []
+        for status in param_status:  # iterate status in each court in POST params
+            new_status = {
+                "start":parse(status['start']),
+                "end":parse(status['end']),
+                "code":status['code']
+            }
+            all_status.append(new_status)
+    except:
+        return JsonResponse({"message": "status error"}, status=401)
+
+    new_court = Court(name=name,
+          enum_id = type,
+          venue = this_venue.id,
+          rent_queue = [],
+          draw_list = [],
+          rent_for_long = [],
+          Status = all_status,
+          status = '开放',
+          court_id = court_id
+          ).save()
+
+    courts_ls.append(new_court.id)
+
+    Venue.objects(venue_id=venue_id).update_one(set__courts=courts_ls)
+
+    return JsonResponse({"message": "ok"})
+
+def delete_venue(request):
+
+    params = json.loads(request.body)
+    try:
+        venue_id = params['venue_id']
+        this_venue = Venue.objects(venue_id=venue_id).first()
+        assert this_venue != None
+    except:
+        return JsonResponse({
+            "message": "venue id error"
+        }, status=401)
+
+    for court in this_venue.courts:
+        this_court = Court.objects(id=court).first()
+        if this_court != None:
+            Court.objects(id=court).delete()
+
+    Venue.objects(venue_id=venue_id).delete()
+
+    return JsonResponse({
+        "message": "ok"
+    })
+
+
+def delete_court(request):
+
+    params = json.loads(request.body)
+    try:
+        court_id = params['court_id']
+        this_court = Court.objects(court_id=court_id).first()
+        assert this_court != None
+    except:
+        return JsonResponse({
+            "message": "court id error"
+        }, status=401)
+    try:
+        this_venue = Venue.objects(id=this_court.venue).first()
+        this_venue.courts.remove(this_court.id)
+        this_venue.save()
+    except:
+        pass
+
+    Court.objects(court_id=court_id).delete()
+    return JsonResponse({
+        "message": "ok"
+    })
+
+
 def make_schedule(request):
     '''
     学期场地预定，接受
