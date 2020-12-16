@@ -222,7 +222,7 @@ def cancel_reservation(request):
                     status['end'] == reservation.details['end']:
                 try:
                     status['reservation_ids'].remove(reservation.id)
-                    return status['users_id'].remove(user.user_id)
+                    status['users_id'].remove(user.user_id)
                 except:
                     return JsonResponse({"message": "您已经从抽签中退出"}, status=400)
                 break

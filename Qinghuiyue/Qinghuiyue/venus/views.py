@@ -57,8 +57,8 @@ def get_courts_info(request):
 
    courts = [Court.objects(id=i)[0] for i in courts_id]
    #print(courts)
-   court_json = [{"id": i.court_id, "type": i.enum_id,
-               "status":[j for j in i.Status]
+   court_json = [{"id": i.court_id, "type": i.enum_id,"name":i.name,
+               "status":[{"start":j['start'],"end":j['end'],"code":j['code']} for j in i.Status]
                } for i in courts]
 
    try:

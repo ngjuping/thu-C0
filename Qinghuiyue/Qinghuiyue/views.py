@@ -12,7 +12,7 @@ def get_notices(request):
         notices = []
         # print(request.session['user_id'])
         for notice in notices_raw:
-            notices.append({"title": notice.title, "content": notice.content, "time": notice.time})
+            notices.append({"id":notice.notice_id,"title": notice.title, "content": notice.content, "time": notice.time})
 
         return JsonResponse({
             "message": "ok",
