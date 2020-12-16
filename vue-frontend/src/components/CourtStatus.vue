@@ -1,6 +1,6 @@
 <template>
     <div class="jumbotron text-left shadow p-3">
-        <span id="title">{{ this.sportsType }}场地{{ info.id }}</span>
+        <span id="title">{{ info.name }}</span>
             <div class="container">
                 <div class="row">
                     <div class="col-12 col-md-12">
@@ -244,6 +244,7 @@ export default {
     background-color:orange;
     opacity:0.5;
 }
+
 
 
 .range,.label{
