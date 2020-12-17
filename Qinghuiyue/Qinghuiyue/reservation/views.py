@@ -255,3 +255,15 @@ def pay_offline(request):
     reservation.save()
 
     return JsonResponse({"message": "ok"})
+
+def test_draw(request):
+    '''仅用于手动测试抽签'''
+    from Qinghuiyue.cronjobs.cronjobs import start_draw,set_court_next_week
+    #set_court_next_week()
+    start_draw()
+    return JsonResponse({"message":"ok"})
+
+def test_set(request):
+    from Qinghuiyue.cronjobs.cronjobs import set_court_next_week
+    set_court_next_week()
+    return JsonResponse({"message": "ok"})

@@ -46,8 +46,11 @@ class Court(DynamicDocument):
         time = now.replace(hour=7, minute=0, second=0, microsecond=0)
         time_end = time + timedelta(days=6, hours=15)
         i = 0
+        print(self.court_id)
         while i < len(self.Status):
+
             status = self.Status[i]
+            print(status)
             if status['start'] >= time and status['end'] <= time_end:
                 self.Status.pop(i)
             else:
