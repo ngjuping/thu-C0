@@ -13,6 +13,9 @@
                         <a class="nav-link" href="/#/admin/bookingManage">场地管理</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="/#/admin/fieldInit">学期场地管理</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/#/admin/replyFeedback">回复反馈</a>
                     </li>
                     <li class="nav-item">

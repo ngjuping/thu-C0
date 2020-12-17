@@ -1,0 +1,76 @@
+<template>
+    <div class="field-delModal">
+        <div class="modal fade" id="delFieldModal" aria-hidden="true" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">提示</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>是否删除该场地</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" @click="handleSave">删除</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    name: 'FieldDelModal',
+    props: {
+        fieldDetail: {
+            type: Object,
+            default() {
+                return {}
+            }
+        },
+        status: {
+            type: String,
+            default() {
+                return {}
+            }
+        }
+    },
+    data() {
+        return {
+            formMessage: {
+                court_id: '',
+                // name: '',
+                // price: ''
+            },
+        }
+    },
+    methods: {
+        handleSave() {
+            // 删除
+            this.$axios.post('/api/admin/delete/venue', this.formMessage).then((res) => {
+                console.log(res, 'res')
+                this.$emit('edit-success');
+            }).catch(err => {
+                console.log(err);
+            })
+        },
+    },
+    watch: {
+        fieldDetail(val) {
+            this.formMessage = {
+                court_id: val.id,
+                // name: val.name,
+                // price: val.price
+            }
+        }
+    },
+}
+</script>
+
+<style scoped>
+    
+</style>
