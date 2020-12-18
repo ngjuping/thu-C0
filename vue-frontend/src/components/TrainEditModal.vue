@@ -18,6 +18,18 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">课程介绍</label>
+                        <div class="col-sm-10">
+                        <input type="text" v-model="formMessage.intro" class="form-control" placeholder="请输入"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">联系方式</label>
+                        <div class="col-sm-10">
+                        <input type="text" v-model="formMessage.tel" class="form-control" placeholder="请输入"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label">价格</label>
                         <div class="col-sm-10">
                         <input type="text" v-model="formMessage.price" class="form-control" placeholder="请输入"/>
@@ -57,6 +69,8 @@ export default {
         return {
             formMessage: {
                 course_id: '',
+                intro:'',
+                tel:'',
                 name: '',
                 price: '',
             },
@@ -97,6 +111,8 @@ export default {
             this.formMessage = {
                 course_id: val.id,
                 name: val.name,
+                intro:val.intro,
+                tel:val.tel,
                 price: val.price
             }
         }
