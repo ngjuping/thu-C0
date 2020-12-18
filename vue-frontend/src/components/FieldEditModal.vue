@@ -14,7 +14,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">输入场地价格：</label>
                             <div class="col-sm-8">
-                                <input type="text" v-model="formMessage.price" class="form-control" placeholder="请输入"/>
+                                <input type="text" v-model.number="formMessage.price" class="form-control" placeholder="请输入"/>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -107,7 +107,7 @@ export default {
     data() {
         return {
             formMessage: {
-                court_id: '',
+                court_id:'',
                 matrix: [
                     [0,0,0,0,0,0,0],
                     [0,0,0,0,0,0,0],
@@ -157,16 +157,14 @@ export default {
             }
         },
     },
-    // watch: {
-    //     fieldDetail(val) {
-    //         console.log(val, 'fieldDetail-watch');
-    //         this.formMessage = {
-    //             court_id: val.id,
-    //             matrix: val.matrix,
-    //             price: val.price
-    //         }
-    //     }
-    // },
+    
+    watch: {
+        fieldDetail(val) {
+             console.log(val, 'fieldDetail-watch');
+             this.formMessage.court_id =  val.id
+         }
+    },
+    
 }
 </script>
 
