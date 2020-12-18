@@ -35,21 +35,32 @@
               @click="handleShowEditModal(item, 'edit')">
               编辑
             </button>
+            <button 
+              type="button" 
+              class="btn btn-danger btn-sm" 
+              data-toggle="modal" 
+              data-target="#delVenueModal" 
+              @click="handleShowEditModal(item, 'delete')"
+              >
+              删除
+            </button>
           </td>
         </tr>
       </tbody>
     </table>
     <venue-edit-modal :venue-detail="venueDetail" @edit-success="handleGetVenues" :status="status" />
     <venue-detail-modal :venue-id="venueId" />
+    <venue-del-modal :venue-detail="venueDetail" :status="status" @edit-success="handleGetVenues" />
   </div>
 </template>
 
 <script>
+import VenueDelModal from '../components/VenueDelModal'
 import VenueDetailModal from '../components/VenueDetailModal.vue'
 import VenueEditModal from '../components/VenueEditModal'
 export default {
   name: 'Venues',
-  components: {VenueEditModal,VenueDetailModal},
+  components: {VenueEditModal,VenueDetailModal,VenueDelModal},
   data() {
     return {
       venuesList: [],
