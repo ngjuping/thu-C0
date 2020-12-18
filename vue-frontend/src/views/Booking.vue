@@ -61,7 +61,7 @@
                 </div>
             </div>
         </div>
-        <vc-calendar mode="range" is-expanded @dayclick='updateByCalendarClick' :attributes="attributes"></vc-calendar>
+        <vc-calendar mode="range" is-expanded @dayclick='updateByCalendarClick' :attributes="attributes" :min-date='new Date()'></vc-calendar>
         <br/>
         <div v-if="courts">
             <CourtStatus v-for="court in filteredcourts" :key="court.id" :info="court" :date="selected_date"></CourtStatus>

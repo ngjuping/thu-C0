@@ -5,7 +5,11 @@
                 <div class="row">
                     <div class="col-12 col-md-12">
                         <div class="row d-flex justify-content-around" id="ranges">
-                            <div class="col-12 col-md range d-flex justify-content-center align-items-center"  v-for="status in info.status" 
+                            <div class="jumbotron p-2" v-if="!info.status.length">
+                                <span class="lead">没有可预定的场地</span>
+                            </div>
+                            <div class="col-12 col-md range d-flex justify-content-center align-items-center"  
+                            v-for="status in info.status"
                             :class="[`courtstatus-${status.code} border border-success rounded`]"
                             :id="selectedCourt && selectedCourt.start === status.start?'activeCourt':'notActive'"
                             :key="`range${status.start}`"
