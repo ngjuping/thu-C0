@@ -30,11 +30,21 @@ def create_course(request):
         assert len(price) > 0
     except:
         return JsonResponse({"message": "requires correct price"}, status=401)
+    try:
+        tel = params['tel']
+    except:
+        return JsonResponse({"message": "requires correct telephone"}, status=401)
+    try:
+        intro = params['intro']
+    except:
+        return JsonResponse({"message": "requires correct introduction"}, status=401)
 
     course = Course(
           course_id = course_id,
           name = name,
           price = price,
+          tel = tel,
+          intro = intro
           ).save()
 
     return JsonResponse({"message": "ok", "course_id": course_id})
@@ -71,6 +81,26 @@ def update_course(request):
     except:
         pass
 
+    try:
+        intro = params['intro']
+        try:
+            assert len(intro) > 0
+        except:
+            return JsonResponse({"message": "requires correct introduction"}, status=401)
+        Course.objects(course_id=course_id).update_one(set__intro=intro)
+    except:
+        pass
+
+    try:
+        tel = params['tel']
+        try:
+            assert len(tel) > 0
+        except:
+            return JsonResponse({"message": "requires correct telephone"}, status=401)
+        Course.objects(course_id=course_id).update_one(set__tel=tel)
+    except:
+        pass
+
     return JsonResponse({
         "message": "ok"
     })
@@ -103,7 +133,8 @@ def get_course(request):
     total = len(course)
     begin = size * (page - 1)   # included
     end = size * page           # not included
-    courses = [{"id":iter['course_id'], "name":iter['name'], "price":iter['price']} for iter in course[begin:end]]
+    courses = [{"id":iter['course_id'], "name":iter['name'], "price":iter['price'],"intro":iter['intro'],"tel":iter['tel']}
+                for iter in course[begin:end]]
 
     return JsonResponse({"message": "ok", "total":total, "courses": courses})
 
