@@ -11,16 +11,23 @@
           </div>
           <div class="modal-body" style="text-align: left;">
             <form>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">输入场地价格：</label>
+                <div class="col-sm-8">
+                  <input type="text" v-model.number="formMessage.price" class="form-control" placeholder="请输入"/>
+                </div>
+              </div>
               <div class="row form-group">
                 <label class="col-sm-2">场地</label>
                 <div class="col-sm-10">
-                  <select v-model="formMessage.type" class="form-control" style="width: 100px">
+                  <select v-model="formMessage.type" v-if="status=='add'" class="form-control" style="width: 100px">
                       <option
                         v-for="(item, index) in sports"
                         :value="index+1"
                         :key="index"
                       >{{item}}</option>
                   </select>
+                  <span v-else>{{sports[formMessage.type]}}</span>
                 </div>
               </div>
               <div class="row form-group">
@@ -87,6 +94,7 @@ export default {
     return {
       sports:[null,"羽球","篮球","乒乓"],
       formMessage: {
+        price:'',
         type: 0,
         timeInfoList: []
       },
@@ -113,6 +121,7 @@ export default {
     },
     handleSave() {
       const params_add = {
+          price:this.formMessage.price,
           venue_id:this.courtInfo.venue_id,
           type: this.formMessage.type-1,
           name: this.sports[this.formMessage.type-1] + "场地",
@@ -121,8 +130,9 @@ export default {
       const params_update = {
         court:[
           {
+            price:this.formMessage.price,
             id:this.courtInfo.id,
-            type:this.formMessage.type,
+            type:this.courtInfo.type,
             status: []
           }
         ]
