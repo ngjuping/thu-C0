@@ -278,7 +278,20 @@ def delete_court(request):
 
 def list_court(request):
     courts = Court.objects().all()
+    total = len(courts)
     courts_ret = []
+
+    try:
+        page = int(request.GET['page'])
+        size = int(request.GET['size'])
+    except:
+        return JsonResponse({
+            "message": "require page and size"
+        })
+    begin = size * (page - 1)   # included
+    end = size * page           # not included
+    courts = courts[begin:end]
+
     for court in courts:
         court_ret = {
             "id":court.court_id,
@@ -289,9 +302,9 @@ def list_court(request):
         courts_ret.append(court_ret)
     return JsonResponse({
         "message": "ok",
+        "total": total,
         "courts": courts_ret
     })
-
 
 def make_schedule(request):
     '''
