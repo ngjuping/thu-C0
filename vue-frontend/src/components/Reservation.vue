@@ -108,7 +108,6 @@
         <TransferModal :reservation="resv"
                        class="modal fade" :id="`transfer_modal-${resv.reservation_id}`"
                        @hide-modal="hideTransferModal"></TransferModal>
-    
     </div>
 </template>
 
@@ -158,12 +157,12 @@ export default {
                     let content = Swal.getContent();
                     chosenPaymentMethod = content.querySelector('select').value;
                     
-                    
                     // 根据支付方式发出支付请求
                     return this.$axios.post(`/api/pay/${chosenPaymentMethod}`,{
                         reservation_id: this.resv.reservation_id
                     })
                     .then(() => {
+                        console.log("Test");
                         // axios只允许200-299状态码进入then
                         // 线下支付选择后会，请求成功就会进入这里
                         if(chosenPaymentMethod === 'offline'){
@@ -178,9 +177,10 @@ export default {
                     })
                     .catch((err) => {
                         // 判断是否是跳转状态码，属于线上支付
+                        console.log(err.response.headers.location);
                         if(err.response.status === 302){
                             // 跳转
-                            window.location.href = err.response.headers.location;
+                            window.location.href = err.response.headers.location + '/';
                             return;
                         }
                         Swal.showValidationMessage(
