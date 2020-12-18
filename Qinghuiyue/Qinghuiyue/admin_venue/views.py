@@ -77,7 +77,7 @@ def create_court(request):
         return JsonResponse({"message": "requires court name"}, status=401)
     try:
         price = params['price']
-        assert type(price) == int
+        assert price>0
     except:
         return JsonResponse({"message": "requires a integer price"}, status=401)
     try:
