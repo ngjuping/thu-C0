@@ -76,6 +76,11 @@ def create_court(request):
     except:
         return JsonResponse({"message": "requires court name"}, status=401)
     try:
+        price = params['price']
+        assert type(price) == int
+    except:
+        return JsonResponse({"message": "requires a integer price"}, status=401)
+    try:
         type = params['type']
         # assert type(type) == int
         assert 0 <= type <= 5     # 需要改
@@ -102,13 +107,12 @@ def create_court(request):
           rent_for_long = [],
           Status = all_status,
           status = '开放',
-          court_id = court_id
+          court_id = court_id,
+          price = price
           ).save()
 
     courts_ls.append(new_court.id)
-
     Venue.objects(venue_id=venue_id).update_one(set__courts=courts_ls)
-
     return JsonResponse({"message": "ok"})
 
 def update_court(request):
@@ -122,7 +126,14 @@ def update_court(request):
         except:
             return JsonResponse({"message":"court id error"}, status=401)
 
-        this_court.enum_id = court['type']
+        try:
+            this_court.enum_id = court['type']
+        except:
+            pass
+        try:
+            this_court.price = court['price']
+        except:
+            pass
         for status in court['status']:  # iterate status in each court in POST params
             flag = False                # have matching starttime and endtime
             for i,status_db in enumerate(this_court.Status): # look for the matching status in database
@@ -172,62 +183,6 @@ def update_venue(request):
     return JsonResponse({
         "message": "ok"
     })
-
-
-def create_court(request):
-
-    params = json.loads(request.body)
-    court_id = 1
-    while True:
-        if Court.objects(court_id=court_id).first() != None:
-            court_id += 1
-        else:
-            break
-    try:
-        venue_id = params['venue_id']
-        this_venue = Venue.objects(venue_id=int(venue_id)).first()  # the venue found with id in database
-        courts_ls = this_venue.courts
-    except:
-        return JsonResponse({"message": "venue id error"}, status=401)
-    try:
-        name = params['name']
-    except:
-        return JsonResponse({"message": "requires court name"}, status=401)
-    try:
-        type = params['type']
-        # assert type(type) == int
-        assert 0 <= type <= 5     # 需要改
-    except:
-        return JsonResponse({"message": "venue sport type error"}, status=401)
-    try:
-        param_status = params['status'] # from parameters
-        all_status = []
-        for status in param_status:  # iterate status in each court in POST params
-            new_status = {
-                "start":parse(status['start']),
-                "end":parse(status['end']),
-                "code":status['code']
-            }
-            all_status.append(new_status)
-    except:
-        return JsonResponse({"message": "status error"}, status=401)
-
-    new_court = Court(name=name,
-          enum_id = type,
-          venue = this_venue.id,
-          rent_queue = [],
-          draw_list = [],
-          rent_for_long = [],
-          Status = all_status,
-          status = '开放',
-          court_id = court_id
-          ).save()
-
-    courts_ls.append(new_court.id)
-
-    Venue.objects(venue_id=venue_id).update_one(set__courts=courts_ls)
-
-    return JsonResponse({"message": "ok"})
 
 def delete_venue(request):
 
