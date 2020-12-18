@@ -53,6 +53,7 @@ export default {
             .then(res => 
             {
                 this.all_courses = res.data.courses
+                console.log(this.all_courses);
                 this.total = res.data.total
             })
             .catch((err)=>{
