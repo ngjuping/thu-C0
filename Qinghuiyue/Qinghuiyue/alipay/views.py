@@ -13,6 +13,7 @@ from Qinghuiyue.venus.models import Court
 from Qinghuiyue.reservation.models import Reservation
 
 
+
 def aliPay():
     obj = AliPay(
         appid="2021000116664022",  # 支付宝沙箱里面的APPI
@@ -67,6 +68,7 @@ def index(request):
     return redirect(pay_url)
 
 
+
 @csrf_exempt
 def pay_for_reservation(request):
     params = json.loads(request.body)
@@ -93,6 +95,7 @@ def pay_for_reservation(request):
     )
     pay_url = "https://openapi.alipaydev.com/gateway.do?{}".format(query_params)
     return redirect(pay_url)
+
 
 
 @csrf_exempt

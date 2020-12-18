@@ -76,6 +76,11 @@ def create_court(request):
     except:
         return JsonResponse({"message": "requires court name"}, status=401)
     try:
+        price = params['price']
+        assert price>0
+    except:
+        return JsonResponse({"message": "requires a integer price"}, status=401)
+    try:
         type = params['type']
         # assert type(type) == int
         assert 0 <= type <= 5     # 需要改
@@ -102,13 +107,12 @@ def create_court(request):
           rent_for_long = [],
           Status = all_status,
           status = '开放',
-          court_id = court_id
+          court_id = court_id,
+          price = price
           ).save()
 
     courts_ls.append(new_court.id)
-
     Venue.objects(venue_id=venue_id).update_one(set__courts=courts_ls)
-
     return JsonResponse({"message": "ok"})
 
 def update_court(request):
@@ -122,7 +126,14 @@ def update_court(request):
         except:
             return JsonResponse({"message":"court id error"}, status=401)
 
-        this_court.enum_id = court['type']
+        try:
+            this_court.enum_id = court['type']
+        except:
+            pass
+        try:
+            this_court.price = court['price']
+        except:
+            pass
         for status in court['status']:  # iterate status in each court in POST params
             flag = False                # have matching starttime and endtime
             for i,status_db in enumerate(this_court.Status): # look for the matching status in database
@@ -132,7 +143,7 @@ def update_court(request):
                     Court.objects(court_id=court['id']).update_one(set__Status=this_court.Status)
                     flag = True
             if not flag:
-                return JsonResponse({"error": "start time or end time not matched"}, status=401)
+                return JsonResponse({"message": "start time or end time not matched"}, status=401)
 
     return JsonResponse({
         "message": "ok"
@@ -158,14 +169,14 @@ def update_venue(request):
         img = request.FILES.get('img')
         #print(img.size)
         if img.size < 128 or img.size > 2048**2:
-            return JsonResponse({"error": "image size invalid"}, status=401)
+            return JsonResponse({"message": "image size invalid"}, status=401)
         Venue.objects(venue_id=venue_id).update_one(set__image=img.name)
         try:
             with open(settings.STATIC_URL + img.name, 'wb+') as destination:
                 for chunk in img.chunks():
                     destination.write(chunk)
         except:
-            return JsonResponse({"error": "save image failed"}, status=500)
+            return JsonResponse({"message": "save image failed"}, status=500)
 
     except:
         pass
@@ -173,6 +184,82 @@ def update_venue(request):
         "message": "ok"
     })
 
+def delete_venue(request):
+
+    params = json.loads(request.body)
+    try:
+        venue_id = params['venue_id']
+        this_venue = Venue.objects(venue_id=venue_id).first()
+        assert this_venue != None
+    except:
+        return JsonResponse({
+            "message": "venue id error"
+        }, status=401)
+
+    for court in this_venue.courts:
+        this_court = Court.objects(id=court).first()
+        if this_court != None:
+            Court.objects(id=court).delete()
+
+    Venue.objects(venue_id=venue_id).delete()
+
+    return JsonResponse({
+        "message": "ok"
+    })
+
+
+def delete_court(request):
+
+    params = json.loads(request.body)
+    try:
+        court_id = params['court_id']
+        this_court = Court.objects(court_id=court_id).first()
+        assert this_court != None
+    except:
+        return JsonResponse({
+            "message": "court id error"
+        }, status=401)
+    try:
+        this_venue = Venue.objects(id=this_court.venue).first()
+        this_venue.courts.remove(this_court.id)
+        this_venue.save()
+    except:
+        pass
+
+    Court.objects(court_id=court_id).delete()
+    return JsonResponse({
+        "message": "ok"
+    })
+
+def list_court(request):
+    courts = Court.objects().all()
+    total = len(courts)
+    courts_ret = []
+
+    try:
+        page = int(request.GET['page'])
+        size = int(request.GET['size'])
+    except:
+        return JsonResponse({
+            "message": "require page and size"
+        })
+    begin = size * (page - 1)   # included
+    end = size * page           # not included
+    courts = courts[begin:end]
+
+    for court in courts:
+        court_ret = {
+            "id":court.court_id,
+            "name":court.name,
+            "type":court.enum_id,
+            "venue":Venue.objects(id=court.venue).first().name
+        }
+        courts_ret.append(court_ret)
+    return JsonResponse({
+        "message": "ok",
+        "total": total,
+        "courts": courts_ret
+    })
 
 def make_schedule(request):
     '''

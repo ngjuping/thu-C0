@@ -3,7 +3,6 @@ from mongoengine import *
 from datetime import datetime, timedelta
 
 
-
 class Venue(DynamicDocument):
     name = StringField()
     intro = StringField()
@@ -14,6 +13,7 @@ class Venue(DynamicDocument):
 
 
 class Court(DynamicDocument):
+
     name = StringField()
     venue = ObjectIdField()
     status_now = StringField()
@@ -36,6 +36,7 @@ class Court(DynamicDocument):
         根据这个矩阵把下一周的场地全部安排好
         注意，0是代表周一
          """
+
         if not self.matrix:
             return
         # 先获取下一周周一的日期
@@ -92,3 +93,4 @@ class Court(DynamicDocument):
                     status['code'] = 1
 
         self.save()
+

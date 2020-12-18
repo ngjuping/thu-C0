@@ -12,7 +12,6 @@ from Qinghuiyue.venus.models import Court
 import datetime
 from pytz import utc
 
-
 def get_reservations(request):
     '''
     获取用户当前预定信息
@@ -45,13 +44,15 @@ def get_reservations(request):
                 "name": Court.objects(id=rent.details['court'])[0].name,
                 "start": rent.details['start'],
                 "end": rent.details['end'],
-                "created": rent.details['created'] + datetime.timedelta(hours=8)
+                "created": rent.details['created']
             },
             "reviewed": reviewed,
             "shared": shared
         }
+
         if rent.status == 2:
-            court["details"]["paid_at"] = rent.details["paid_at"] + datetime.timedelta(hours=8)
+            court["details"]["paid_at"] = rent.details["paid_at"]
+
         courts.append(court)
     return JsonResponse({
         "message": "ok",
@@ -76,6 +77,7 @@ def book_draw(request):
         if status['start'] == book_info['start'] \
                 and status['end'] == book_info['end']:
             if status['code'] == 3:  # 可供抽签
+
                 if user.user_id in status['users_id']:
                     return JsonResponse({"message":"您已经预定过这个场地了"},status=400)
                 reservation = Reservation(type=court.enum_id, details={
@@ -83,6 +85,7 @@ def book_draw(request):
                     "user_id": user.user_id,
                     "start": book_info["start"],
                     "end": book_info["end"],
+
                     "created": datetime.datetime.now()
                 }, reservation_id=Stat.add_object("reservation"), status=5)  # 5是等待抽签
                 reservation.save()  # 应该先保存，不然会导致读取不出id
@@ -95,11 +98,13 @@ def book_draw(request):
                 court.save()
                 user.save()
 
+
                 return JsonResponse({"message": "ok", "reservation_id": reservation.reservation_id})
     return JsonResponse({"message": "找不到需要预定的时间段"}, status=400)
 
 
 def book_first_come(request):
+
     '''
      先到先得预定，接受用户id和要预定的场馆和时间段
      :param request:
@@ -117,6 +122,7 @@ def book_first_come(request):
     user = User.objects(user_id=request.session.get("user_id")).first()
     if not user:
         return JsonResponse({"message": "用户不存在或登陆过期，请重新登陆"}, status=400)
+
     for status in court_status:
         # print(status['start'], status['end'])
         if status['start'] == book_info['start'] \
@@ -131,6 +137,7 @@ def book_first_come(request):
                     "start": book_info["start"],
                     "end": book_info["end"],
                     "created": datetime.datetime.now()
+
                 }, reservation_id=stat.data['reservation'] + 1, status=1)
                 reservation.save()  # 应该先保存，不然会导致读取不出id
                 stat.data['reservation'] += 1
@@ -139,10 +146,9 @@ def book_first_come(request):
                 court.save()
                 user.save()
                 stat.save()
-
                 return JsonResponse({"message": "ok", "reservation_id": reservation.reservation_id})
-    return JsonResponse({"message": "error"}, status=400)
 
+    return JsonResponse({"message": "error"}, status=400)
 
 def transfer_reservation(request):
     '''
@@ -150,6 +156,7 @@ def transfer_reservation(request):
     :param request:
     :return:
     '''
+
     # 是新建一个订单，原来的状态改为已经转移,只有已经预定成功（含未付款）才能转让
     params = json.loads(request.body)
     reservation = Reservation.objects(reservation_id=params['reservation_id']).first()

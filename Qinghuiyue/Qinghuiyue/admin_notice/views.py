@@ -47,7 +47,7 @@ def delete_notice(request):
         assert Notification.objects(notice_id=notice_id).first() != None
         Notification.objects(notice_id=notice_id).delete()
     except:
-        return JsonResponse({"error": "requires correct notice id"}, status=401)
+        return JsonResponse({"message": "requires correct notice id"}, status=401)
 
     return JsonResponse({"message": "ok"})
 
@@ -57,18 +57,18 @@ def update_notice(request):
         notice_id = params['notice_id']
         notice = Notification.objects(notice_id=int(notice_id)).first()  # the court found with id in database
     except:
-        return JsonResponse({"error": "notice id error"}, status=401)
+        return JsonResponse({"message": "notice id error"}, status=401)
 
     try:
         title = params['title']
         assert len(title) > 0
     except:
-        return JsonResponse({"error": "requires correct title"}, status=401)
+        return JsonResponse({"message": "requires correct title"}, status=401)
     try:
         content = params['content']
         assert len(content) > 0
     except:
-        return JsonResponse({"error": "requires correct content"}, status=401)
+        return JsonResponse({"message": "requires correct content"}, status=401)
 
     Notification.objects(notice_id=notice_id).update_one(set__title=title)
     Notification.objects(notice_id=notice_id).update_one(set__content=content)
@@ -83,7 +83,7 @@ def get_notice(request):
         assert page > 0
         assert size > 0
     except:
-        return JsonResponse({"error": "requires correct page and size"}, status=401)
+        return JsonResponse({"message": "requires correct page and size"}, status=401)
 
     notice = Notification.objects().all()  # all notices in db
     total = len(notice)

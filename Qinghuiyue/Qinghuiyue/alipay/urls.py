@@ -5,4 +5,5 @@ urlpatterns=[
     path('update_order/',views.update_order),
     path('index/',views.index),
     path('alipay',views.pay_for_reservation)
+
 ]
