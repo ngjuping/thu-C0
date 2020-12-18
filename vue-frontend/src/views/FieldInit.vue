@@ -1,5 +1,12 @@
 <template>
     <div class="field-init">
+        <button
+        type="button"
+        class="btn btn-primary"
+        data-toggle="modal" 
+        style="float: left; margin-bottom: 5px"
+        @click="exportInfo()"
+        >导出</button>
         <table class="table">
             <thead class="thead-dark">
                 <tr>
@@ -77,6 +84,9 @@ export default {
         this.getField();
     },
     methods: {
+        exportInfo(){
+
+        },
         handleShowEditModal(item, status) {
             this.status = status;
             this.fieldDetail = item;
