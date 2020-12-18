@@ -1,7 +1,7 @@
 <template>
     <div class="field-modal">
         <div class="modal fade" id="editFieldModal" aria-hidden="true" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">场地初始化</h5>
@@ -57,6 +57,18 @@
                                         </th>
                                         <th scope="row">
                                             <input type="text" v-model="item[6]" class="form-control" />
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">
+                                            <span>快速设定</span>
+                                        </th>
+                                        <th scope="row" v-for="col_no in 7" :key="'col'+col_no">
+                                            <select @change="initCol($event,col_no)">
+                                                <option value="0">未开放</option>
+                                                <option value="1">先到先得</option>
+                                                <option value="3">抽签</option>
+                                            </select>
                                         </th>
                                     </tr>
                                 </tbody>
@@ -118,6 +130,21 @@ export default {
         }
     },
     methods: {
+        initCol(e,col_no){
+            console.log("New value:" + e.target.value);
+            console.log("Column no:" + col_no)
+
+            //每周场地状态矩阵
+            let time_matrix = this.formMessage.matrix;
+
+            //为一整列每一行赋值
+            for(let rows in time_matrix){
+                console.log(parseInt(e.target.value));
+                time_matrix[rows][parseInt(col_no)-1] = parseInt(e.target.value);
+            }
+
+            console.log(this.formMessage.matrix)
+        },
         handleSave() {
             if (this.status == 'add') {
                 // 新增
