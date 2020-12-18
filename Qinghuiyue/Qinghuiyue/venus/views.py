@@ -63,22 +63,25 @@ def get_courts_info(request):
 
    try:
       year = request.GET['year']
-      times_filtered = [item for item in court_json[0]['status'] if str(item['start'].year) == str(year)]
-      court_json[0]['status'] = times_filtered
+      for i in range(len(court_json)):
+        times_filtered = [item for item in court_json[i]['status'] if str(item['start'].year) == str(year)]
+        court_json[i]['status'] = times_filtered
    except:
       pass
 
    try:
       month = request.GET['month']
-      times_filtered = [item for item in court_json[0]['status'] if str(item['start'].month) == str(month)]
-      court_json[0]['status'] = times_filtered
+      for i in range(len(court_json)):
+        times_filtered = [item for item in court_json[i]['status'] if str(item['start'].month) == str(month)]
+        court_json[i]['status'] = times_filtered
    except:
       pass
 
    try:
       day = request.GET['day']
-      times_filtered = [item for item in court_json[0]['status'] if str(item['start'].day) == str(day)]
-      court_json[0]['status'] = times_filtered
+      for i in range(len(court_json)):
+        times_filtered = [item for item in court_json[i]['status'] if str(item['start'].day) == str(day)]
+        court_json[i]['status'] = times_filtered
    except:
       pass
 
