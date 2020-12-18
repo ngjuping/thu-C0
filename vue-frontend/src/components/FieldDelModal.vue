@@ -51,7 +51,7 @@ export default {
     methods: {
         handleSave() {
             // 删除
-            this.$axios.post('/api/admin/delete/venue', this.formMessage).then((res) => {
+            this.$axios.post('/api/admin/delete/court', this.formMessage).then((res) => {
                 console.log(res, 'res')
                 this.$emit('edit-success');
             }).catch(err => {
@@ -59,6 +59,7 @@ export default {
             })
         },
     },
+    /*
     watch: {
         fieldDetail(val) {
             this.formMessage = {
@@ -67,6 +68,13 @@ export default {
                 // price: val.price
             }
         }
+    },
+    */
+   watch: {
+        fieldDetail(val) {
+             console.log(val, 'fieldDetail-watch');
+             this.formMessage.court_id = val.id
+         }
     },
 }
 </script>
