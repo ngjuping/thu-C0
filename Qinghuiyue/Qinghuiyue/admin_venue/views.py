@@ -1,6 +1,7 @@
 from Qinghuiyue.users.models import *
 from Qinghuiyue.venus.models import *
 from Qinghuiyue.models.models import Stat
+from Qinghuiyue.reservation.models import *
 from django.http import HttpResponse, JsonResponse
 import json
 import datetime
@@ -8,6 +9,9 @@ from dateutil.parser import parse
 from pytz import tzinfo
 from pytz import utc
 from Qinghuiyue import settings
+import pandas as pd
+import zipfile
+import os
 
 def create_venue(request):
     venue_id = 1
@@ -285,3 +289,81 @@ def make_schedule(request):
     court.save()
     court.set_schedule()
     return JsonResponse({"message":"ok"})
+
+def generate_csv(request):
+
+    path = "static/reservation"
+    if not os.path.exists(path):
+        os.mkdir(path)
+
+    # find next monday
+    today = datetime.date.today()
+    #today -= datetime.timedelta(days = 1) * 26 # set 11.26 for test
+
+    while today.weekday() != 0: # stand for Monday
+        today += datetime.timedelta(days = 1)
+    next_monday = today
+    date = next_monday
+    # print(date)
+    file_list = [] # all files generated this time
+
+    venues = Venue.objects().all()
+
+    for venue in venues:
+        date = next_monday
+        for _ in range(7): # loop for days in next week
+            df = pd.DataFrame(columns = ['venue', 'court','date','7:00-8:00','8:00-9:00','9:00-10:00','10:00-11:00',
+                                     '11:00-12:00','12:00-13:00','13:00-14:00','14:00-15:00','15:00-16:00','16:00-17:00',
+                                     '17:00-18:00','18:00-19:00','19:00-20:00','20:00-21:00'])
+            # set courts (line)
+            courts = []
+
+            for court__id in venue.courts:
+                court = Court.objects(id=court__id).first()
+                courts.append(court)
+            for court in courts:
+                df.loc[court.id]=[venue.name, court.name, str(date) ,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0]
+
+            # add reservations
+            reservations = Reservation.objects().all()
+            for reserv in reservations:
+                if (reserv.details['start'].month == date.month and
+                    reserv.details['start'].day == date.day and
+                    Court.objects(id=reserv.details['court']).first() in courts):
+                    # check the status of the reservation:
+                    if reserv.status == 1:
+                        status = '[未付款]'
+                    elif reserv.status == 2:
+                        status = ''
+                    else:
+                        continue
+                    court = Court.objects(id=reserv.details['court']).first()
+
+                    # make the time form in the charm header
+                    str_time = str(reserv.details['start'].hour) + ':00-' + str(reserv.details['end'].hour) + ':00'
+                    user = User.objects(user_id=reserv.details['user_id']).first()
+
+                    # set the string to fill in this pos of the chart
+                    str_in_blank = ''
+                    str_in_blank += user.name
+                    str_in_blank += status
+                    df.loc[court.id,str_time]=str_in_blank
+
+            # print('-----------' + venue.name + '------------' + str(date) + '------------')
+            # print(df)
+            file_name = 'static/reservation/' + venue.name + '_' + str(date) +'data.csv'
+            try:
+                df.to_csv(file_name,encoding='utf_8_sig',index=False)
+            except:
+                return JsonResponse({"message":"save image error, save path not exists"}, status=500)
+            file_list.append(file_name)
+
+            date += datetime.timedelta(days = 1)
+
+    zip_path = 'static/reservation/' + str(next_monday) + '.zip'
+    zip_file = zipfile.ZipFile(zip_path,'w')
+    for file in file_list:
+        zip_file.write(file)
+    zip_file.close()
+
+    return JsonResponse({"message":"ok", "path": zip_path})

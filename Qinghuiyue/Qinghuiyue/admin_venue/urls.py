@@ -8,5 +8,6 @@ urlpatterns = [
 	path('/admin/schedule',views.make_schedule),
 	path('/admin/delete/venue',views.delete_venue),
 	path('/admin/delete/court',views.delete_court),
-	path('/admin/court/list',views.list_court)
+	path('/admin/court/list',views.list_court),
+	path('/admin/csv/generate',views.generate_csv)
 ]

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="b2f1be94-e9ce-43a9-8c90-9037c56bfbf7" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Qinghuiyue/Qinghuiyue/admin_venue/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Qinghuiyue/Qinghuiyue/admin_venue/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Qinghuiyue/Qinghuiyue/admin_venue/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Qinghuiyue/Qinghuiyue/admin_venue/views.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JupyterTrust" id="28997099-d1b0-47d2-b136-316c60e2487a" />
+  <component name="ProjectId" id="1lp10bBFdg6oKMYtcDarpzcEzfB" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b2f1be94-e9ce-43a9-8c90-9037c56bfbf7" name="Default Changelist" comment="" />
+      <created>1608279000855</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1608279000855</updated>
+      <workItem from="1608279003319" duration="2399000" />
+      <workItem from="1608381467989" duration="33000" />
+      <workItem from="1608381540281" duration="5488000" />
+      <workItem from="1608394709780" duration="4221000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="315" y="178" key="IDE.errors.dialog" timestamp="1608282029827">
+      <screen x="0" y="0" width="1469" height="864" />
+    </state>
+    <state x="315" y="178" key="IDE.errors.dialog/0.0.1469.864@0.0.1469.864" timestamp="1608282029827" />
+  </component>
+</project>
