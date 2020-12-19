@@ -88,6 +88,8 @@
 
 <script>
 // import $ from 'jquery'
+import Vue from 'vue';
+
 export default {
     name: 'FieldModal',
     props: {
@@ -139,11 +141,9 @@ export default {
 
             //为一整列每一行赋值
             for(let rows in time_matrix){
-                console.log(parseInt(e.target.value));
-                time_matrix[rows][parseInt(col_no)-1] = parseInt(e.target.value);
+                Vue.set(time_matrix[rows],parseInt(col_no)-1,parseInt(e.target.value));
             }
 
-            console.log(this.formMessage.matrix)
         },
         handleSave() {
             if (this.status == 'add') {
