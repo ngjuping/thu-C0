@@ -1,6 +1,9 @@
 <template>
     <nav class="navbar bg-white shadow">
-        <img src="@/assets/logo.png" width="100" class="d-inline-block align-top" alt="" id="headerimg" @click="$router.push({name:'Mainpage'})">
+        <div @click="$router.push({name:'Mainpage'})" id="logo" class="d-flex align-items-center">
+            <img src="@/assets/logo.png" width="100" class="d-inline-block align-top" alt="" id="logoimg">
+            <span id="logotext" class="rounded bg-dark text-light p-2">回到主页</span>
+        </div>
         <div>
             <div class="btn-group mr-2" v-if="this.$store.state.logged_in && !this.$store.state.privilege">
                 <div class="btn btn-primary" @click="$router.push({name:'Manage'})">我的场地</div>
@@ -79,6 +82,22 @@ export default {
         width:100%;
 
     }
+    #logo *:hover{
+        cursor:pointer;
+        transition: opacity 0.3s;
+    }
+
+    #logotext{
+        opacity:0;
+        font-size:20px;
+    }
+    nav:hover #logotext{
+        opacity: 1;
+    }
+
+    nav:hover #logoimg{
+        opacity:0.5;
+    }
 
     #title{
         font-size:30px;
@@ -93,7 +112,7 @@ export default {
         #title{
             font-size:20px;
         }
-        #headerimg{
+        #logoimg{
             width:50px;
         }
     }
@@ -101,7 +120,7 @@ export default {
         #title{
             font-size:15px;
         }
-        #headerimg{
+        #logoimg{
             width:40px;
         }
     }

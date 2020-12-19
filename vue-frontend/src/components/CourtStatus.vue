@@ -54,10 +54,18 @@ import $ from 'jquery'
 import Swal from 'sweetalert2'
 
 export default {
-    props:["info","date"],
+    props:["info","date","clear"],
     data(){
         return {
             selectedCourt:null
+        }
+    },
+    watch:{
+        clear(val){
+            if(val == true){
+                console.log("clear selected court time");
+                this.selectedCourt = null;
+            }
         }
     },
     mounted(){

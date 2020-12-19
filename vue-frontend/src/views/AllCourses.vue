@@ -48,6 +48,7 @@ export default {
     components:{Course},
     methods:{
         getCourses(){
+            this.loading = true;
             this.$axios
             .get(`/api/courses?page=${this.current_page}&size=5`)
             .then(res => 

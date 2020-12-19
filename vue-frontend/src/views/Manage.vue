@@ -16,20 +16,20 @@
                             <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown">
                                 过滤
                             </button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" @click="filter_status(1)">尚未付款</a>
-                                <a class="dropdown-item" @click="filter_status(2)">已付款</a>
-                                <a class="dropdown-item" @click="filter_status(-1)">历史订单</a>
+                            <div class="dropdown-menu bg-light">
+                                <a class="dropdown-item bg-danger text-light" @click="filter_status(1)">尚未付款</a>
+                                <a class="dropdown-item bg-success text-light" @click="filter_status(2)">已付款</a>
+                                <a class="dropdown-item bg-secondary text-light" @click="filter_status(-1)">历史订单</a>
                                 <hr>
-                                <a class="dropdown-item" @click="filter_type(1)">羽球</a>
-                                <a class="dropdown-item" @click="filter_type(2)">乒乓</a>
-                                <a class="dropdown-item" @click="filter_type(3)">网球</a>
-                                <a class="dropdown-item" @click="filter_type(4)">篮球</a>
-                                <hr>
-                                <a class="dropdown-item" @click="filter_status(0)">查看全部</a>
+                                <a class="dropdown-item bg-light text-dark" @click="filter_type(1)">羽球</a>
+                                <a class="dropdown-item bg-light text-dark" @click="filter_type(2)">乒乓</a>
+                                <a class="dropdown-item bg-light text-dark" @click="filter_type(3)">网球</a>
+                                <a class="dropdown-item bg-light text-dark" @click="filter_type(4)">篮球</a>
+                                <hr/>
+                                <a class="dropdown-item bg-light text-dark" @click="filter_status(0)">查看全部</a>
                             </div>
                         </div>
-                        <div class="btn btn-info" @click="show_calendar = !show_calendar">日历</div>
+                        <div class="btn btn-info" @click="show_calendar = !show_calendar">您的行程</div>
                     </div>
                      
                 </div>
@@ -39,7 +39,7 @@
 
             <ul class="pagination pagination-lg">
                     <li class="page-item"  v-for="(resv,index) in courts" :key="resv.reservation_id">
-                        <a class="page-link px-2" :class="`resvStatus-${resv.status}`" @click="scrollToTarget(`resv-${resv.reservation_id}`)">{{ index+1 }}</a></li>
+                        <a class="page-link px-3" :class="`resvStatus-${resv.status}`" @click="scrollToTarget(`resv-${resv.reservation_id}`)">{{ index+1 }}</a></li>
             </ul>
         </div>
         <div class="container">
@@ -159,7 +159,7 @@ export default {
                     highlight: 'purple',
                     dates: court.details.start,
                     popover: {
-                        label: `${this.chineseTime(court.details.start)} to ${this.chineseTime(court.details.end)}`,
+                        label: `${this.chineseTime(court.details.start)} to ${this.chineseTime(court.details.end)}  ${court.details.name}`,
                         hideIndicator: true,
                     },
                 }))]

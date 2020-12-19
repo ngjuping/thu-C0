@@ -64,7 +64,7 @@
         <vc-calendar mode="range" is-expanded @dayclick='updateByCalendarClick' :attributes="attributes" :min-date='new Date()'></vc-calendar>
         <br/>
         <div v-if="courts">
-            <CourtStatus v-for="court in filteredcourts" :key="court.id" :info="court" :date="selected_date"></CourtStatus>
+            <CourtStatus v-for="court in filteredcourts" :key="court.id" :info="court" :date="selected_date" :clear="clearSelected"></CourtStatus>
         </div>
         <div class="alert alert-danger" v-if="failedToLoadCourts">
             无法加载场地信息
@@ -88,6 +88,7 @@ export default {
             loadingCourts:false,
             selected_date:this.today(),
             timer:0,
+            clearSelected:false
         };
     },
     components:{
@@ -97,12 +98,15 @@ export default {
         updateByCalendarClick(dayEvent){
 
             if(dayEvent.isDisabled) return;
-
+            this.clearSelected = true;
             let parsed_date = dayEvent.id.split("-");
             let day = parsed_date[2];
             let month = parsed_date[1];
             let year = parsed_date[0];
             this.updateCourts([day,month,year]);
+
+            // 将命令场地清除选项的变量重置
+            setTimeout(()=>{this.clearSelected = false;},0);
         },
         setFilter(x){
             this.filter_type = x;
