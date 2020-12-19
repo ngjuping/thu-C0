@@ -3,8 +3,8 @@
 <div class="row p-3 shadow" id="venue_panel">
     <div class="col-12 col-lg-4 pt-4 shadow" id="venue_select_panel">
         <h1>选择场馆</h1>
-        <div class="spinner-border" v-if="loadingVenue">
-            <span class="sr-only">Loading...</span>
+        <div v-if="loadingVenue" class="text-info">
+            <span>正在加载场地信息...</span>
         </div>
         <hr>
         <div class="list-group">
@@ -30,9 +30,12 @@
                         </div>
                         <div class="col-12 col-lg-6 d-flex align-items-center">
                             <div class="btn-group shadow w-100">
-                                <button type="button" class="btn btn-light h-100">导航</button>
-                                <button type="button" class="btn btn-light h-100" @click="goBooking(currentvenue.id)">前往订场</button>
-                                <button type="button" class="btn btn-dark h-100">长期预约</button>
+                                <div class="btn btn-primary d-flex align-items-center justify-content-center gobookcontainer" @click="goBooking(currentvenue.id)">
+                                    <span class="gobook mr-2">
+                                    前往订场</span>
+                                    <font-awesome-icon icon="arrow-circle-right" id="gobookarrow" />
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -179,6 +182,21 @@ export default {
 #feedback_body{
     height:200px;
 }
+
+.gobook{
+    font-size: 3em;
+}
+
+.gobookcontainer:hover #gobookarrow{
+    font-size:50px;
+}
+
+#gobookarrow{
+    font-size:0px;
+    transition: font-size 0.4s
+}
+
+
 @media(max-width:600px){
     .noticetitle{
         font-size:20px;

@@ -1,6 +1,5 @@
 <template>
-    <div class="col-12 mb-3">
-        
+    <div class="col-12 mb-3 chopbox" >
         <div class="card h-100 border border-dark">
             <div class="card-header bg-dark text-light">
                 {{ resv.details.name }}
@@ -8,7 +7,7 @@
             <div class="card-body text-left sports" :class="`sports-${this.resv.type}`">
                 
                 <!-- 订单信息 -->
-                <form class="bg-light shadow p-3">
+                <form class="bg-light shadow p-3" :class="{'outdated':outDated}">
                     <fieldset>
                         <div class="form-group">
                         <label><b>预定日期</b></label>
@@ -427,6 +426,17 @@ export default {
 
 form{
     width:70%;
+}
+
+.chopbox{
+    position:relative;
+}
+
+.outdated{
+    background-image:url('../assets/outdated.png');
+    background-repeat:no-repeat;
+    background-size: 50% 100%;
+    background-position: right;
 }
 
 @media(max-width:800px){

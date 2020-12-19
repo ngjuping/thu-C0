@@ -1,6 +1,6 @@
 <template>
-    <div class="card">
-        <div class="card-header">{{ course.name }}</div>
+    <div class="card mb-3">
+        <div class="card-header bg-dark text-light">{{ course.name }}</div>
         <div class="card-body">
             价格: {{ course.price }}
             <br/>
@@ -9,9 +9,9 @@
                 {{ course.intro }}
             </div>
             <br/>
-            <div class="card-footer">
-            联络方式：{{ course.tel }}
-            </div>
+        </div>
+        <div class="card-footer bg-dark text-light">
+        联络方式：{{ course.tel }}
         </div>
     </div>
 </template>

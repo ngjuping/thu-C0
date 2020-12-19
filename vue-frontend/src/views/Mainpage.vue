@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container mb-5">
         <div class="alert alert-danger" v-if="failedToGetNotices">
             无法获得通告
         </div>
