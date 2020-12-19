@@ -95,6 +95,9 @@ export default {
     },
     methods:{
         updateByCalendarClick(dayEvent){
+
+            if(dayEvent.isDisabled) return;
+
             let parsed_date = dayEvent.id.split("-");
             let day = parsed_date[2];
             let month = parsed_date[1];
@@ -152,7 +155,7 @@ export default {
         this.venue_id = this.$route.params.venueid
         let today = this.today();
         this.updateCourts(today);
-        this.timer = setInterval(this.updateCourts,3000);
+        this.timer = setInterval(this.updateCourts,4000);
     },
     destroyed(){
         clearInterval(this.timer);
@@ -190,6 +193,14 @@ export default {
 
 #title{
     font-size:50px;
+}
+
+.dayDisabled{
+    pointer-events: none;
+}
+
+.dayContentDisabled {
+    pointer-events: none;
 }
 
 @media (max-width:760px) {

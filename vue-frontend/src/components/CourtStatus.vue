@@ -5,8 +5,9 @@
                 <div class="row">
                     <div class="col-12 col-md-12">
                         <div class="row d-flex justify-content-around" id="ranges">
-                            <div class="jumbotron p-2" v-if="!info.status.length">
-                                <span class="lead">没有可预定的场地</span>
+                            <div class="jumbotron p-2 d-flex align-items-center justify-content-center" v-if="!info.status.length">
+                                <span class="lead">没有可预定的时间段</span>
+                                <font-awesome-icon icon="frown-open" class="w-50 h-50" style="max-width:50px;" />
                             </div>
                             <div class="col-12 col-md range d-flex justify-content-center align-items-center"  
                             v-for="status in info.status"

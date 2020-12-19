@@ -7,7 +7,7 @@ import axios from 'axios';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faArrowCircleRight,faStar,faAngleUp,faExclamationTriangle,faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import { faArrowCircleRight,faStar,faAngleUp,faExclamationTriangle,faCheckCircle,faFrownOpen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VCalendar from 'v-calendar';
 
@@ -15,7 +15,7 @@ import VCalendar from 'v-calendar';
 Vue.use(VCalendar, {
   componentPrefix: 'vc',  // Use <vc-calendar /> instead of <v-calendar />
 });
-library.add(faArrowCircleRight,faStar,faAngleUp,faExclamationTriangle,faCheckCircle);
+library.add(faArrowCircleRight,faStar,faAngleUp,faExclamationTriangle,faCheckCircle,faFrownOpen);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
