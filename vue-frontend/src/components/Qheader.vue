@@ -14,11 +14,8 @@
                     <div class="btn btn-success" @click="$router.push({name:'AllShares'})">拼场广场</div>
                     <div class="btn btn-warning" @click="$router.push({name:'AllFeedbacks'})">反馈天地</div>
                     <div class="btn btn-info" @click="$router.push({name:'AllCourses'})">培训武馆</div>
-                <button class="btn btn-primary" v-if="!this.$store.state.logged_in"  @click="gotoLogin">登录</button>
-                <button class="btn btn-danger" v-else @click="logout">登出</button>
-                
-                <!-- <small v-if="this.$store.state.logged_in">已上线：{{ now() }}</small> -->
-            </div>
+                </div>
+                    <button class="btn btn-danger" v-if="this.$store.state.logged_in" @click="logout">登出</button>
         
         
         
