@@ -1,7 +1,7 @@
 <template>
 <div class="jumbotron text-left shadow p-3">
   <div class="row top">
-    <span id="title">{{ sports[info.type] }}场地{{ info.id }}</span>
+    <span id="title">{{ $store.state.sportsType[info.type] }}场地{{ info.id }}</span>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editCourtModal" @click="showModal">编辑场地</button>
   </div>
   <div class="container">
@@ -11,7 +11,7 @@
             <div class="col-12 col-md ranges d-flex justify-content-center align-items-center"  v-for="status in info.status" 
             :class="[`courtstatus-${status.code} border border-success rounded`]"
             :key="`range${status.start}`"
-            :title="statustext[status.code]"
+            :title="$store.state.courtStatus[status.code]"
             data-toggle="tooltip" 
             data-placement="top">
             <span class="d-inline d-md-none bg-light lead">{{ status.start }} -- {{ status.end }}</span>
@@ -40,7 +40,6 @@ export default {
     props:["info"],
     data(){
         return {
-            sports:[null,"羽球","篮球","乒乓"],
             statustext:["空场地","已有人预定"],
             selectedCourt:null,
             courtInfo: {},
@@ -73,13 +72,18 @@ export default {
   margin-bottom: 20px;
 }
 
-.courtstatus-0{
+.courtstatus-1{
     background-color:greenyellow;
     opacity:0.5;
 }
 
-.courtstatus-1{
+.courtstatus-2{
     background-color:red;
+    opacity:0.5;
+}
+
+.courtstatus-3{
+    background-color:orange;
     opacity:0.5;
 }
 
