@@ -20,14 +20,14 @@
                             <div class="dropdown-menu bg-light">
                                 <a class="dropdown-item bg-danger text-light" @click="filter_status(1)">尚未付款</a>
                                 <a class="dropdown-item bg-success text-light" @click="filter_status(2)">已付款</a>
-                                <a class="dropdown-item bg-secondary text-light" @click="filter_status(-1)">历史订单</a>
+                                <a class="dropdown-item bg-secondary text-light" @click="filter_status(-1)">过期订单</a>
                                 <hr>
                                 <a class="dropdown-item bg-light text-dark" @click="filter_type(1)">羽球</a>
                                 <a class="dropdown-item bg-light text-dark" @click="filter_type(2)">乒乓</a>
                                 <a class="dropdown-item bg-light text-dark" @click="filter_type(3)">网球</a>
                                 <a class="dropdown-item bg-light text-dark" @click="filter_type(4)">篮球</a>
                                 <hr/>
-                                <a class="dropdown-item bg-light text-dark" @click="filter_status(0)">查看全部</a>
+                                <a class="dropdown-item bg-light text-dark" @click="filter_status(0)">全部订单</a>
                             </div>
                         </div>
                         <div class="btn btn-info" @click="show_calendar = !show_calendar">您的行程</div>
@@ -36,19 +36,7 @@
                 </div>
             </div>
         </div>
-        <div class="container overflow-auto" style="box-sizing:border-box;">
-            
-            <ul class="pagination pagination-lg overflow-auto">
-                    <li class="page-item"  v-for="(resv,index) in courts" :key="resv.reservation_id">
-                        <a class="page-link px-3" :class="`resvStatus-${resv.status}`" @click="scrollToTarget(`resv-${resv.reservation_id}`)">{{ index+1 }}</a></li>
-            </ul>
-
-        </div>
-        <ul class="legend">
-            <li v-for="(str,index) in allStatusExceptFirst" :key="`${index+1}${str}`">
-                <span :class="`resvStatus-${index+1}`"></span> {{ str }}</li>
-        </ul>
-        <br/>
+        
         <div class="container">
             <div class="row text-right mb-4">
                 <div class="col"></div>
@@ -61,6 +49,19 @@
                     <vc-calendar :attributes="attributes" mode="range" is-expanded class="shadow"></vc-calendar>
                 </div>
             </div>
+            <div class="container overflow-auto" style="box-sizing:border-box;">
+            
+            <ul class="pagination pagination-lg overflow-auto">
+                    <li class="page-item"  v-for="(resv,index) in courts" :key="resv.reservation_id">
+                        <a class="page-link px-3" :class="`resvStatus-${resv.status}`" @click="scrollToTarget(`resv-${resv.reservation_id}`)">{{ index+1 }}</a></li>
+            </ul>
+            <ul class="legend">
+                <li v-for="(str,index) in allStatusExceptFirst" :key="`${index+1}${str}`">
+                    <span :class="`resvStatus-${index+1}`"></span> {{ str }}</li>
+            </ul>
+
+            </div>
+            <br/>
             <div class="row" v-for="court in courts" :key="court.reservation_id" :ref="`resv-${court.reservation_id}`">
                 
                     <Reservation  :resv="court" ></Reservation>

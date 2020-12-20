@@ -50,7 +50,7 @@
         <br/>
         <div v-if="courts">
             <button class="btn btn-white">
-                <span class="spinner-border spinner-border-md " :class="{'text-white':loadingCourts}"></span>
+                <span class="spinner-border spinner-border-md " :class="{'text-white':!loadingCourts}"></span>
             </button>
             <ul class="legend jumbotron bg-light p-0">
                 <li v-for="(str,index) in allCourtStatusExceptFirst" :key="`${index+1}${str}`">
@@ -83,7 +83,7 @@ export default {
             selected_date:this.today(),
             timer:0,
             clearSelected:false,
-            changingDay:false
+            lastClickedCalendarTime: null
         };
     },
     components:{
@@ -91,6 +91,15 @@ export default {
     },
     methods:{
         updateByCalendarClick(dayEvent){
+            let now,diff;
+            
+            now = moment();
+
+            if(this.lastClickedCalendarTime){
+                diff = now.diff(this.lastClickedCalendarTime)
+                if(diff < 1000) return;
+            }
+            this.lastClickedCalendarTime = now
 
             if(dayEvent.isDisabled) return;
             this.clearSelected = true;
@@ -99,22 +108,7 @@ export default {
             let month = parsed_date[1];
             let year = parsed_date[0];
 
-            // 让之前背景更新所有的回复无效
-            this.changingDay = true;
-
-            // 切换日期，停止场地的循环更新
-            clearInterval(this.timer);
-
-            this.updateCourts([day,month,year])
-            .then(() => {
-
-                // 开始接受回复
-                this.changingDay = false;
-
-                // 切换成功，复原背景循环更新
-                this.timer = setInterval(this.updateCourts,5000);
-
-            });
+            this.updateCourts([day,month,year]);
 
             // 将命令场地清除选项的变量重置
             setTimeout(()=>{this.clearSelected = false;},0);
@@ -155,8 +149,6 @@ export default {
             return this.$axios
             .get(`/api/booking?id=${this.venue_id}&day=${day}&month=${month}&year=${year}`)
             .then(res => {
-
-                if(this.changingDay) return;
                 
                 this.courts = res.data.courts;
                 this.venue_name = res.data.venue_name;
@@ -202,7 +194,7 @@ export default {
                 // 月份从0开始
                 dates: new Date(date[2],date[1]-1,date[0]),
                 popover: {
-                    label: "选择这天",
+                    label: "当前预定日期",
                     hideIndicator: true,
                 }
             }]
