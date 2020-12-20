@@ -2,14 +2,14 @@
     <div class="list-group-item text-left mb-1 share rounded"  data-backdrop="false" >
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12 pt-3">
+                <div class="col-12 pt-2">
                     <div class="row">
                         <div class="col"  data-toggle="modal" :data-target="`#share-${share.share_id}`">
-                            <h4><span class="title">{{ parsedShare }}&nbsp;&nbsp;<span class="badge badge-pill badge-dark">New</span></span></h4>
+                            <h4 class="d-inline">{{ parsedShare }}&nbsp;&nbsp;<span class="badge badge-pill badge-dark">New</span></h4>
                             <p class="lead content"><span class="text-secondary">场地：{{ share.reservation.details.name }}</span></p>
                         </div>
-                        <div class="col-1 text-right" v-if="$store.state.logged_in_user_id === share.user_id" @click.stop="$emit('show-share-modal')">
-                            <div class="btn btn-info">修改帖子</div>
+                        <div class="col-12 col-sm-3 text-right" v-if="$store.state.logged_in_user_id === share.user_id" @click.stop="$emit('show-share-modal')">
+                            <div class="btn btn-info">修改</div>
                         </div>
                     </div>
                 </div>
