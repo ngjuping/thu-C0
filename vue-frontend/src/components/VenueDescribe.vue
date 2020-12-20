@@ -1,20 +1,19 @@
 <template>
 
-<div class="row p-3 shadow" id="venue_panel">
-    <div class="col-12 col-lg-4 pt-4 shadow" id="venue_select_panel">
-        <h1>选择场馆</h1>
+<div class="row p-3 shadow rounded" id="venue_panel">
+    <div class="col-12 col-lg-4 pt-4 shadow p-4" id="venue_select_panel">
+        <h1 class="text-left">选择场馆 &nbsp;&nbsp;<font-awesome-icon icon="basketball-ball" class="text-danger" /></h1>
         <div v-if="loadingVenue" class="text-info">
             <span>正在加载场地信息...</span>
         </div>
         <hr>
-        <div class="list-group">
-        <div class="list-group-item list-group-item-action container" v-for="venue in venues" :key="venue.id">
-            <div class="row">
-                <div class="col-8 d-flex align-items-center"  @click="getVenueInfo(venue.id)"><a>{{ venue.name }}</a></div>
-                <button type="button" class="col btn btn-dark h-100" @click="goBooking(venue.id)">前往订场</button>
+        <div class="list-group overflow-auto pb-2" style="max-height:400px;">
+            <div class="list-group-item list-group-item-action container" v-for="venue in venues" :key="venue.id">
+                <div class="row">
+                    <div class="col-8 d-flex align-items-center"  @click="getVenueInfo(venue.id)"><a>{{ venue.name }}</a></div>
+                    <button type="button" class="col btn btn-dark h-100" @click="goBooking(venue.id)">订场</button>
+                </div>
             </div>
-        </div>
-        
         </div>
     </div>
     <div class="col-12 col-lg-8">
@@ -198,6 +197,12 @@ export default {
 
 
 @media(max-width:600px){
+    .gobook{
+        font-size: 30px;
+    }
+    .gobookcontainer:hover #gobookarrow{
+        font-size:30px;
+    }
     .noticetitle{
         font-size:20px;
     }

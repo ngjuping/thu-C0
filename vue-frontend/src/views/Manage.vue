@@ -51,14 +51,14 @@
             </div>
             <div class="container overflow-auto" style="box-sizing:border-box;">
             
-            <ul class="pagination pagination-lg overflow-auto">
-                    <li class="page-item"  v-for="(resv,index) in courts" :key="resv.reservation_id">
-                        <a class="page-link px-3" :class="`resvStatus-${resv.status}`" @click="scrollToTarget(`resv-${resv.reservation_id}`)">{{ index+1 }}</a></li>
-            </ul>
-            <ul class="legend">
-                <li v-for="(str,index) in allStatusExceptFirst" :key="`${index+1}${str}`">
-                    <span :class="`resvStatus-${index+1}`"></span> {{ str }}</li>
-            </ul>
+                <ul class="pagination pagination-lg overflow-auto">
+                        <li class="page-item"  v-for="(resv,index) in courts" :key="resv.reservation_id">
+                            <a class="page-link px-3" :class="`resvStatus-${resv.status}`" @click="scrollToTarget(`resv-${resv.reservation_id}`)">{{ index+1 }}</a></li>
+                </ul>
+                <ul class="legend">
+                    <li v-for="(str,index) in allStatusExceptFirst" :key="`${index+1}${str}`">
+                        <span :class="`resvStatus-${index+1}`"></span> {{ str }}</li>
+                </ul>
 
             </div>
             <br/>

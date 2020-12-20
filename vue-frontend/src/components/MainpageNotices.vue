@@ -4,7 +4,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col">
-                        <h1 id="notice">最新通知</h1>
+                        <h1 id="notice">最新通知&nbsp;&nbsp;<font-awesome-icon icon="bullhorn" class="text-warning" /></h1>
                     </div>
                     <div class="col text-right pr-0">
                         <span class="btn btn-dark align-middle" @click="$router.push({name:'AllNotices'})">显示所有通告</span>

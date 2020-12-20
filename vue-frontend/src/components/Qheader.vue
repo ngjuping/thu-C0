@@ -1,29 +1,21 @@
 <template>
     <nav class="navbar navbar-expand-lg bg-white shadow">
-                <div @click="$router.push({name:'Mainpage'})" id="logo" class="d-flex align-items-center w-50 my-2">
+                <div @click="logoClicked" id="logo" class="d-flex align-items-center w-50 my-2">
                     <img src="@/assets/logo.png" width="100" class="d-inline-block align-top" alt="" id="logoimg">
-                    <span id="logotext" class="rounded bg-dark text-light p-2">回到主页</span>
+                    <span id="logotext" class="rounded bg-dark text-light p-2" v-if="logged_in">回到主页</span>
                 </div>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu" v-if="logged_in">
                     <font-awesome-icon icon="bars" class="w-50 h-50" style="max-width:50px;" />
                 </button>
-                <div class="w-100">
-                    <div class="collapse navbar-collapse d-lg-flex justify-content-end" id="navbarTogglerDemo02">
-                        <div class="btn-group">
-                            <div class="btn-group mr-2 d-inline-block" 
-                            v-if="this.$store.state.logged_in && !this.$store.state.privilege">
-                                <button class="btn btn-primary" @click="$router.push({name:'Manage'})">我的场地</button>
-                                <button class="btn btn-success" @click="$router.push({name:'AllShares'})">拼场广场</button>
-                                <button class="btn btn-warning" @click="$router.push({name:'AllFeedbacks'})">反馈天地</button>
-                                <button class="btn btn-info" @click="$router.push({name:'AllCourses'})">培训武馆</button>
-                            </div>
-                            <div class="btn-group">
-                                <button class="btn btn-danger w-50" v-if="this.$store.state.logged_in" @click="logout">登出</button>
-                            </div>
-                            
-                        </div>
-                    
-                </div>
+                <div class="d-lg-flex justify-content-end" :class="{'collapse':logged_in,'navbar-collapse':logged_in}" id="menu">
+                    <div class="navbar-nav" v-if="logged_in && hasUserPrivilege">
+                            <a class="nav-item nav-link active" @click="$router.push({name:'Manage'})">我的场地</a>
+                            <a class="nav-item nav-link" @click="$router.push({name:'AllShares'})">拼场广场</a>
+                            <a class="nav-item nav-link" @click="$router.push({name:'AllFeedbacks'})">反馈天地</a>
+                            <a class="nav-item nav-link" @click="$router.push({name:'AllCourses'})">培训武馆</a>
+                    </div>
+                        <button class="btn btn-danger mt-3 mt-md-0" v-if="logged_in" @click="logout">登出</button>
+                        <button class="btn btn-primary mt-3 mt-md-0" v-else @click="gotoLogin">登陆</button>
                 </div>
                 
         
@@ -44,6 +36,15 @@ export default {
     methods:{
         gotoLogin(){
             this.$router.push({name:'Login'});
+        },
+        logoClicked(){
+            if(!this.$store.state.logged_in){
+                this.gotoLogin()
+            }
+            else{
+                this.$router.push({name:'Mainpage'});
+            }
+            
         },
         logout()
         {
@@ -69,6 +70,14 @@ export default {
             
         },
     },
+    computed:{
+        logged_in(){
+            return this.$store.state.logged_in;
+        },
+        hasUserPrivilege(){
+            return !this.$store.state.privilege;
+        }
+    }
     // //use timer to simulate real time update
     // beforeUpdate(){
     //     clearInterval(this.timer);
@@ -86,6 +95,15 @@ export default {
 </script>
 
 <style>
+    .nav-item{
+        color:black;
+    }
+    .nav-item:hover{
+        background-color: #343a40;
+        color:white;
+        cursor:pointer;
+        border-radius:5px;
+    }
     nav{
         position:fixed;
         top:0px;
@@ -109,42 +127,29 @@ export default {
     nav:hover #logoimg{
         opacity:0.5;
     }
-    #title{
-        font-size:30px;
-    }
 
     @media (max-width:760px) {
-        #title{
-            font-size:25px;
-        }
 
         #logo{
             width:100%;
         }
 
         #logotext{
-            opacity:1;
             font-size:20px;
-        }
-
-        #logoimg{
-            display:none !important;
         }
     }
     @media (max-width:500px) {
-        #title{
-            font-size:20px;
-        }
         #logoimg{
-            width:50px;
+            width:60px;
+        }
+        #logotext{
+            font-size:15px;
         }
     }
     @media (max-width:400px) {
-        #title{
-            font-size:15px;
-        }
+
         #logoimg{
-            width:40px;
+            width:50px;
         }
     }
 </style>
