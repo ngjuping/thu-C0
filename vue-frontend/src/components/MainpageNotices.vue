@@ -3,11 +3,11 @@
         <div class="rounded p-2 p-sm-3 p-lg-3 pt-lg-4 text-left shadow bg-light">
             <div class="container">
                 <div class="row">
-                    <div class="col">
+                    <div class="col-7 pl-0">
                         <h1 id="notice">最新通知&nbsp;&nbsp;<font-awesome-icon icon="bullhorn" class="text-warning" /></h1>
                     </div>
                     <div class="col text-right pr-0">
-                        <span class="btn btn-dark align-middle" @click="$router.push({name:'AllNotices'})">显示所有通告</span>
+                        <span class="btn btn-dark align-middle" @click="$router.push({name:'AllNotices'})">所有通告</span>
                     </div>
                 </div>
             </div>
