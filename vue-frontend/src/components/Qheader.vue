@@ -7,15 +7,25 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02">
                     <font-awesome-icon icon="bars" class="w-50 h-50" style="max-width:50px;" />
                 </button>
-                <div class="btn-group mr-2 collapse navbar-collapse" 
-                v-if="this.$store.state.logged_in && !this.$store.state.privilege" 
-                id="navbarTogglerDemo02">
-                    <div class="btn btn-primary" @click="$router.push({name:'Manage'})">我的场地</div>
-                    <div class="btn btn-success" @click="$router.push({name:'AllShares'})">拼场广场</div>
-                    <div class="btn btn-warning" @click="$router.push({name:'AllFeedbacks'})">反馈天地</div>
-                    <div class="btn btn-info" @click="$router.push({name:'AllCourses'})">培训武馆</div>
+                <div class="w-100">
+                    <div class="collapse navbar-collapse d-lg-flex justify-content-end" id="navbarTogglerDemo02">
+                        <div class="btn-group">
+                            <div class="btn-group mr-2 d-inline-block" 
+                            v-if="this.$store.state.logged_in && !this.$store.state.privilege">
+                                <button class="btn btn-primary" @click="$router.push({name:'Manage'})">我的场地</button>
+                                <button class="btn btn-success" @click="$router.push({name:'AllShares'})">拼场广场</button>
+                                <button class="btn btn-warning" @click="$router.push({name:'AllFeedbacks'})">反馈天地</button>
+                                <button class="btn btn-info" @click="$router.push({name:'AllCourses'})">培训武馆</button>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-danger w-50" v-if="this.$store.state.logged_in" @click="logout">登出</button>
+                            </div>
+                            
+                        </div>
+                    
                 </div>
-                    <button class="btn btn-danger" v-if="this.$store.state.logged_in" @click="logout">登出</button>
+                </div>
+                
         
         
         

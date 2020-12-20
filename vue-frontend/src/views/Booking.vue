@@ -25,26 +25,13 @@
                 <div class="col-12 col-md col-lg  d-flex justify-content-start mb-4 px-0">
                     <div class="container">
                         <div class="row">
-                            <div class="btn-group shadow col-12 col-md px-0">
+                            <div class="btn-group col-12 col-md-4 px-0">
                                 <div class="btn btn-dark" @click="updateCourts(today())">
-                                    今天
+                                    今天的场
                                 </div>
                                 <div class="btn btn-dark" @click="updateCourts(today(1))">
-                                    明天
+                                    明天的场
                                 </div>
-                                <div class="btn-group dropdown" style="position: static;">
-                                    <div class="btn btn-dark dropdown-toggle" type="button" data-toggle="dropdown">
-                                        更多
-                                    </div>
-                                    <div class="dropdown-menu" >
-                                        <a class="dropdown-item" @click="updateCourts(today(2))">{{ today(2).join("-") }}</a>
-                                        <a class="dropdown-item" @click="updateCourts(today(3))">{{ today(3).join("-") }}</a>
-                                        <a class="dropdown-item" @click="updateCourts(today(4))">{{ today(4).join("-") }}</a>
-                                        <a class="dropdown-item" @click="updateCourts(today(5))">{{ today(5).join("-") }}</a>
-                                        <a class="dropdown-item" @click="updateCourts(today(6))">{{ today(6).join("-") }}</a>
-                                    </div>
-                                </div>
-                                
                             </div>
 
                             <div class="card px-2 pt-1 col-12 col-md">
@@ -52,19 +39,26 @@
                                     当前预定日期：{{ selected_date.join("-") }}
                                 </span>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
                 
-                <div class="spinner-border shadow text-primary" v-if="loadingCourts">
-                    <span class="sr-only">Loading...</span>
-                </div>
             </div>
         </div>
         <vc-calendar mode="range" is-expanded @dayclick='updateByCalendarClick' :attributes="attributes" :min-date='new Date()'></vc-calendar>
         <br/>
         <div v-if="courts">
-            <CourtStatus v-for="court in filteredcourts" :key="court.id" :info="court" :date="selected_date" :clear="clearSelected"></CourtStatus>
+            <button class="btn btn-white">
+                <span class="spinner-border spinner-border-md " :class="{'text-white':loadingCourts}"></span>
+            </button>
+            <ul class="legend jumbotron bg-light p-0">
+                <li v-for="(str,index) in allCourtStatusExceptFirst" :key="`${index+1}${str}`">
+                    <span :class="`courtStatus-${index+1}`"></span> {{ str }}</li>
+            </ul>
+            <CourtStatus v-for="court in filteredcourts" :key="court.id" :info="court" :date="selected_date" :clear="clearSelected">
+                
+            </CourtStatus>
         </div>
         <div class="alert alert-danger" v-if="failedToLoadCourts">
             无法加载场地信息
@@ -88,7 +82,8 @@ export default {
             loadingCourts:false,
             selected_date:this.today(),
             timer:0,
-            clearSelected:false
+            clearSelected:false,
+            changingDay:false
         };
     },
     components:{
@@ -103,7 +98,23 @@ export default {
             let day = parsed_date[2];
             let month = parsed_date[1];
             let year = parsed_date[0];
-            this.updateCourts([day,month,year]);
+
+            // 让之前背景更新所有的回复无效
+            this.changingDay = true;
+
+            // 切换日期，停止场地的循环更新
+            clearInterval(this.timer);
+
+            this.updateCourts([day,month,year])
+            .then(() => {
+
+                // 开始接受回复
+                this.changingDay = false;
+
+                // 切换成功，复原背景循环更新
+                this.timer = setInterval(this.updateCourts,5000);
+
+            });
 
             // 将命令场地清除选项的变量重置
             setTimeout(()=>{this.clearSelected = false;},0);
@@ -141,13 +152,17 @@ export default {
             let month = date[1];
             let year = date[2];
 
-            this.$axios
+            return this.$axios
             .get(`/api/booking?id=${this.venue_id}&day=${day}&month=${month}&year=${year}`)
             .then(res => {
+
+                if(this.changingDay) return;
+                
                 this.courts = res.data.courts;
                 this.venue_name = res.data.venue_name;
             })
-            .catch(() => {
+            .catch((e) => {
+                console.log(e);
                 this.failedToLoadCourts = true;
             })
             .finally(() => {
@@ -159,12 +174,15 @@ export default {
         this.venue_id = this.$route.params.venueid
         let today = this.today();
         this.updateCourts(today);
-        this.timer = setInterval(this.updateCourts,4000);
+        this.timer = setInterval(this.updateCourts,5000);
     },
     destroyed(){
         clearInterval(this.timer);
     },
     computed:{
+        allCourtStatusExceptFirst(){
+            return this.$store.state.courtStatus.filter((v,i) => !!i);
+        },
         filteredcourts(){
             if(this.filter_type === -1)
             {
@@ -194,6 +212,21 @@ export default {
 </script>
 
 <style scoped>
+
+.courtStatus-1{
+    background-color:greenyellow;
+    opacity:0.5;
+}
+
+.courtStatus-2{
+    background-color:red;
+    opacity:0.5;
+}
+
+.courtStatus-3{
+    background-color:orange;
+    opacity:0.5;
+}
 
 #title{
     font-size:50px;

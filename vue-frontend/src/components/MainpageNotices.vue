@@ -1,6 +1,6 @@
 <template>
     <!-- notices -->
-        <div class="rounded p-2 p-sm-3 p-lg-5 text-left shadow bg-light">
+        <div class="rounded p-2 p-sm-3 p-lg-3 pt-lg-4 text-left shadow bg-light">
             <div class="container">
                 <div class="row">
                     <div class="col">

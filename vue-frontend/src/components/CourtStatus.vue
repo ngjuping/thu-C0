@@ -1,7 +1,11 @@
 <template>
     <div class="jumbotron text-left shadow p-3">
         <span id="title">{{ info.name }}</span>
-            <div class="container">
+        
+        <span class="d-inline-block ml-3">
+            <span class="card-footer bg-dark text-white rounded">剩余 {{availableTimes}} 时间段可预定</span>
+        </span>
+            <div class="my-3 container">
                 <div class="row">
                     <div class="col-12 col-md-12">
                         <div class="row d-flex justify-content-around" id="ranges">
@@ -11,7 +15,7 @@
                             </div>
                             <div class="col-12 col-md range d-flex justify-content-center align-items-center"  
                             v-for="status in info.status"
-                            :class="[`courtstatus-${status.code} border border-success rounded`]"
+                            :class="[`courtStatus-${status.code} border border-success rounded`]"
                             :id="selectedCourt && selectedCourt.start === status.start?'activeCourt':'notActive'"
                             :key="`range${status.start}`"
                             :title="courtState(status)"
@@ -45,6 +49,7 @@
                 预定这个场地！
             </button>
         </div>
+            
            
     </div>
     
@@ -62,7 +67,7 @@ export default {
     },
     watch:{
         clear(val){
-            if(val == true){
+            if(val === true){
                 console.log("clear selected court time");
                 this.selectedCourt = null;
             }
@@ -72,6 +77,11 @@ export default {
         $('[data-toggle="tooltip"]').tooltip();
     },
     computed:{
+        availableTimes(){
+            let total = 0;
+            this.info.status.forEach((curr) => { total += curr.code === 1? 1:0 });
+            return total;
+        },
         sportsType(){
             return this.$store.state.sportsType[parseInt(this.info.type)];
         },
@@ -119,7 +129,7 @@ export default {
                     您的订单
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">${ this.sportsType } 场地 ${ this.info.id }</h5>
+                    <h5 class="card-title">${ this.info.name }</h5>
                     <p class="card-text">${this.date.join("/")}
                     <hr>
                     ${this.getTimeOnly(this.selectedCourt.start)} 到 ${this.getTimeOnly(this.selectedCourt.end)}</p>
@@ -243,22 +253,20 @@ export default {
     background-color:yellow;
     opacity:0.8;
 }
-.courtstatus-1{
+.courtStatus-1{
     background-color:greenyellow;
     opacity:0.5;
 }
 
-.courtstatus-2{
+.courtStatus-2{
     background-color:red;
     opacity:0.5;
 }
 
-.courtstatus-3{
+.courtStatus-3{
     background-color:orange;
     opacity:0.5;
 }
-
-
 
 .range,.label{
     height:50px;

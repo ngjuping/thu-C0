@@ -1,5 +1,5 @@
 <template>
-    <div class="list-group-item text-left mb-1 notice rounded" data-toggle="modal" :data-target="`#modal-${notice.id}`" data-backdrop="false">
+    <div class="list-group-item text-left mb-1 notice rounded p-0" data-toggle="modal" :data-target="`#modal-${notice.id}`" data-backdrop="false">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12 col-md-10 pt-3">
@@ -8,7 +8,7 @@
                 </div>
                 <div class="col-12 col-md-2">
                     <div class="d-inline-block w-100 h-100 d-flex align-items-center justify-content-end">
-                    <font-awesome-icon icon="arrow-circle-right" class="rightarrow w-50 h-50" style="max-width:50px;" />
+                    <font-awesome-icon icon="arrow-circle-right" class="rightarrow w-75 h-75" style="max-width:50px;" />
                     </div>
                 </div>
             </div>

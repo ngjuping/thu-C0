@@ -2,9 +2,10 @@
     <div class="container">
         
         <div id="title" class="p-3 px-4 bg-dark rounded shadow text-white mb-5">管理场地</div>
-        <div class="alert alert-danger" v-if="!loadCourtsSuccess">
+        <div class="alert alert-danger" v-if="!loadCourtsSuccess && !freshLoad">
             无法加载您的场地信息
         </div>
+        <span class="spinner-border spinner-border-md text-dark" v-if="freshLoad"></span>
         <div class="container mb-3">
             <div class="row">
                 <div class="col text-left">
@@ -35,13 +36,19 @@
                 </div>
             </div>
         </div>
-        <div class="container overflow-auto">
-
-            <ul class="pagination pagination-lg">
+        <div class="container overflow-auto" style="box-sizing:border-box;">
+            
+            <ul class="pagination pagination-lg overflow-auto">
                     <li class="page-item"  v-for="(resv,index) in courts" :key="resv.reservation_id">
                         <a class="page-link px-3" :class="`resvStatus-${resv.status}`" @click="scrollToTarget(`resv-${resv.reservation_id}`)">{{ index+1 }}</a></li>
             </ul>
+
         </div>
+        <ul class="legend">
+            <li v-for="(str,index) in allStatusExceptFirst" :key="`${index+1}${str}`">
+                <span :class="`resvStatus-${index+1}`"></span> {{ str }}</li>
+        </ul>
+        <br/>
         <div class="container">
             <div class="row text-right mb-4">
                 <div class="col"></div>
@@ -60,7 +67,7 @@
                     
             </div>
             
-                    <div class="alert alert-dark" v-if="!courts.length">
+                    <div class="alert alert-dark" v-if="!courts.length && !freshLoad">
                         没有找到数据...
                     </div>
         </div>
@@ -85,6 +92,7 @@ export default {
             original_courts:[],
             show_calendar:false,
             today:moment().format(),
+            freshLoad:true,
         }
     },
     methods:{
@@ -133,6 +141,9 @@ export default {
             .catch(()=>{
                 this.loadCourtsSuccess = false;
             })
+            .finally(() => {
+                this.freshLoad = false;
+            })
         },
         outDated(resv){
             return resv.details.end < this.today;
@@ -150,9 +161,11 @@ export default {
             return;
         }
         this.getReservations();
-        
     },
     computed:{
+        allStatusExceptFirst(){
+            return this.$store.state.reservationStatus.filter((v,i) => {return !!i});
+        },
         attributes(){
             return [...this.original_courts.map(court => ({
                     key: 'today',
@@ -174,21 +187,53 @@ export default {
     font-size:50px;
 }
 
+li > *{
+    border-width:0px;
+    border-color:transparent;
+    opacity:0.8;
+}
+
+a:hover{
+    opacity:1;
+    cursor:pointer;
+}
+
+li{
+    border-width:0px;
+    border-color:transparent;
+}
+
 .resvStatus-1{
-    color:red;
+    color:rgb(255, 255, 255);
+    background-color:rgb(255, 0, 0);
 }
 
 .resvStatus-2{
-    color:green;
+    color:white;
+    background-color:rgb(4, 138, 49);
+    
 }
 
 .resvStatus-3{
-    color:grey;
+    color:white;
+    background-color:rgb(77, 77, 77);
 }
 
 .resvStatus-4{
-    color:grey;
+    color:white;
+    background-color: rgb(0, 140, 255);
 }
+
+.resvStatus-5{
+    color:white;
+    background-color:rgb(255, 0, 234);
+}
+
+.resvStatus-6{
+    color:white;
+    background-color:rgb(140, 0, 255);
+}
+
 @media (max-width:760px) {
     #title{
         font-size:30px;

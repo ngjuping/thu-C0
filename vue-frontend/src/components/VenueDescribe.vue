@@ -180,7 +180,7 @@ export default {
 }
 
 #feedback_body{
-    height:200px;
+    max-height:200px;
 }
 
 .gobook{
