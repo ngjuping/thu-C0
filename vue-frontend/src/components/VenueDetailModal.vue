@@ -22,7 +22,7 @@
               <div class="info-row">
                 <div class="label">场馆图片: </div>
                 <div class="value">
-                  <img :src="venueDetail.img" class="img-thumbnail" style="width: 100px; height: 100px" />
+                  <img :src="`http://58.87.86.11:8000/${this.venueDetail.img}`" class="img-thumbnail" style="width: 100px; height: 100px" />
                 </div>
               </div>
               <div v-if="venueDetail.review">
@@ -53,7 +53,7 @@ export default {
   name: 'VenueDetailModal',
   props: {
     venueId: {
-      type: String,
+      type: Number,
       required: true
     }
   },

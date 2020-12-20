@@ -85,6 +85,14 @@ export default {
     },
     methods: {
         exportInfo(){
+            this.$axios.post("api/admin/csv/generate")
+            .then((res) => {
+                let data = res.data;
+                window.location.href = "http://58.87.86.11:8000/" + data.path;
+            })
+            .catch((e) => {
+                console.log(e.response.data.message);
+            });
 
         },
         handleShowEditModal(item, status) {
