@@ -22,12 +22,12 @@
                 <div class="col-sm-10">
                   <select v-model="formMessage.type" v-if="status=='add'" class="form-control" style="width: 100px">
                       <option
-                        v-for="(item, index) in sports"
+                        v-for="(item, index) in $store.state.sportsType"
                         :value="index+1"
                         :key="index"
                       >{{item}}</option>
                   </select>
-                  <span v-else>{{sports[formMessage.type]}}</span>
+                  <span v-else>{{$store.state.sportsType[formMessage.type]}}</span>
                 </div>
               </div>
               <div class="row form-group">
@@ -92,7 +92,6 @@ export default {
   },
   data() {
     return {
-      sports:[null,"羽球","篮球","乒乓"],
       formMessage: {
         price:'',
         type: 0,
@@ -124,7 +123,7 @@ export default {
           price:this.formMessage.price,
           venue_id:this.courtInfo.venue_id,
           type: this.formMessage.type-1,
-          name: this.sports[this.formMessage.type-1] + "场地",
+          name: this.$store.state.sportsType[this.formMessage.type-1] + "场地",
           status: []
       }
       const params_update = {
