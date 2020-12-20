@@ -26,17 +26,17 @@
                 </div>
               </div>
               <div v-if="venueDetail.review">
-                <h6 class="title">评论: </h6>
+                <h6 class="title">最新评论: </h6>
                 <div class="info-row">
-                  <div class="label">好评数: </div>
+                  <div class="label" v-if="venueDetail.review.stars">星级: </div>
                   <div class="value">{{venueDetail.review.stars}}</div>
                 </div>
                 <div class="info-row">
-                  <div class="label">评论内容: </div>
-                  <div class="value">{{venueDetail.review.content}}</div>
+                  <div class="label" v-if="venueDetail.review.content">评论内容: </div>
+                  <div class="value" v-html="venueDetail.review.content"></div>
                 </div>
                 <div class="info-row">
-                  <div class="label">评论日期: </div>
+                  <div class="label" v-if="venueDetail.review.publish_date">评论日期: </div>
                   <div class="value">{{venueDetail.review.publish_date}}</div>
                 </div>
               </div>

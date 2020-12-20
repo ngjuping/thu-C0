@@ -40,7 +40,6 @@ export default {
     props:["info"],
     data(){
         return {
-            statustext:["空场地","已有人预定"],
             selectedCourt:null,
             courtInfo: {},
             show: false
