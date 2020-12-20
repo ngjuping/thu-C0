@@ -7,16 +7,19 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu" v-if="logged_in">
                     <font-awesome-icon icon="bars" class="w-50 h-50" style="max-width:50px;" />
                 </button>
-                <div class="d-lg-flex justify-content-end" :class="{'collapse':logged_in,'navbar-collapse':logged_in}" id="menu">
+                <div class="d-flex justify-content-end" :class="{'collapse':logged_in,'navbar-collapse':logged_in}" id="menu">
                     <div class="navbar-nav" v-if="logged_in && hasUserPrivilege">
                             <a class="nav-item nav-link active" @click="$router.push({name:'Manage'})">我的场地</a>
                             <a class="nav-item nav-link" @click="$router.push({name:'AllShares'})">拼场广场</a>
                             <a class="nav-item nav-link" @click="$router.push({name:'AllFeedbacks'})">反馈天地</a>
                             <a class="nav-item nav-link" @click="$router.push({name:'AllCourses'})">培训武馆</a>
                     </div>
-                        <button class="btn btn-danger mt-3 mt-md-0" v-if="logged_in" @click="logout">登出</button>
-                        <button class="btn btn-primary mt-3 mt-md-0" v-else @click="gotoLogin">登陆</button>
+                        <div class="btn btn-danger mt-3 mt-md-0" v-if="logged_in" @click="logout">登出</div>
                 </div>
+                <div class="w-50 text-right" v-if="!logged_in" >
+                    <button class="btn btn-primary mt-3 mt-md-0" @click="gotoLogin">登录</button>
+                </div>
+                
                 
         
         

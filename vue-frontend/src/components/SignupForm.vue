@@ -1,8 +1,8 @@
 <template>
-<div class="form_container d-flex justify-content-center">
+<div class="form_container d-flex justify-content-center my-5">
   <div class="card shadow p-4" id="signup_panel">
       <div class="card-img-top w-100 d-flex justify-content-center">
-        <img src="@/assets/logo.png">
+        <img src="@/assets/logo.png" class="logoimg">
       </div>
       
       <form class="card-body h-50 pb-5">
@@ -147,6 +147,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.logoimg{
+  max-width:200px;
+}
+
 form{
   height:30vw;
 }

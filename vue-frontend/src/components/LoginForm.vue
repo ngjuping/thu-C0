@@ -48,7 +48,7 @@ export default {
   data()
   {
     return {
-      api_id: "admin",
+      api_id: "2018012398",
       pwd: "123456",
       logging_in: false
     }
