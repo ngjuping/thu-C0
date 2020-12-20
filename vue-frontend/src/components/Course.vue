@@ -4,7 +4,7 @@
         <div class="card-body">
             价格: {{ course.price }}
             <br/>
-            教练介绍：
+            课程介绍：
             <div class="jumbotron">
                 {{ course.intro }}
             </div>

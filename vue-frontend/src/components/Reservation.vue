@@ -366,7 +366,7 @@ export default {
         },
         cancellable(){
             // 如果还没过期
-            return (this.resvStatus === 1 || this.resvStatus === 2 || this.resvStatus === 5) && !this.outDated;
+            return (this.resvStatus === 1 || this.resvStatus === 5) && !this.outDated;
         },
         shareable(){
             // 如果已付款且还没过期且没有发布过拼场帖子
