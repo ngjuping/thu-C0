@@ -35,11 +35,12 @@ def create_venue(request):
         assert img.name.endswith(('.bmp', '.dib', '.png', '.jpg', '.jpeg', '.pbm', '.pgm', '.ppm', '.tif', '.tiff'))
         if img.size < 128 or img.size > 2048 ** 2:
             return JsonResponse({"error": "image size invalid"}, status=401)
-        Venue.objects(venue_id=venue_id).update_one(set__image=img.name)
+
         try:
             img_format = img.name.split('.')[1]
             img_name = 'venue_' + str(venue_id) + '_img.' + img_format
-            with open(settings.STATIC_URL + img_name, 'wb+') as destination:
+            Venue.objects(venue_id=venue_id).update_one(set__image='static/venue/' + img_name)
+            with open('static/venue/' + img_name, 'wb+') as destination:
                 for chunk in img.chunks():
                     destination.write(chunk)
         except:
@@ -51,7 +52,7 @@ def create_venue(request):
     Venue(name=name,
         intro=description,
         courts=[],
-        image=img_name,
+        image='static/venue/' + img_name,
         venue_id=venue_id,
         notices=[]).save()
 
@@ -174,9 +175,12 @@ def update_venue(request):
         #print(img.size)
         if img.size < 128 or img.size > 2048**2:
             return JsonResponse({"message": "image size invalid"}, status=401)
-        Venue.objects(venue_id=venue_id).update_one(set__image=img.name)
+        
+        img_format = img.name.split('.')[1]
+        img_name = 'venue_' + str(venue_id) + '_img.' + img_format
+        Venue.objects(venue_id=venue_id).update_one(set__image='static/venue/' + img_name)
         try:
-            with open(settings.STATIC_URL + img.name, 'wb+') as destination:
+            with open('static/venue/'  + img_name, 'wb+') as destination:
                 for chunk in img.chunks():
                     destination.write(chunk)
         except:
