@@ -1,7 +1,7 @@
 <template>
 
 <div class="row p-3 shadow rounded" id="venue_panel">
-    <div class="col-12 col-lg-4 pt-4 shadow p-4" id="venue_select_panel">
+    <div class="col-12 col-lg-4 pt-4 shadow p-3" id="venue_select_panel">
         <h1 class="text-left">选择场馆 &nbsp;&nbsp;<font-awesome-icon icon="basketball-ball" class="text-danger" /></h1>
         <div v-if="loadingVenue" class="text-info">
             <span>正在加载场地信息...</span>
