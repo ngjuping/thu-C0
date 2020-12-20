@@ -4,7 +4,7 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">编辑场馆</h5>
+            <h5 class="modal-title" id="exampleModalLabel">{{status=='add'?'新增':'编辑'}}场馆</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -45,7 +45,7 @@
 
 <script>
 export default {
-  name: 'ReviewModal',
+  name: 'VenueEditModal',
   props: {
     venueDetail: {
       type: Object,
@@ -58,7 +58,7 @@ export default {
         default() {
             return {}
         }
-    }
+    },
   },
   data() {
     return {
