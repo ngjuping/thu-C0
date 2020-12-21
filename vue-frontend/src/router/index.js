@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '@/views/Login.vue'
+import store from '../store';
 
 Vue.use(VueRouter);
 
@@ -146,6 +147,28 @@ const routes = [
 
 const router = new VueRouter({
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  let user_pages = ["AllCourses","AllShares","AllFeedbacks","AllNotices","Manage","Booking","Mainpage"];
+  let admin_pages = ["Admin","Venues","BookingManage","ReplyFeedback","NoticeManager","TrainManager","FieldInit"];
+  let accessingUserPage = Boolean(user_pages.indexOf(to.name) != -1);
+  let accessingAdminPage = Boolean(admin_pages.indexOf(to.name) != -1);
+  let isAdmin = Boolean(store.state.privilege === 1);
+  let isUser = Boolean(!store.state.privilege);
+  let noPrivilege = Boolean(store.state.privilege === -1);
+  if(accessingUserPage && isAdmin){
+    next(false);
+  }
+  else if(accessingAdminPage && isUser){
+    next(false);
+  }
+  else if(noPrivilege && accessingAdminPage){
+    next(false);
+  }
+  else{
+    next();
+  }
 })
 
 export default router

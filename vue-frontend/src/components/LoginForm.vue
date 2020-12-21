@@ -99,7 +99,11 @@ export default {
   mounted(){
     if(this.$store.state.logged_in)
     {
-      this.$router.replace({name:'Mainpage'});
+      if(this.$store.state.privilege===1) {
+          this.$router.replace({name:'Admin'})
+        } else {
+          this.$router.replace({name:'Mainpage'});
+        }
     }
   }
 }
