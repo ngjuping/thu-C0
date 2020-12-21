@@ -87,6 +87,9 @@ export default {
         sportsType(){
             return this.$store.state.sportsType[parseInt(this.info.type)];
         },
+        usingPhone(){
+            return /Mobi|Android/i.test(navigator.userAgent) ;
+        }
     },
     methods:{
         courtState(status){
@@ -204,9 +207,10 @@ export default {
 
                             // 进一步支付
                             return this.$axios.post(`/api/pay/${chosenPaymentMethod}`,{
-                                reservation_id: res.data.reservation_id
+                                reservation_id: res.data.reservation_id,
+                                isPhone:this.usingPhone
                             })
-                            .then(() => {
+                            .then((res) => {
                                 // axios只允许200-299状态码进入then
                                 // 线下支付选择后会，请求成功就会进入这里
                                 if(chosenPaymentMethod === 'offline'){
@@ -218,14 +222,14 @@ export default {
                                         confirmButtonText:"我知道了"
                                     })
                                 }
-                            })
-                            .catch((err) => {
-                                // 判断是否是跳转状态码
-                                if(err.response.status === 302){
-                                    // 跳转
-                                    window.location.href = err.response.headers.location;
+                                // 线上支付
+                                else{
+                                    // 跳转到支付api
+                                    window.location.href = res.headers.location;
                                     return;
                                 }
+                            })
+                            .catch((err) => {
                                 Swal.showValidationMessage(
                                     `跳转失败: ${err.response.data.message}`
                                 )

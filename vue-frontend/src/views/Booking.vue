@@ -149,7 +149,10 @@ export default {
             return this.$axios
             .get(`/api/booking?id=${this.venue_id}&day=${day}&month=${month}&year=${year}`)
             .then(res => {
-                
+                if(this.selected_date.join("-") !== res.data.requestedDate.join("-") ) {
+                    console.log("Does not match, reject");
+                    return;
+                }
                 this.courts = res.data.courts;
                 this.venue_name = res.data.venue_name;
             })

@@ -1,6 +1,5 @@
 <template>
     <div class="container my-4">
-        <p class="bg-light">您正在使用手机 {{ boolean }}</p>
         <div class="alert alert-danger" v-if="failedToGetNotices">
             无法获得通告
         </div>
@@ -61,11 +60,6 @@ export default {
             this.failedToGetVenues = true;
         })
         
-    },
-    computed:{
-        boolean(){
-            return /Mobi|Android/i.test(navigator.userAgent) ;
-        }
     }
 
 }
