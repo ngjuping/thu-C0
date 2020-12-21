@@ -82,10 +82,10 @@ def get_courts_info(request):
    except:
       pass
 
-
    return JsonResponse({
       "message": "ok",
       "venue_name": venue.name,
+      "requestedDate":[int(day),int(month),int(year)],
       "courts": court_json
    })
 
