@@ -32,7 +32,6 @@
               </div>
               <div class="row form-group">
                 <div class="col-sm-2">场地配置</div>
-                <div class="col-sm-10"><button type="button" class="btn btn-primary" @click="handleAddItem">添加</button></div>
               </div>
               <div class="row form-group" v-for="(item,index) in formMessage.timeInfoList" :key="index">
                 <div class="col-sm-3">
@@ -50,14 +49,17 @@
                 <div class="col-sm-3">
                   <select v-model="item.code" class="form-control">
                     <!-- <option :value="''" disabled>状态</option> -->
-                    <option :value="0">可预定</option>
-                    <option :value="1">已预定</option>
+                    <option :value="0">未开放</option>
+                    <option :value="1">空场地</option>
+                    <option :value="2">已有人预定</option>
+                    <option :value="4">可抽签</option>
                   </select>
                 </div>
                 <div class="col-sm-3" v-if="index === formMessage.timeInfoList.length - 1">
-                  <button type="button" class="btn btn-danger" @click="handleDeleteItem">删除</button>
                 </div>
               </div>
+
+              
             </form>
           </div>
           <div class="modal-footer">
@@ -95,6 +97,7 @@ export default {
       formMessage: {
         price:'',
         type: 0,
+        timelist:[{start: '',end: '',code: 0 },],
         timeInfoList: []
       },
       timeList: []
@@ -186,14 +189,12 @@ export default {
   },
   mounted() {
     this.timeList = []
-    for (let i = 0; i <= 24; i++) {
+    for (let i = 7; i <= 22; i++) {
       let item = ''
-      if (i === 0) {
-        item = '0000'
-      } else if (i < 10) {
-        item = '0' + (i*100).toString()
+      if (i < 10) {
+        item = '0' + (i).toString() + ':00 - '
       } else {
-        item = (i*100).toString()
+        item = (i).toString() + ':00'
       }
       this.timeList.push(item)
     }

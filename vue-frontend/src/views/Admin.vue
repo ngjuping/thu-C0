@@ -32,8 +32,21 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 export default {
-    name: 'Admin'
+    name: 'Admin',
+    mounted(){
+        if(!this.$store.state.privilege)
+        {
+            Swal.fire({
+            title: "您并非管理员",
+            text: "并非管理员，没有操作权限",
+            icon: "error",
+            timer: 1500});
+        }
+
+    }
+    
 }
 </script>
 

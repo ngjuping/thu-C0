@@ -14,7 +14,7 @@
             :title="$store.state.courtStatus[status.code]"
             data-toggle="tooltip" 
             data-placement="top">
-            <span class="d-inline d-md-none bg-light lead">{{ status.start }} -- {{ status.end }}</span>
+            <span class="d-inline d-md-none bg-light lead">{{ getTimeOnly(status.start) }} -- {{ getTimeOnly(status.end) }}</span>
             </div>
         </div>
       </div>
@@ -22,11 +22,11 @@
         <div class="row d-flex justify-content-end">
           <div class="col px-0" v-for="(status) in info.status" :key="`label${status.start}`">
             <div class="pl-0">
-                {{ status.start }}
+                {{ getTimeOnly(status.start) }}
             </div>      
           </div>
           <div class="pr-0">
-            {{ info.status[info.status.length-1].end }}
+            {{ getTimeOnly(info.status[info.status.length-1].end) }}
           </div>
         </div>
       </div>
@@ -53,6 +53,18 @@ export default {
         this.show = true
         this.$emit('edit', this.info)
       },
+      getTimeOnly(date){
+            if(!date) return "解析日期错误"
+            try{
+                //input: "1999-03-01T00:00:00+01:00"
+                let date_second_part = date.split("T")[1]; //["1999-03-01","00:00:00+01:00"][1] = "00:00:00+01:00"
+                let [hour,minutes] = date_second_part.split(":").slice(0,2); 
+                return hour+minutes;
+            }
+            catch(err){
+                return "解析日期错误"
+            }
+        },
       handleSuccessEdit() {
         this.$emit('court-change')
       }

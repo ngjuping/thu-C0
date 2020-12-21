@@ -22,8 +22,9 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" @click="setFilter(1)">羽球</a>
-                    <a class="dropdown-item" @click="setFilter(2)">篮球</a>
-                    <a class="dropdown-item" @click="setFilter(3)">乒乓</a>
+                    <a class="dropdown-item" @click="setFilter(2)">乒乓</a>
+                    <a class="dropdown-item" @click="setFilter(3)">网球</a>
+                    <a class="dropdown-item" @click="setFilter(3)">篮球</a>
                 </div>
                 </div>
                 <button
