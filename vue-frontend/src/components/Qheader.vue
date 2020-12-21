@@ -4,19 +4,27 @@
                     <img src="@/assets/logo.png" width="100" class="d-inline-block align-top" alt="" id="logoimg">
                     <span id="logotext" class="rounded bg-dark text-light p-2" v-if="logged_in">回到主页</span>
                 </div>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu" v-if="logged_in">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu" v-if="logged_in && hasUserPrivilege">
                     <font-awesome-icon icon="bars" class="w-50 h-50" style="max-width:50px;" />
                 </button>
                 <div class="d-lg-flex justify-content-center justify-content-lg-end" :class="{'collapse':logged_in,'navbar-collapse':logged_in}" id="menu">
                     <div class="navbar-nav" v-if="logged_in && hasUserPrivilege">
+                            <li class="dropdown">
+                                <a class="nav-item nav-link dropdown-toggle" data-toggle="dropdown">
+                                    订场
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" v-for="venue in venues" :key="venue.id" @click="goBooking(venue.id)">{{ venue.name }}</a>
+                                </div>
+                            </li>
                             <a class="nav-item nav-link active" @click="$router.push({name:'Manage'})">我的场地</a>
                             <a class="nav-item nav-link" @click="$router.push({name:'AllShares'})">拼场广场</a>
                             <a class="nav-item nav-link" @click="$router.push({name:'AllFeedbacks'})">反馈天地</a>
                             <a class="nav-item nav-link" @click="$router.push({name:'AllCourses'})">培训武馆</a>
                         <a class="btn btn-danger mt-3 mt-md-0 nav-item" v-if="logged_in" @click="logout">登出</a>
                     </div>
-                    <a class="btn btn-danger mt-3 mt-md-0 nav-item" v-if="logged_in && hasAdminPrivilege" @click="logout">登出</a>
                 </div>
+                <a class="btn btn-danger mt-3 mt-md-0 nav-item abc" v-if="logged_in && hasAdminPrivilege" @click="logout">登出</a>
                 <div class="w-50 text-right" v-if="!logged_in" >
                     <button class="btn btn-primary mt-3 mt-md-0" @click="gotoLogin">登录</button>
                 </div>
@@ -34,10 +42,26 @@ import Swal from 'sweetalert2'
 export default {
     data(){
         return {
-            timer:0
+            timer:0,
+            venues:[],
+            failedToGetVenues:false
         }
     },
+    mounted(){
+        //get venues list
+        this.$axios
+        .get('/api/main/venues/list')
+        .then(res => {
+            this.venues = res.data.venues;
+        })
+        .catch(() => {
+            this.failedToGetVenues = true;
+        })
+    },
     methods:{
+        goBooking(x){
+            this.$router.push({name:'Booking',params:{venueid:x}});
+        },
         gotoLogin(){
             this.$router.push({name:'Login'});
         },
