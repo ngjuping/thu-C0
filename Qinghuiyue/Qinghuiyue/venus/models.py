@@ -1,4 +1,5 @@
 from random import randint
+from copy import deepcopy
 from mongoengine import *
 from datetime import datetime, timedelta
 
@@ -25,40 +26,46 @@ class Court(DynamicDocument):
     court_id = IntField()
     price = FloatField()
     matrix = ListField()
-
-    def set_schedule(self):
+    def set_future_court(self,weeks=1):
         """
+        根据现有的matrix来设定后weeks周的场地
+        如果有场地已经有人预定，会跳过这些将带来冲突的场地
+        weeks=1代表下一周
+
+\
          matrix:[
          [1,2,3,1,2,2,3],
          [1,2,3,1,2,2,3],
          ...
          ]#大小7*15，15代表十五个时间段，7-8,8-9...21-22
-        根据这个矩阵把下一周的场地全部安排好
+        根据这个矩阵把下下周的场地全部安排好
         注意，0是代表周一
-         """
-
+        """
         if not self.matrix:
             return
         # 先获取下一周周一的日期
-        now = datetime.now() + timedelta(days=1)  # 防止今天是周一
+        now = datetime.now() + timedelta(days=1+(weeks-1)*7)  # 防止今天是周一
 
         while now.weekday() != 0:
             now += timedelta(days=1)
         time = now.replace(hour=7, minute=0, second=0, microsecond=0)
         time_end = time + timedelta(days=6, hours=15)
         i = 0
-        print(self.court_id)
+        matrix=deepcopy(self.matrix)
+        #已经安排过的场地不会自动安排，自动安排时会跳过，防止给用户预定带来冲突
         while i < len(self.Status):
-
             status = self.Status[i]
-            print(status)
             if status['start'] >= time and status['end'] <= time_end:
+                matrix[status['start'].hour-time.hour][(status['start']-time).days]=-1
                 self.Status.pop(i)
             else:
                 i += 1
-        # 应该要先处理掉可能冲突、重复的地方,但目前的处理不会通知到用户
         for i in range(15):
             for j in range(7):
+                if matrix[i][j]==-1:
+                    print("skip")
+                    continue
+
                 status = {"start": time + timedelta(hours=i, days=j), "end": time + timedelta(hours=i + 1, days=j),
                           "user_id": -1, "code": self.matrix[i][j]}
                 if status['code'] == 3:
@@ -66,6 +73,13 @@ class Court(DynamicDocument):
                     status['users_id']=[]#储存定了了user_id
                 self.Status.append(status)
         self.save()
+
+    def set_schedule(self):
+        """
+        设定下下周与下周的场地
+        """
+        self.set_future_court(1)
+        self.set_future_court(2)
 
     def draw(self):
         '''

@@ -31,7 +31,10 @@ class AliPay(object):
         else:
             self.__gateway = "https://openapi.alipay.com/gateway.do"
 
-    def direct_pay(self, subject, out_trade_no, total_amount, return_url=None, **kwargs):
+    def direct_pay(self, subject, out_trade_no, total_amount, return_url=None, is_phone=0,**kwargs):
+        '''
+        subject:物品名，out_trade_no:系统内单号，total_amount:总金额,is_phone:是否是手机
+        '''
         biz_content = {
             "subject": subject,
             "out_trade_no": out_trade_no,
@@ -41,7 +44,10 @@ class AliPay(object):
         }
 
         biz_content.update(kwargs)
-        data = self.build_body("alipay.trade.page.pay", biz_content, self.return_url)
+        if not is_phone:
+            data = self.build_body("alipay.trade.page.pay", biz_content, self.return_url)
+        else:
+            data=self.build_body("alipay.trade.wap.pay", biz_content, self.return_url)
         return self.sign_data(data)
 
     def build_body(self, method, biz_content, return_url=None):

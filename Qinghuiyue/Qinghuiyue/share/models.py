@@ -31,3 +31,14 @@ class Share_notification(DynamicDocument):
             return True,{"message":"ok","share_id":share.share_id}
         else:
             return False,{"message":"找不到此预定"}
+    @classmethod
+    def del_share(cls,reservation):
+        '''
+        传入reservation的objectID,如果有对应的拼场就删除
+        '''
+        share=cls.objects(reservation=reservation).first()
+        if share:
+            user=User.objects(user_id=share.user_id).first()
+            user.invitation.remove(share.id)
+            share.delete()
+

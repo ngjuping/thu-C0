@@ -73,6 +73,9 @@ def book_draw(request):
     user = User.objects(user_id=request.session.get("user_id")).first()
     if not user:
         return JsonResponse({"message": "用户不存在或登陆过期，请重新登陆"}, status=400)
+    draw_now=Reservation.objects(id__in=user.rent_now,status=5).count()
+    if draw_now>=3:
+        return JsonResponse({"message":"您最多同时参与三场抽签","draw_now":draw_now},status=400)
     for status in court_status:
         if status['start'] == book_info['start'] \
                 and status['end'] == book_info['end']:
@@ -183,6 +186,7 @@ def transfer_reservation(request):
     user_new.save()
     user_now.save()
     reservation.save()
+    Share_notification.del_share(reservation.id)
     # 再到court里面去修改status,可能可以抽象成函数
     court = Court.objects(id=reservation.details['court']).first()
     for status in court.Status:
@@ -236,6 +240,8 @@ def cancel_reservation(request):
         court.save()
     else:
         return JsonResponse({"message": "当前状态不可取消预定"}, status=400)
+
+    Share_notification.del_share(reservation.id)
     return JsonResponse({"message": "ok"})
 
 

@@ -61,12 +61,13 @@ def index(request):
         subject=court.name + "支付",  # 商品简单描述 这里一般是从前端传过来的数据
         out_trade_no=out_trade_no,  # 商户订单号  这里一般是从前端传过来的数据
         total_amount=court.price,  # 交易金额(单位: 元 保留俩位小数)   这里一般是从前端传过来的数据
+        is_phone=1
     )
     # 拼接url，转到支付宝支付页面
     pay_url = "https://openapi.alipaydev.com/gateway.do?{}".format(query_params)
-
-    return redirect(pay_url)
-
+    response=JsonResponse({"message":"ok"},status=302)
+    response["Location"]=pay_url
+    return response
 
 
 @csrf_exempt
@@ -92,9 +93,12 @@ def pay_for_reservation(request):
         subject=court.name + "支付",  # 商品简单描述 这里一般是从前端传过来的数据
         out_trade_no=out_trade_no,  # 商户订单号  这里一般是从前端传过来的数据
         total_amount=court.price,  # 交易金额(单位: 元 保留俩位小数)   这里一般是从前端传过来的数据
+        is_phone=params['isPhone'],
     )
     pay_url = "https://openapi.alipaydev.com/gateway.do?{}".format(query_params)
-    return redirect(pay_url)
+    response=JsonResponse({"message":"ok"},status=200)
+    response["Location"]=pay_url
+    return response
 
 
 
