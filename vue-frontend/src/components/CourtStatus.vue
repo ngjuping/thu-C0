@@ -68,9 +68,12 @@ export default {
         }
     },
     watch:{
+        async info(){
+            await $('[data-toggle="tooltip"]').tooltip('dispose');
+            $('[data-toggle="tooltip"]').tooltip();
+        },
         clear(val){
             if(val === true){
-                console.log("clear selected court time");
                 this.selectedCourt = null;
             }
         }

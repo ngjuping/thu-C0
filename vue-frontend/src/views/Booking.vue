@@ -97,7 +97,7 @@ export default {
 
             if(this.lastClickedCalendarTime){
                 diff = now.diff(this.lastClickedCalendarTime)
-                if(diff < 1000) return;
+                if(diff < 500) return;
             }
             this.lastClickedCalendarTime = now
 
@@ -150,7 +150,7 @@ export default {
             .get(`/api/booking?id=${this.venue_id}&day=${day}&month=${month}&year=${year}`)
             .then(res => {
                 if(this.selected_date.join("-") !== res.data.requestedDate.join("-") ) {
-                    console.log("Does not match, reject");
+                    console.log("late response, reject");
                     return;
                 }
                 this.courts = res.data.courts;
