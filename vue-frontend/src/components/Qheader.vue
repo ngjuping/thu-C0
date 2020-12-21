@@ -14,13 +14,17 @@
                                     订场
                                 </a>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" v-for="venue in venues" :key="venue.id" @click="goBooking(venue.id)">{{ venue.name }}</a>
+                                    <a class="dropdown-item" 
+                                    data-toggle="collapse" data-target="#menu"
+                                    v-for="venue in venues" 
+                                    :key="venue.id" 
+                                    @click="goBooking(venue.id)">{{ venue.name }}</a>
                                 </div>
                             </li>
-                            <a class="nav-item nav-link active" @click="$router.push({name:'Manage'})">我的场地</a>
-                            <a class="nav-item nav-link" @click="$router.push({name:'AllShares'})">拼场广场</a>
-                            <a class="nav-item nav-link" @click="$router.push({name:'AllFeedbacks'})">反馈天地</a>
-                            <a class="nav-item nav-link" @click="$router.push({name:'AllCourses'})">培训武馆</a>
+                            <a class="nav-item nav-link active" data-toggle="collapse" data-target="#menu" @click="$router.push({name:'Manage'})">我的场地</a>
+                            <a class="nav-item nav-link" data-toggle="collapse" data-target="#menu" @click="$router.push({name:'AllShares'})">拼场广场</a>
+                            <a class="nav-item nav-link" data-toggle="collapse" data-target="#menu" @click="$router.push({name:'AllFeedbacks'})">反馈天地</a>
+                            <a class="nav-item nav-link" data-toggle="collapse" data-target="#menu" @click="$router.push({name:'AllCourses'})">培训武馆</a>
                         <a class="btn btn-danger mt-3 mt-md-0 nav-item" v-if="logged_in" @click="logout">登出</a>
                     </div>
                 </div>
@@ -61,6 +65,7 @@ export default {
     methods:{
         goBooking(x){
             this.$router.push({name:'Booking',params:{venueid:x}});
+            this.$router.go();
         },
         gotoLogin(){
             this.$router.push({name:'Login'});
