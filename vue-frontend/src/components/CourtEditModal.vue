@@ -126,7 +126,7 @@ export default {
           price:this.formMessage.price,
           venue_id:this.courtInfo.venue_id,
           type: this.formMessage.type-1,
-          name: this.$store.state.sportsType[this.formMessage.type-1] + "场地",
+          name: this.$store.state.sportsType[this.formMessage.type] + "场地",
           status: []
       }
       const params_update = {
