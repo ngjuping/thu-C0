@@ -1,5 +1,6 @@
 <template>
   <div class="venues">
+    <span class="spinner-border spinner-border-md text-info" v-if="loading"></span>
     <button
         type="button"
         class="btn btn-primary"
@@ -66,7 +67,8 @@ export default {
       venuesList: [],
       venueId: 1,
       venueDetail: {},
-      status: 'add'
+      status: 'add',
+      loading:true
     }
   },
   methods: {
@@ -80,6 +82,7 @@ export default {
       this.venueId = item.id
     },
     handleGetVenues() {
+      this.loading = true;
       this.$axios.request({
         method: 'get',
         url: '/api/main/venues/list',
@@ -88,6 +91,7 @@ export default {
       }).catch(error => {
         console.log(error)
       })
+      .finally(()=>{this.loading = false});
     }
   },
   mounted() {

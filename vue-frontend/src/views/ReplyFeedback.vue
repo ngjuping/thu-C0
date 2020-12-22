@@ -1,5 +1,6 @@
 <template>
     <div class="reply-feedback">
+        <span class="spinner-border spinner-border-md text-info" v-if="loading"></span>
         <table class="table table-striped bg-light table-hover">
             <thead class="thead-dark">
                 <tr>
@@ -92,6 +93,7 @@ export default {
             reply: {},
             status: 'add',
             feedbackId: 1,  // 管理员回复的反馈id
+            loading:true
         }
     },
     mounted() {
@@ -107,6 +109,7 @@ export default {
             this.feedbackId = item.feedback_id;
         },
         getFeedBack() {
+            this.loading = true;
             this.$axios.request({
                 method: 'get',
                 url: `/api/manage/feedback?page=${this.form.page}&size=${this.form.size}`,
@@ -116,6 +119,7 @@ export default {
             }).catch(err => {
                 console.log(err);
             })
+            .finally(()=>{this.loading = false});
         },
         handleShowDetailModal(item) {
             // 展示详情

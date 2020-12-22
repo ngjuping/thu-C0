@@ -1,5 +1,6 @@
 <template>
     <div class="train-manager">
+        <span class="spinner-border spinner-border-md text-info" v-if="loading"></span>
         <button
             type="button"
             class="btn btn-primary"
@@ -85,7 +86,8 @@ export default {
             total: 0,
             trainDetail: {},
             trainId: '',
-            status: 'add'
+            status: 'add',
+            loading:true
         }
     },
     mounted() {
@@ -97,6 +99,7 @@ export default {
             this.trainDetail = item;
         },
         getTrain() {
+            this.loading = true;
             this.$axios.request({
                 method: 'get',
                 url: `/api/courses?page=${this.form.page}&size=${this.form.size}`,
@@ -106,6 +109,7 @@ export default {
             }).catch(err => {
                 console.log(err);
             })
+            .finally(()=>{this.loading = false});
         },
         goPage(type) {
             if (type == 0) {

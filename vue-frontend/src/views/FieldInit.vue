@@ -1,6 +1,6 @@
 <template>
     <div class="field-init">
-        
+        <span class="spinner-border spinner-border-md text-info" v-if="loading"></span>
         <BookingManage></BookingManage>
         <table class="table table-striped bg-light table-hover rounded">
             <thead class="thead-dark">
@@ -83,7 +83,8 @@ export default {
             total: 0,
             sports: [null, "羽球", "篮球", "乒乓"],
             fieldDetail: {},
-            status: 'add'
+            status: 'add',
+            loading:true
         }
     },
     mounted() {
@@ -91,6 +92,7 @@ export default {
     },
     methods: {
         exportInfo(){
+            this.loading = true;
             this.$axios.post("/api/admin/csv/generate")
             .then((res) => {
                 let data = res.data;
@@ -98,7 +100,8 @@ export default {
             })
             .catch((e) => {
                 console.log(e.response.data.message);
-            });
+            })
+            .finally(()=>{this.loading = false});
 
         },
         handleShowEditModal(item, status) {
@@ -106,6 +109,7 @@ export default {
             this.fieldDetail = item;
         },
         getField() {
+            this.loading = true;
             this.$axios.request({
                 method: 'get',
                 url: `/api/admin/court/list?page=${this.form.page}&size=${this.form.size}`,
@@ -115,6 +119,7 @@ export default {
             }).catch(err => {
                 console.log(err);
             })
+            .finally(()=>{this.loading = false});
         },
         goPage(type) {
             if (type == 0) {
