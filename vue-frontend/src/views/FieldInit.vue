@@ -2,7 +2,7 @@
     <div class="field-init">
         
         <BookingManage></BookingManage>
-        <table class="table">
+        <table class="table table-striped bg-light table-hover rounded">
             <thead class="thead-dark">
                 <tr>
                 <th scope="col">ID</th>

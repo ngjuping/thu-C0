@@ -8,7 +8,7 @@
             style="float: left; margin-bottom: 5px"
             @click="handleShowEditModal(item, 'add')"
         >新增</button>
-        <table class="table">
+        <table class="table bg-light table-striped table-hover">
             <thead class="thead-dark">
                 <tr>
                 <th scope="col">ID</th>

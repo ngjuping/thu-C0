@@ -3,13 +3,13 @@
         <div class="modal fade" id="editFieldModal" aria-hidden="true" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-dark text-white">
                     <h5 class="modal-title" id="exampleModalLabel">场地初始化</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body overflow-auto">
                     <form>
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">输入场地价格：</label>
@@ -19,9 +19,9 @@
                         </div>
                         <div class="form-group row">
                             <div style="margin: 10px auto">请设置场地状态，其中0 表示未开放，1 表示可供先到先得，3 表示可供预定抽签</div>
-                            <table class="table">
+                            <table class="table table-striped bg-light">
                                 <thead>
-                                    <tr>
+                                    <tr class="table-info">
                                     <th scope="col" style="width: 120px">时间</th>
                                     <th scope="col">周一</th>
                                     <th scope="col">周二</th>
@@ -34,38 +34,58 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="(item, index) in formMessage.matrix" :key="index">
-                                        <th scope="row">
+                                        <td scope="row">
                                             <span>{{index+7}}:00-{{index+8}}:00</span>
-                                        </th>
-                                        <th scope="row">
-                                            <input type="text" v-model="item[0]" class="form-control" />
-                                        </th>
-                                        <th scope="row">
-                                            <input type="text" v-model="item[1]" class="form-control" />
-                                        </th>
-                                        <th scope="row">
-                                            <input type="text" v-model="item[2]" class="form-control" />
-                                        </th>
-                                        <th scope="row">
-                                            <input type="text" v-model="item[3]" class="form-control" />
-                                        </th>
-                                        <th scope="row">
-                                            <input type="text" v-model="item[4]" class="form-control" />
-                                        </th>
-                                        <th scope="row">
-                                            <input type="text" v-model="item[5]" class="form-control" />
-                                        </th>
-                                        <th scope="row">
-                                            <input type="text" v-model="item[6]" class="form-control" />
-                                        </th>
+                                        </td>
+                                        <td scope="row">
+                                            <select v-model.number="item[0]">
+                                                <option value="1">先到先得</option>
+                                                <option value="3">抽签</option>
+                                            </select>
+                                        </td>
+                                        <td scope="row">
+                                            <select v-model.number="item[1]">
+                                                <option value="1">先到先得</option>
+                                                <option value="3">抽签</option>
+                                            </select>
+                                        </td>
+                                        <td scope="row">
+                                            <select v-model.number="item[2]">
+                                                <option value="1">先到先得</option>
+                                                <option value="3">抽签</option>
+                                            </select>
+                                        </td>
+                                        <td scope="row">
+                                            <select v-model.number="item[3]">
+                                                <option value="1">先到先得</option>
+                                                <option value="3">抽签</option>
+                                            </select>
+                                        </td>
+                                        <td scope="row">
+                                            <select v-model.number="item[4]">
+                                                <option value="1">先到先得</option>
+                                                <option value="3">抽签</option>
+                                            </select>
+                                        </td>
+                                        <td scope="row">
+                                            <select v-model.number="item[5]">
+                                                <option value="1">先到先得</option>
+                                                <option value="3">抽签</option>
+                                            </select>
+                                        </td>
+                                        <td scope="row">
+                                            <select v-model.number="item[6]">
+                                                <option value="1">先到先得</option>
+                                                <option value="3">抽签</option>
+                                            </select>
+                                        </td>
                                     </tr>
-                                    <tr>
+                                    <tr class="table-success">
                                         <th scope="row">
                                             <span>快速设定</span>
                                         </th>
                                         <th scope="row" v-for="col_no in 7" :key="'col'+col_no">
                                             <select @change="initCol($event,col_no)">
-                                                <option value="0">未开放</option>
                                                 <option value="1">先到先得</option>
                                                 <option value="3">抽签</option>
                                             </select>
@@ -111,21 +131,21 @@ export default {
             formMessage: {
                 court_id:'',
                 matrix: [
-                    [0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0]
+                    [1,1,1,1,1,1,1],
+                    [1,1,1,1,1,1,1],
+                    [1,1,1,1,1,1,1],
+                    [1,1,1,1,1,1,1],
+                    [1,1,1,1,1,1,1],
+                    [1,1,1,1,1,1,1],
+                    [1,1,1,1,1,1,1],
+                    [1,1,1,1,1,1,1],
+                    [1,1,1,1,1,1,1],
+                    [1,1,1,1,1,1,1],
+                    [1,1,1,1,1,1,1],
+                    [1,1,1,1,1,1,1],
+                    [1,1,1,1,1,1,1],
+                    [1,1,1,1,1,1,1],
+                    [1,1,1,1,1,1,1]
                 ],
                 price: '',
             },
@@ -169,5 +189,7 @@ export default {
 </script>
 
 <style scoped>
-    
+    td{
+        max-width:10px;
+    }
 </style>

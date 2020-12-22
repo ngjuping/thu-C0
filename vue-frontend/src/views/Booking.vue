@@ -48,7 +48,7 @@
         </div>
         <vc-calendar mode="range" is-expanded @dayclick='updateByCalendarClick' :attributes="attributes" :min-date='new Date()'></vc-calendar>
         <br/>
-        <div v-if="courts">
+        <div>
             <button class="btn btn-white">
                 <span class="spinner-border spinner-border-md " :class="{'text-white':!loadingCourts}"></span>
             </button>
@@ -56,6 +56,8 @@
                 <li v-for="(str,index) in allCourtStatusExceptFirst" :key="`${index+1}${str}`">
                     <span :class="`courtStatus-${index+1}`"></span> {{ str }}</li>
             </ul>
+        </div>
+        <div v-if="courts">
             <CourtStatus v-for="court in filteredcourts" :key="court.id" :info="court" :date="selected_date" :clear="clearSelected">
                 
             </CourtStatus>
