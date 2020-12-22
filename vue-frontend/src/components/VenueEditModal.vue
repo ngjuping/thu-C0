@@ -38,8 +38,9 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeVenueEdit">取消</button>
             <button type="button" class="btn btn-primary" @click="handleSave">保存</button>
+            <span class="spinner-border spinner-border-md text-info" v-if="loading"></span>
           </div>
         </div>
       </div>
@@ -75,7 +76,8 @@ export default {
         venue_id:''
       },
       file: null,
-      err_msg:null
+      err_msg:null,
+      loading:false
     }
   },
   methods: {
@@ -96,7 +98,8 @@ export default {
       params.set('venue_id',this.formMessage.venue_id)
       params.append('img', this.file)
       this.formMessage.img = this.file;
-      console.log(this.formMessage, 'firmem')
+      
+      this.loading = true;
       if (this.status == 'add') {
         // 新增
         this.$axios.post('/api/admin/create/venue', params,{headers:{'Content-Type':'multipart/form-data'}}).then((res) => {
@@ -105,6 +108,10 @@ export default {
         }).catch(err => {
             console.log(err.response.data);
 
+        })
+        .finally(() => {
+          $('#closeVenueEdit').click();
+          this.loading = false;
         })
       } else {
         this.$axios.request({
@@ -119,9 +126,11 @@ export default {
         }).catch((error) => {
             console.log(error.response.data.message)
         })
+        .finally(() => {
+          $('#closeVenueEdit').click();
+          this.loading = false;
+        })
       }
-
-      $('#venue_edit_modal').modal('close');
     }
   },
   watch: {
