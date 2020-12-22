@@ -5,9 +5,10 @@ from django.http import HttpResponse, JsonResponse
 from Qinghuiyue.feedback.models import Feedback
 from Qinghuiyue.users.models import User
 from Qinghuiyue.venus.models import Court
+from Qinghuiyue.utils import require
 
 
-
+@require('post', online=True)
 def create_feedback(request):
     '''
     创建反馈，接受的是form-data
@@ -28,6 +29,7 @@ def create_feedback(request):
         return JsonResponse({"message": feedback_id}, status=500)
 
 
+@require('get')
 def get_all_feedback(request):
     '''
     获取所有反馈
@@ -60,6 +62,7 @@ def get_all_feedback(request):
     return JsonResponse({"message": "ok", "total": total, "feedbacks": feedbacks})
 
 
+@require('get')
 def get_user_feedbacks(request):
     '''
     获取单个用户的反馈
@@ -93,6 +96,7 @@ def get_user_feedbacks(request):
     return JsonResponse({"message": "ok", "total": total, "feedbacks": feedbacks})
 
 
+@require('post', online=True)
 def update_feedback(request):
     # 目前上传新的图片会更改图片的名字，但是原来的图片没有删除。删除反馈的图片时候也没有删除
     try:
@@ -115,17 +119,20 @@ def update_feedback(request):
         return JsonResponse({"message": "服务器内部错误"}, status=500)
 
 
+@require('post', online=True)
 def delete_feedback(request):
     params = json.loads(request.body)
     feedback = Feedback.objects(feedback_id=params['feedback_id']).first()
     if not feedback:
         return JsonResponse({"message": "这条反馈已经不存在了..."}, status=500)
+    if feedback.user_id != request.session.get('user_id'):
+        return JsonResponse({"message": "您没有删除的权限，请确认登陆状态"}, status=403)
     user = User.objects(user_id=feedback.user_id).first()
 
     user.feedback.remove(feedback.id)
     user.save()
     feedback.delete()
-    if feedback.img !="None":
+    if feedback.img != "None":
         try:
             os.remove(feedback.img)
         except Exception:
@@ -133,11 +140,10 @@ def delete_feedback(request):
     return JsonResponse({"message": "ok"})
 
 
+@require('post', privilege=1)
 def reply_feedback(request):
     '''
     管理员回复
-    :param request:
-    :return:
     '''
     params = json.loads(request.body)
     feedback = Feedback.objects(feedback_id=params['feedback_id']).first()

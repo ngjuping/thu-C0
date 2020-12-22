@@ -1,10 +1,12 @@
+import json
+from django.http import HttpResponse, JsonResponse
 from Qinghuiyue.feedback.models import Feedback
 from Qinghuiyue.venus.models import *
 from Qinghuiyue.models.models import *
-from django.http import HttpResponse, JsonResponse
-import json
+from Qinghuiyue.utils import require
 
 
+@require('get')
 def get_venues_info(request):
     '''
     获取场馆信息
@@ -42,7 +44,7 @@ def get_venues_info(request):
         }
     })
 
-
+@require('get')
 def get_courts_info(request):
    '''
     获取某个场馆下所有场地的信息
@@ -93,7 +95,7 @@ def get_courts_info(request):
       "courts": court_json
    })
 
-
+@require('get')
 def get_venues_list(request):
     '''
         获取所有场馆的列表

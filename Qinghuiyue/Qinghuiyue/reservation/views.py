@@ -1,5 +1,6 @@
 import json
-
+import datetime
+from dateutil.parser import parse
 from django.http import JsonResponse
 
 from Qinghuiyue.feedback.models import Feedback
@@ -7,18 +8,19 @@ from Qinghuiyue.models.models import Stat
 from Qinghuiyue.reservation.models import Reservation
 from Qinghuiyue.share.models import Share_notification
 from Qinghuiyue.users.models import User
-from Qinghuiyue.utils.time import str2datetime
-from Qinghuiyue.venus.models import Court
-import datetime
-from pytz import utc
 
+from Qinghuiyue.venus.models import Court
+
+from Qinghuiyue.utils import require
+
+
+@require('get', online=True)
 def get_reservations(request):
     '''
     获取用户当前预定信息
     :param request:
-    :return:
+
     '''
-    # print(request.session.get('user_id'))
     user_id = int(request.GET['user_id'])
     user = User.objects(user_id=user_id)[0]
     rent_now_id = user.rent_now
@@ -30,7 +32,6 @@ def get_reservations(request):
             reviewed = feedback.feedback_id
         else:
             reviewed = 0
-
         share = Share_notification.objects(reservation=rent.id).first()
         if share:
             shared = share.share_id
@@ -60,6 +61,7 @@ def get_reservations(request):
     })
 
 
+@require('post', online=True)
 def book_draw(request):
     '''
     用户抽签预定
@@ -68,60 +70,52 @@ def book_draw(request):
     book_info = json.loads(request.body)
     court = Court.objects(court_id=book_info['court_id']).first()
     court_status = court.Status
-    book_info['start'] = str2datetime(book_info['start'])
-    book_info['end'] = str2datetime(book_info['end'])
+    book_info['start'] = parse(book_info['start'])
+    book_info['end'] = parse(book_info['end'])
     user = User.objects(user_id=request.session.get("user_id")).first()
     if not user:
-        return JsonResponse({"message": "用户不存在或登陆过期，请重新登陆"}, status=400)
-    draw_now=Reservation.objects(id__in=user.rent_now,status=5).count()
-    if draw_now>=3:
-        return JsonResponse({"message":"您最多同时参与三场抽签","draw_now":draw_now},status=400)
+        return JsonResponse({"message": "用户不存在"}, status=400)
+    draw_now = Reservation.objects(id__in=user.rent_now, status=5).count()
+    if draw_now >= 3:
+        return JsonResponse({"message": "您最多同时参与三场抽签", "draw_now": draw_now}, status=400)
     for status in court_status:
         if status['start'] == book_info['start'] \
                 and status['end'] == book_info['end']:
             if status['code'] == 3:  # 可供抽签
-
                 if user.user_id in status['users_id']:
-                    return JsonResponse({"message":"您已经预定过这个场地了"},status=400)
+                    return JsonResponse({"message": "您已经预定过这个场地了"}, status=400)
                 reservation = Reservation(type=court.enum_id, details={
                     "court": court.id,
                     "user_id": user.user_id,
                     "start": book_info["start"],
                     "end": book_info["end"],
-
                     "created": datetime.datetime.now()
                 }, reservation_id=Stat.add_object("reservation"), status=5)  # 5是等待抽签
                 reservation.save()  # 应该先保存，不然会导致读取不出id
 
                 if 'reservation_ids' not in status.keys():
-                    status['reservation_ids']=[]
+                    status['reservation_ids'] = []
                 status['reservation_ids'].append(reservation.id)
                 status['users_id'].append(user.user_id)
                 user.rent_now.append(reservation.id)
                 court.save()
                 user.save()
 
-
                 return JsonResponse({"message": "ok", "reservation_id": reservation.reservation_id})
     return JsonResponse({"message": "找不到需要预定的时间段"}, status=400)
 
-
+@require('post',online=True)
 def book_first_come(request):
-
-    '''
+    """
      先到先得预定，接受用户id和要预定的场馆和时间段
-     :param request:
-     :return:
-     '''
+:
+     """
     book_info = json.loads(request.body)
     print(book_info)
     court = Court.objects(court_id=book_info['court_id']).first()
-    # print(court.name)
     court_status = court.Status
-    # print(court_status)
-    book_info['start'] = str2datetime(book_info['start'])
-
-    book_info['end'] = str2datetime(book_info['end'])
+    book_info['start'] = parse(book_info['start'])
+    book_info['end'] = parse(book_info['end'])
     user = User.objects(user_id=request.session.get("user_id")).first()
     if not user:
         return JsonResponse({"message": "用户不存在或登陆过期，请重新登陆"}, status=400)
@@ -153,6 +147,7 @@ def book_first_come(request):
 
     return JsonResponse({"message": "error"}, status=400)
 
+@require('post',online=True)
 def transfer_reservation(request):
     '''
     转让场地
@@ -197,7 +192,7 @@ def transfer_reservation(request):
     court.save()
     return JsonResponse({"message": "ok"})
 
-
+@require('post',online=True)
 def cancel_reservation(request):
     '''
     取消订单，把订单状态改为3，并且在场馆处修改状态。
@@ -244,7 +239,7 @@ def cancel_reservation(request):
     Share_notification.del_share(reservation.id)
     return JsonResponse({"message": "ok"})
 
-
+@require('post',online=True)
 def pay_offline(request):
     '''
     线下支付
@@ -256,7 +251,8 @@ def pay_offline(request):
         return JsonResponse({"message": "该订单不存在"}, status=500)
     if reservation.status != 1:
         return JsonResponse({"message": "该订单不可支付"}, status=401)
-
+    if reservation.details['user_id']!=request.session.get('user_id'):
+        return JsonResponse({"message":"这不是您的订单，请确认登陆信息"},status=403)
     court = Court.objects(id=reservation.details['court']).first()
     if not court:
         return JsonResponse({"message": "该场地不存在！"}, status=501)
@@ -269,12 +265,14 @@ def pay_offline(request):
 
     return JsonResponse({"message": "ok"})
 
+
 def test_draw(request):
     '''仅用于手动测试抽签'''
-    from Qinghuiyue.cronjobs.cronjobs import start_draw,set_court_next_week
-    #set_court_next_week()
+    from Qinghuiyue.cronjobs.cronjobs import start_draw, set_court_next_week
+    # set_court_next_week()
     start_draw()
-    return JsonResponse({"message":"ok"})
+    return JsonResponse({"message": "ok"})
+
 
 def test_set(request):
     from Qinghuiyue.cronjobs.cronjobs import set_court_next_week

@@ -80,7 +80,8 @@ def pay_for_reservation(request):
 
     if reservation.status != 1:
         return JsonResponse({"message": "该订单不可支付"}, status=401)
-
+    if reservation.details['user_id']!=request.session.get('user_id'):
+        return JsonResponse({"message":"这不是您的订单，请确认登陆信息"},status=403)
     court = Court.objects(id=reservation.details['court']).first()
     if not court:
         return JsonResponse({"message": "该场地不存在！"}, status=501)
