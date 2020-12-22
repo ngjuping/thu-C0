@@ -59,11 +59,6 @@
             <li class="page-item"><a class="page-link" href="javascript:void(0)" @click="goPage(1)">下一页</a></li>
         </ul>
 
-        <reply-edit-modal
-            :reply-detail="replyDetail"
-            :status="status"
-            @edit-success="getFeedBack"
-        />
         <reply-del-modal
             :reply-detail="replyDetail"
             :status="status"
@@ -96,7 +91,7 @@ export default {
             replyDetail: {},
             reply: {},
             status: 'add',
-            feedbackId: '',  // 管理员回复的反馈id
+            feedbackId: 1,  // 管理员回复的反馈id
         }
     },
     mounted() {
