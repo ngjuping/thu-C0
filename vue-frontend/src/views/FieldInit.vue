@@ -10,9 +10,10 @@
         <table class="table">
             <thead class="thead-dark">
                 <tr>
-                <th scope="col">序号</th>
+                <th scope="col">ID</th>
                 <th scope="col">所属场馆</th>
-                <th scope="col">场地名称</th>
+                <th scope="col">名字</th>
+                <th scope="col">球類</th>
                 <th scope="col">操作</th>
                 </tr>
             </thead>
@@ -20,6 +21,7 @@
                 <tr v-for="(item, index) in fieldList" :key="index">
                     <th scope="row">{{item.id}}</th>
                     <td>{{item.venue}}</td>
+                    <td>{{item.name}}</td>
                     <td>{{sports[item.type]}}</td>
                     <td>
                         <button

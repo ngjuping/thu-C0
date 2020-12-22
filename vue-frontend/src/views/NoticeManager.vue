@@ -11,7 +11,7 @@
         <table class="table">
             <thead class="thead-dark">
                 <tr>
-                <th scope="col" width="25%">序号</th>
+                <th scope="col" width="25%">ID</th>
                 <th scope="col" width="25%">标题</th>
                 <th scope="col" width="25%">内容</th>
                 <th scope="col" width="25%">操作</th>

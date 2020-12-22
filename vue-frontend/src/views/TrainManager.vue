@@ -11,7 +11,7 @@
         <table class="table">
             <thead class="thead-dark">
                 <tr>
-                <th scope="col">序号</th>
+                <th scope="col">ID</th>
                 <th scope="col">课程名称</th>
                 <th scope="col">价格</th>
                 <th scope="col">操作</th>
