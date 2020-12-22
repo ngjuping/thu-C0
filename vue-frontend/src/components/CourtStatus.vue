@@ -199,7 +199,6 @@ export default {
                         选择您的支付方式：
                         <select name="payments">
                             <option value="alipay">支付宝</option>
-                            <option value="wepay">微信支付</option>
                             <option value="offline">线下支付</option>
                         </select><hr/>`,
                         preConfirm: () => {
