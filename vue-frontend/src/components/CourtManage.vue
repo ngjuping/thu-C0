@@ -25,7 +25,7 @@
                 {{ getTimeOnly(status.start) }}
             </div>      
           </div>
-          <div class="pr-0">
+          <div class="pr-0" v-if="info.status.length">
             {{ getTimeOnly(info.status[info.status.length-1].end) }}
           </div>
         </div>

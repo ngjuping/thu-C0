@@ -96,7 +96,7 @@ export default {
   data() {
     return {
       venuesList: [],
-      venueId: '',
+      venueId: 1,
       courts: null,
       venue_name: null,
       filter_type: -1,
@@ -212,6 +212,8 @@ export default {
     }).catch(error => {
       console.log(error)
     })
+
+    this.handleGetCourts();
   }
 }
 </script>
