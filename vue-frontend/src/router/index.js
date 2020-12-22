@@ -49,14 +49,6 @@ const routes = [
         component: () => import(/* webpackChunkName: "about" */ '@/views/Venues.vue')
       },
       {
-        path:'/admin/bookingManage',
-        name:'BookingManage',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '@/views/BookingManage.vue')
-      },
-      {
         path:'/admin/replyFeedback',
         name:'ReplyFeedback',
         // route level code-splitting
@@ -151,7 +143,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   let user_pages = ["AllCourses","AllShares","AllFeedbacks","AllNotices","Manage","Booking","Mainpage"];
-  let admin_pages = ["Admin","Venues","BookingManage","ReplyFeedback","NoticeManager","TrainManager","FieldInit"];
+  let admin_pages = ["Admin","Venues","ReplyFeedback","NoticeManager","TrainManager","FieldInit"];
   let accessingUserPage = Boolean(user_pages.indexOf(to.name) != -1);
   let accessingAdminPage = Boolean(admin_pages.indexOf(to.name) != -1);
   let isAdmin = Boolean(store.state.privilege === 1);

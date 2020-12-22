@@ -4,8 +4,7 @@
                 <div class="navbar-nav mr-auto">
                     <a class="nav-item nav-link">Home <span class="sr-only">(current)</span></a>
                     <a class="nav-item nav-link" @click="$router.push({'name':'Venues'})">场馆管理</a>
-                    <a class="nav-item nav-link" @click="$router.push({'name':'BookingManage'})">场地管理</a>
-                    <a class="nav-item nav-link" @click="$router.push({'name':'FieldInit'})">学期场地管理</a>
+                    <a class="nav-item nav-link" @click="$router.push({'name':'FieldInit'})">场地管理</a>
                     <a class="nav-item nav-link" @click="$router.push({'name':'ReplyFeedback'})">回复反馈</a>
                     <a class="nav-item nav-link" @click="$router.push({'name':'NoticeManager'})">通知管理</a>
                     <a class="nav-item nav-link" @click="$router.push({'name':'TrainManager'})">培训课程管理</a>

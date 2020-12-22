@@ -1,12 +1,7 @@
 <template>
     <div class="field-init">
-        <button
-        type="button"
-        class="btn btn-primary"
-        data-toggle="modal" 
-        style="float: left; margin-bottom: 5px"
-        @click="exportInfo()"
-        >导出</button>
+        
+        <BookingManage></BookingManage>
         <table class="table">
             <thead class="thead-dark">
                 <tr>
@@ -44,6 +39,14 @@
                 </tr>
             </tbody>
         </table>
+        
+        <div
+            type="button"
+            class="btn btn-primary"
+            data-toggle="modal" 
+            style=" margin-bottom: 5px"
+            @click="exportInfo()"
+            >导出</div>
         <ul class="pagination">
             <li class="page-item"><a class="page-link" href="javascript:void(0)" @click="goPage(0)">上一页</a></li>
             <li class="page-item"><a class="page-link" href="javascript:void(0)" @click="goPage(1)">下一页</a></li>
@@ -66,9 +69,10 @@
 // import moment from 'moment'
 import FieldEditModal from '../components/FieldEditModal'
 import FieldDelModal from '../components/FieldDelModal'
+import BookingManage from '../views/BookingManage.vue'
 export default {
     name: 'FieldInit',
-    components: { FieldEditModal, FieldDelModal },
+    components: { FieldEditModal, FieldDelModal,BookingManage },
     data() {
         return {
             fieldList: [],
