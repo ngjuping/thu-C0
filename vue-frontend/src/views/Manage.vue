@@ -20,6 +20,7 @@
                             <div class="dropdown-menu bg-light">
                                 <a class="dropdown-item bg-danger text-light" @click="filter_status(1)">尚未付款</a>
                                 <a class="dropdown-item bg-success text-light" @click="filter_status(2)">已付款</a>
+                                <a class="dropdown-item bg-warning text-black" @click="filter_status(3,4)">无效订单</a>
                                 <a class="dropdown-item bg-secondary text-light" @click="filter_status(-1)">过期订单</a>
                                 <hr>
                                 <a class="dropdown-item bg-light text-dark" @click="filter_type(1)">羽球</a>
@@ -106,18 +107,18 @@ export default {
         filter_type(type){
             this.courts = this.original_courts.filter((court) => {return court.type === type});
         },
-        filter_status(status_code){
+        filter_status(status_code,status_code2){
             // 查看所有订单
             if(!status_code){
                 this.courts = this.original_courts;
             }
             else if(status_code === -1){
-                // 已退场，转让，过期的场地
-                this.courts = this.original_courts.filter((court) => {return this.between(court.status,3,4) || this.outDated(court)  });
+                // 已过期的场地
+                this.courts = this.original_courts.filter((court) => {return this.outDated(court)  });
             }
             else{
                 // 过滤订单
-                this.courts = this.original_courts.filter((court) => {return court.status === status_code});
+                this.courts = this.original_courts.filter((court) => {return court.status === status_code || court.status === status_code2});
             }
 
         },
