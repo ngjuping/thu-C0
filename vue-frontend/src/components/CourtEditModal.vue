@@ -35,12 +35,14 @@
                   </select>
                   <span v-else>{{$store.state.sportsType[formMessage.type]}}</span>
                 </div>
-              </div>         
+              </div>   
+              <div class="alert alert-danger" v-if="err_msg"> {{err_msg}} </div>      
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="closeModal">取消</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal" @click="handleSave">保存</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="closeModal" id="closeCreateCourtButton">取消</button>
+            <button type="button" class="btn btn-primary" @click="handleSave">保存</button>
+            <span class="spinner-border spinner-border-md text-info" v-if="loading"></span>
           </div>
         </div>
       </div>
@@ -49,6 +51,8 @@
 </template>
 
 <script>
+import $ from 'jquery';
+
 export default {
   name: 'CourtEditModal',
   props: {
@@ -77,6 +81,8 @@ export default {
       },
       timeList: [],
       newCourtName:"",
+      err_msg:null,
+      loading:false
     }
   },
   methods: {
@@ -98,6 +104,14 @@ export default {
       this.formMessage.timeInfoList = temp
     },
     handleSave() {
+      if(this.formMessage.price === ''){
+        this.err_msg = "请输入价格";
+        return;
+      }
+      else if(isNaN(parseInt(this.formMessage.price))){
+        this.err_msg = "价格必须为数字";
+        return;
+      }
       const params_add = {
           price:this.formMessage.price,
           venue_id:this.courtInfo.venue_id,
@@ -109,7 +123,7 @@ export default {
       if(this.newCourtName.length === 0){
         params_add.name = this.defaultCourtName
       }
-      
+      this.loading=true;
       this.$axios.request({
           method: 'post',
           url: '/api/admin/create/court',
@@ -120,6 +134,11 @@ export default {
           console.log(error);
           console.log(params_add);
       })
+      .finally(()=>{
+          $('#closeCreateCourtButton').click();
+          this.loading=false;
+          this.$router.go();
+      });
     }
   },
   computed:{

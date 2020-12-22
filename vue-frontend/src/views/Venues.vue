@@ -65,7 +65,7 @@ export default {
   data() {
     return {
       venuesList: [],
-      venueId: 1,
+      venueId: 0,
       venueDetail: {},
       status: 'add',
       loading:true

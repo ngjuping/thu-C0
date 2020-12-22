@@ -176,6 +176,10 @@ export default {
                 this.err_msg = "请输入价格！"
                 return;
             }
+            else if(isNaN(parseInt(this.formMessage.price))){
+                this.err_msg = "价格必须为数字！"
+                return;
+            }
             this.err_msg = null;
 
             if (this.status == 'add') {
