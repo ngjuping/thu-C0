@@ -149,11 +149,13 @@ export default {
             return this.$axios
             .get(`/api/booking?id=${this.venue_id}&day=${day}&month=${month}&year=${year}`)
             .then(res => {
-                if(this.selected_date.join("-") !== res.data.requestedDate.join("-") ) {
+                if(this.selected_date.map((part)=>{return parseInt(part)}).join("-") 
+                !== res.data.requestedDate.map((part)=>{return parseInt(part)}).join("-") ) {
                     console.log("late response, reject");
                     return;
                 }
                 this.courts = res.data.courts;
+                // console.log(this.courts);
                 this.venue_name = res.data.venue_name;
             })
             .catch((e) => {
