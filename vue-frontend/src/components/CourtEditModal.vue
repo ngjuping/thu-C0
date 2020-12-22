@@ -22,7 +22,7 @@
                 <div class="col-sm-10">
                   <select v-model="formMessage.type" v-if="status=='add'" class="form-control" style="width: 100px">
                       <option
-                        v-for="(item, index) in $store.state.sportsType"
+                        v-for="(item, index) in actualSportsType"
                         :value="index+1"
                         :key="index"
                       >{{item}}</option>
@@ -185,6 +185,12 @@ export default {
             //console.log(error.response.data.message);
         })
       }
+    }
+  },
+  computed:{
+    actualSportsType(){
+      let len = this.$store.state.sportsType.length;
+      return this.$store.state.sportsType.slice(1,len);
     }
   },
   mounted() {

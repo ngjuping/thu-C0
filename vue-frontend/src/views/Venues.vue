@@ -6,7 +6,7 @@
         data-toggle="modal" 
         data-target="#editVenueModal"
         style="float: left; margin-bottom: 5px"
-        @click="handleShowEditModal(item, 'add')"
+        @click="handleShowEditModal(null, 'add')"
     >新增</button>
     <table class="table">
       <thead class="thead-dark">
@@ -64,15 +64,17 @@ export default {
   data() {
     return {
       venuesList: [],
-      venueId: '',
+      venueId: 1,
       venueDetail: {},
       status: 'add'
     }
   },
   methods: {
     handleShowEditModal(item, status) {
+      if(status !== 'add'){
+        this.venueDetail = item;
+      }
       this.status = status;
-      this.venueDetail = item;
     },
     handleShowDetailModal(item) {
       this.venueId = item.id
