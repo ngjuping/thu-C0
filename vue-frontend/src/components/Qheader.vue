@@ -65,7 +65,9 @@ export default {
     methods:{
         goBooking(x){
             this.$router.push({name:'Booking',params:{venueid:x}});
-            this.$router.go();
+            if(this.$route.name === "Booking"){
+                this.$router.go();
+            }
         },
         gotoLogin(){
             this.$router.push({name:'Login'});
