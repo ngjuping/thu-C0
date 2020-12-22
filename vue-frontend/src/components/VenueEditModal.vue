@@ -1,5 +1,5 @@
 <template>
-  <div class="review-modal">
+  <div class="review-modal" id="venue_edit_modal">
     <div class="modal fade" id="editVenueModal" aria-hidden="true" tabindex="-1" role="dialog">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -31,11 +31,15 @@
                   </div>
                 </div>
               </div>
+              
+              <div class="alert alert-danger" v-if="err_msg">
+                  {{err_msg}}
+              </div>
             </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-            <button type="button" class="btn btn-primary" @click="handleSave" data-dismiss="modal">保存</button>
+            <button type="button" class="btn btn-primary" @click="handleSave">保存</button>
           </div>
         </div>
       </div>
@@ -44,6 +48,8 @@
 </template>
 
 <script>
+import $ from 'jquery';
+
 export default {
   name: 'VenueEditModal',
   props: {
@@ -68,14 +74,22 @@ export default {
         img: '',
         venue_id:''
       },
-      file: null
+      file: null,
+      err_msg:null
     }
   },
   methods: {
     handleFileChange(e) {
+      
+      this.err_msg = null;
       this.file = e.target.files[0]
     },
     handleSave() {
+      
+      if(!this.file || this.file.value === ''){
+        this.err_msg = "必须上传图片"
+        return;
+      }
       const params = new FormData()
       params.set('name', this.formMessage.name)
       params.set('description', this.formMessage.description)
@@ -106,6 +120,8 @@ export default {
             console.log(error.response.data.message)
         })
       }
+
+      $('#venue_edit_modal').modal('close');
     }
   },
   watch: {
