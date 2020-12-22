@@ -84,7 +84,7 @@ export default {
     computed:{
         availableTimes(){
             let total = 0;
-            this.info.status.forEach((curr) => { total += curr.code === 1? 1:0 });
+            this.info.status.forEach((curr) => { total += (curr.code === 1 || curr.code === 3)? 1:0 });
             return total;
         },
         sportsType(){
