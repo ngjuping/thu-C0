@@ -94,11 +94,15 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="alert alert-danger" v-if="err_msg">
+                            {{err_msg}}
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" @click="handleSave">保存</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelFieldInit">取消</button>
+                    <button type="button" class="btn btn-primary" @click="handleSave">保存</button>
+                    <span class="spinner-border spinner-border-md text-info" v-if="loading"></span>
                 </div>
                 </div>
             </div>
@@ -107,7 +111,7 @@
 </template>
 
 <script>
-// import $ from 'jquery'
+import $ from 'jquery'
 import Vue from 'vue';
 
 export default {
@@ -149,6 +153,8 @@ export default {
                 ],
                 price: '',
             },
+            err_msg:null,
+            loading:false
         }
     },
     methods: {
@@ -166,13 +172,24 @@ export default {
 
         },
         handleSave() {
+            if(this.formMessage.price === ''){
+                this.err_msg = "请输入价格！"
+                return;
+            }
+            this.err_msg = null;
+
             if (this.status == 'add') {
+                this.loading = true;
                 // 新增
                 this.$axios.post('/api/admin/schedule', this.formMessage).then((res) => {
                     console.log(res, 'res')
                     this.$emit('edit-success');
                 }).catch(err => {
                     console.log(err);
+                })
+                .finally(()=>{
+                    $('#cancelFieldInit').click();
+                    this.loading = false;
                 })
             }
         },

@@ -17,7 +17,7 @@
                     <th scope="row">{{item.id}}</th>
                     <td>{{item.venue}}</td>
                     <td>{{item.name}}</td>
-                    <td>{{sports[item.type]}}</td>
+                    <td>{{$store.state.sportsType[item.type]}}</td>
                     <td>
                         <button
                             type="button"
@@ -81,7 +81,6 @@ export default {
                 size: 5
             },
             total: 0,
-            sports: [null, "羽球", "篮球", "乒乓"],
             fieldDetail: {},
             status: 'add',
             loading:true

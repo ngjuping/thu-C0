@@ -26,7 +26,7 @@
               <div class="row form-group">
                 <label class="col-sm-2">球类</label>
                 <div class="col-sm-10">
-                  <select v-model="formMessage.type" v-if="status=='add'" class="form-control" style="width: 100px">
+                  <select v-model.number="formMessage.type" v-if="status=='add'" class="form-control" style="width: 100px">
                       <option
                         v-for="(item, index) in actualSportsType"
                         :value="index+1"
@@ -71,7 +71,7 @@ export default {
     return {
       formMessage: {
         price:'',
-        type: 0,
+        type: 1,
         timelist:[{start: '',end: '',code: 0 },],
         timeInfoList: [],
       },
@@ -101,7 +101,7 @@ export default {
       const params_add = {
           price:this.formMessage.price,
           venue_id:this.courtInfo.venue_id,
-          type: this.formMessage.type-1,
+          type: this.formMessage.type,
           name: this.newCourtName,
           status: []
       }

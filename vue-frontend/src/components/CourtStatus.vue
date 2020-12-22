@@ -138,9 +138,12 @@ export default {
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">${ this.info.name }</h5>
-                    <p class="card-text">${this.date.join("/")}
+                    <p class="card-text">
+                    球类：<b>${this.$store.state.sportsType[this.info.type]}</b>
+                    <br/>
+                    日期：${this.date.join("/")}
                     <hr>
-                    ${this.getTimeOnly(this.selectedCourt.start)} 到 ${this.getTimeOnly(this.selectedCourt.end)}</p>
+                    <b>${this.getTimeOnly(this.selectedCourt.start)}</b> 到 <b>${this.getTimeOnly(this.selectedCourt.end)}</b></p>
                 </div>
             </div>`,
             showCancelButton: true,
