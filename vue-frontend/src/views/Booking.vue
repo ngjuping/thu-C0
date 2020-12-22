@@ -142,8 +142,8 @@ export default {
             //upload select date for courtstatus to capture current date
             this.selected_date = date;
 
-            let day = date[0];
-            let month = date[1];
+            let day = parseInt(date[0]);
+            let month = parseInt(date[1]);
             let year = date[2];
 
             return this.$axios
