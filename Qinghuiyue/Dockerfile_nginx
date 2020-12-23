@@ -1,0 +1,5 @@
+FROM nginx:latest
+
+RUN mkdir /static && mkdir /frontend
+COPY ./frontend /frontend/
+COPY ./static /static/

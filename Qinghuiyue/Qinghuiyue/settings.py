@@ -76,11 +76,11 @@ MIDDLEWARE = [
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 ROOT_URLCONF = 'Qinghuiyue.urls'
-ALLOWED_HOSTS+=['58.87.86.11','127.0.0.1']
+ALLOWED_HOSTS+=['58.87.86.11','127.0.0.1','app']
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'Qinghuiyue/alipay/templates')],
+        'DIRS': [os.path.join(BASE_DIR,'Qinghuiyue/alipay/templates'),'frontend'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -156,9 +156,11 @@ SESSION_SAVE_EVERY_REQUEST = False  # 是否每次请求都保存Session，默�
 
 
 STATIC_URL = '/static/'
+
 #STATIC_ROOT=os.path.join(BASE_DIR,'static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
+    'frontend/',
 )
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",

@@ -7,6 +7,31 @@ services:
       bash -c
       "python manage.py runserver 0.0.0.0:8000"
     ports:
-      - "8000:8000"
+      - "8000"
+    volumes:
+    - static-volume:/code/static
     environment:
       - TZ=Asia/Shanghai
+    networks:
+      - backend
+
+
+  nginx:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile_nginx
+    ports:
+    - "8000:8000"
+    depends_on:
+      - app
+    volumes:
+    - ./config/nginx:/etc/nginx/conf.d
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  static-volume:

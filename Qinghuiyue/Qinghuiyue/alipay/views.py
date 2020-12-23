@@ -41,7 +41,7 @@ def aliPay():
 def index(request):
     # 假的index用于在没有前端的情况下测试2
     if request.method == "GET":
-        return render(request, 'index.html')
+        return render(request, 'index_test_pay.html')
 
     # 对购买的数据进行加密
     reservation_id = int(request.POST.get('reservation_id'))  # 保留俩位小数  前端传回的数据

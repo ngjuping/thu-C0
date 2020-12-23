@@ -37,12 +37,16 @@ def get_reservations(request):
             shared = share.share_id
         else:
             shared = 0
+        try:
+            court_name=Court.objects(id=rent.details['court'])[0].name
+        except Exception:
+            court_name="找不到场地信息"
         court = {
             "reservation_id": rent.reservation_id,
             "type": rent.type,
             "status": rent.status,
             "details": {
-                "name": Court.objects(id=rent.details['court'])[0].name,
+                "name": court_name,
                 "start": rent.details['start'],
                 "end": rent.details['end'],
                 "created": rent.details['created']
