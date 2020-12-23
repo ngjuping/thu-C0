@@ -14,6 +14,7 @@ class User(DynamicDocument):
     rent_history=ListField()
     invitation=ListField()
     feedback=ListField()
+    privilege=IntField()#权限
     @classmethod
     def create(cls,  password, **kwargs):
         pw = password.encode('utf-8')

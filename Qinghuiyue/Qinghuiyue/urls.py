@@ -14,23 +14,30 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from django.views.generic.base import TemplateView
 from Qinghuiyue import views
-import Qinghuiyue.users.views
-from Qinghuiyue import venus
-import Qinghuiyue.venus.views
+import Qinghuiyue.feedback.views
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/main/notices',views.get_notices),
-    path('api/booking',Qinghuiyue.venus.views.get_courts_info),
-    path('api/signup', Qinghuiyue.users.views.signup),
-    path('api/login', Qinghuiyue.users.views.login),
-    path('api/logout', Qinghuiyue.users.views.logout),
-    path('api/main/venues',Qinghuiyue.venus.views.get_venues_info),
-    path('api/main/venues/list',Qinghuiyue.venus.views.get_venues_list),
-    path('api/manage/courts',views.get_reservations),
-    path('api/book',views.book_first_come)
-]
+                  path('admin/', admin.site.urls),
+                  path('api/main/notices', views.get_notices),
+                  path('api/', include('Qinghuiyue.users.urls')),
+                  path('api/',include('Qinghuiyue.venus.urls')),
+
+                  path('api/manage/share', include('Qinghuiyue.share.urls')),
+                  path('api/manage/feedback', include('Qinghuiyue.feedback.urls')),
+                  path('api/admin/reply/feedback',Qinghuiyue.feedback.views.reply_feedback),
+                  path('api/',include('Qinghuiyue.reservation.urls')),
+
+                  path('api',include('Qinghuiyue.admin_notice.urls')),
+                  path('api',include('Qinghuiyue.admin_course.urls')),
+                  path('api',include('Qinghuiyue.admin_venue.urls')),
+                  path('api/pay/',include('Qinghuiyue.alipay.urls')),
+                  path('',TemplateView.as_view(template_name="index.html"))
+
+              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
