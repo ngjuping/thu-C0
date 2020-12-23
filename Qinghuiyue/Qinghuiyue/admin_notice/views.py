@@ -85,7 +85,8 @@ def get_notice(request):
     except:
         return JsonResponse({"message": "requires correct page and size"}, status=401)
 
-    notice = Notification.objects().all()  # all notices in db
+    notice = Notification.objects().order_by("-time")  # all notices in db
+    # sorted(notice, key=lambda s: s['id'], reverse=True)
     total = len(notice)
     begin = size * (page - 1)   # included
     end = size * page           # not included

@@ -88,9 +88,13 @@ def get_courts_info(request):
    except:
       pass
 
+   for i in range(len(court_json)):
+        times_filtered = [item for item in court_json[i]['status'] if item['code'] > 0]
+        court_json[i]['status'] = times_filtered
 
    return JsonResponse({
       "message": "ok",
+      "requestedDate":[int(day),int(month),int(year)],
       "venue_name": venue.name,
       "courts": court_json
    })
