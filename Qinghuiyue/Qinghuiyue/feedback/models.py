@@ -32,7 +32,8 @@ class Feedback(DynamicDocument):
                                           reply="等待管理员回复中", feedback_id=Stat.add_object("feedback"), reservation_id=params['reservation_id'],solved=False)
             #img_name = settings.STATIC_URL + str(feedback.feedback_id) + params['img'].name
             if params['img']:
-                img_name = "static/feedback/"+ str(feedback.feedback_id) + params['img'].name
+                assert params['img'].name.endwith(('.bmp', '.dib', '.png', '.jpg', '.jpeg', '.pbm', '.pgm', '.ppm', '.tif', '.tiff'))
+                img_name = "static/feedback/"+ str(feedback.feedback_id) + params['img'].name.split('.')[-1]
                 feedback.img = img_name
                 feedback.save()
 

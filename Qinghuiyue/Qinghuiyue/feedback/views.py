@@ -52,7 +52,7 @@ def get_all_feedback(request):
             "content": feedback.content,
             "publish_date": feedback.time,
             "court_id": Court.objects(id=feedback.court)[0].court_id,
-            "img": feedback.img,
+            "img": feedback.img if feedback.img!="None" else "static/feedback/default.png",
             "reply": feedback.reply,
             "solved": feedback.solved,
             "stars": feedback.stars,
@@ -86,7 +86,7 @@ def get_user_feedbacks(request):
             "content": feedback.content,
             "publish_date": feedback.time,
             "court_id": Court.objects(id=feedback.court)[0].court_id,
-            "img": feedback.img,
+            "img": feedback.img if feedback.img!="None" else "static/feedback/default.png",
             "reply": feedback.reply,
             "solved": feedback.solved,
             "stars": feedback.stars,
@@ -106,7 +106,9 @@ def update_feedback(request):
         feedback.stars = int(params['stars'])
         img = request.FILES.get("img")
         if img:
-            img_name = "static/feedback/" + str(feedback.feedback_id) + img.name
+            assert params['img'].name.endwith(
+                ('.bmp', '.dib', '.png', '.jpg', '.jpeg', '.pbm', '.pgm', '.ppm', '.tif', '.tiff'))
+            img_name = "static/feedback/" + str(feedback.feedback_id) + params['img'].name.split('.')[-1]
             feedback.img = img_name
             feedback.save()
             with open(img_name, 'wb+') as img_file:

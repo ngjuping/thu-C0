@@ -9,13 +9,25 @@ services:
     ports:
       - "8000"
     volumes:
-    - static-volume:/code/static
+    - /home/ubuntu/static:/code/static
     environment:
       - TZ=Asia/Shanghai
     networks:
       - backend
+      - database
+    depends_on:
+      - db
 
-
+  db:
+    image: mongo
+    volumes:
+    - /home/ubuntu/mongodb/data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=thuC0
+      - MONGO_INITDB_ROOT_PASSWORD=C0Qinghuiyue
+      - TZ=ASIA/SHANGHAI
+    networks:
+      - database
   nginx:
     restart: always
     build:
@@ -27,11 +39,11 @@ services:
       - app
     volumes:
     - ./config/nginx:/etc/nginx/conf.d
+    - /home/ubuntu/static:/static
     networks:
       - backend
 networks:
   backend:
     driver: bridge
-
-volumes:
-  static-volume:
+  database:
+    driver: bridge

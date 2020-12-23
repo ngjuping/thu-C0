@@ -49,14 +49,14 @@ def get_reservations(request):
                 "name": court_name,
                 "start": rent.details['start'],
                 "end": rent.details['end'],
-                "created": rent.details['created']
+                "created": rent.details['created']+datetime.timedelta(hours=8)
             },
             "reviewed": reviewed,
             "shared": shared
         }
 
         if rent.status == 2:
-            court["details"]["paid_at"] = rent.details["paid_at"]
+            court["details"]["paid_at"] = rent.details["paid_at"]+datetime.timedelta(hours=8)
 
         courts.append(court)
     return JsonResponse({

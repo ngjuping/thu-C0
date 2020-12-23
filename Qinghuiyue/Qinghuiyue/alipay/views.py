@@ -147,5 +147,5 @@ def pay_result(request):
     status = alipay.verify(params, sign)
 
     if status:
-        return redirect("/manage")  # 之后换成支付成功/失败的页面
+        return redirect("/#/manage")  # 之后换成支付成功/失败的页面
     return HttpResponse('支付失败')

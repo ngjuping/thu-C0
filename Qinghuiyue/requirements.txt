@@ -7,3 +7,4 @@ django
 pymongo
 pytz
 django-crontab
+pandas
