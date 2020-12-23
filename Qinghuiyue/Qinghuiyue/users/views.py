@@ -1,12 +1,10 @@
-import json
-from django.http import HttpResponse, JsonResponse
 from Qinghuiyue.users.models import *
 from Qinghuiyue.models.models import Stat
-from Qinghuiyue.utils import require
+from django.http import HttpResponse, JsonResponse
+import json
 
 
-
-@require('post')
+# @require('post')
 def signup(request):
     '''
 
@@ -16,18 +14,18 @@ def signup(request):
     目前可以根据注册人数自动增加id,但是还没有做重复的检查，工会id不能重复
     '''
     params = json.loads(request.body)
-    user=User.objects(api_id=params['api_id']).first()
-    if user:
-        return JsonResponse({"message": "该工号已经注册过啦！请进入登陆界面", "user_id": user.user_id})
+    stat = Stat.objects(name="size_of_collection")[0]
 
     user = User.create(password=params['pwd'], user_id=Stat.add_object("user"), name=params['name'],
                        api_id=params['api_id'])
     return JsonResponse({"message": "ok", "user_id": user.user_id})
 
 
-@require('post')
+# @require('post')
 def login(request):
     params = json.loads(request.body)
+
+    # print(params)
     user = User.objects(api_id=params['api_id']).first()
 
     if user and user.authenticate(params['pwd']):
@@ -39,17 +37,20 @@ def login(request):
         return JsonResponse({"message": "用户名或密码错误！"}, status=400)
 
 
-@require('post')
+# @require('post')
+
 def logout(request):
+    # print(request.session['user_id'])
     request.session.delete()
     return JsonResponse({"message": "ok", "content": "logout success"})
-
-
-@require('get')
 def get_name_by_id(request):
     '''
     通过用户名获取id
+    :param request:
+    :return:
     '''
+    #params=json.loads(request.body)
+    #users_raw=User.objects(name=params['user_name'])
     users_raw = User.objects(name__contains=request.GET['user_name'])
     users=[{
         "user_id":user.user_id,

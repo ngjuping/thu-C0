@@ -22,30 +22,30 @@ class Feedback(DynamicDocument):
     # 要不要根据打星进行一个自动回复
     @classmethod
     def create_feedback(cls, params):
-        try:
-            feedback=cls.objects(reservation_id=params['reservation_id']).first()
-            if feedback:
-                return False,"已经反馈过啦！"
-            reservation=Reservation.objects(reservation_id=params['reservation_id']).first()
-            feedback = cls.objects.create(user_id=params['user_id'], court=reservation.details['court'],
+        
+        feedback=cls.objects(reservation_id=params['reservation_id']).first()
+        if feedback:
+            return False,"已经反馈过啦！"
+        reservation=Reservation.objects(reservation_id=params['reservation_id']).first()
+        feedback = cls.objects.create(user_id=params['user_id'], court=reservation.details['court'],
                                           content=params['content'], stars=params['stars'], time=datetime.datetime.now(),
                                           reply="等待管理员回复中", feedback_id=Stat.add_object("feedback"), reservation_id=params['reservation_id'],solved=False)
             #img_name = settings.STATIC_URL + str(feedback.feedback_id) + params['img'].name
-            if params['img']:
-                img_name = "static/feedback/"+ str(feedback.feedback_id) + params['img'].name
-                feedback.img = img_name
-                feedback.save()
+        if params['img']:
+            img_name = "static/feedback/"+ str(feedback.feedback_id) + params['img'].name
+            feedback.img = img_name
+            feedback.save()
 
-                with open(img_name, 'wb+') as img_file:
-                    for chunk in params['img'].chunks():
-                        img_file.write(chunk)
-            else:
-                feedback.img="None"
-                feedback.save()
-            user = User.objects(user_id=params['user_id'])[0]
-            user.feedback.append(feedback.id)
-            user.save()
-            return True, feedback.feedback_id
-        except Exception:
+            with open(img_name, 'wb+') as img_file:
+                for chunk in params['img'].chunks():
+                    img_file.write(chunk)
+        else:
+            feedback.img="None"
+            feedback.save()
+        user = User.objects(user_id=params['user_id'])[0]
+        user.feedback.append(feedback.id)
+        user.save()
+        return True, feedback.feedback_id
+     #   except Exception:
 
-            return False,"创建反馈失败！系统内部错误"
+           # return False,"创建反馈失败！系统内部错误"
