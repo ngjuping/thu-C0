@@ -99,7 +99,8 @@ WSGI_APPLICATION = 'Qinghuiyue.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 from mongoengine import connect
-connect('qhy',host='mongodb://thuC0:C0Qinghuiyue@db:27017',authentication_source='admin')
+#connect('qhy',host='mongodb://thuC0:C0Qinghuiyue@db:27017',authentication_source='admin')
+connect('qhy',host='mongodb://thuC0:C0Qinghuiyue@58.87.86.11:27017',authentication_source='admin')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.dummy'

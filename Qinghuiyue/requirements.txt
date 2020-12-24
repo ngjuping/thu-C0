@@ -8,3 +8,4 @@ pymongo
 pytz
 django-crontab
 pandas
+gunicorn

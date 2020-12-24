@@ -106,9 +106,9 @@ def update_feedback(request):
         feedback.stars = int(params['stars'])
         img = request.FILES.get("img")
         if img:
-            assert params['img'].name.endwith(
+            assert img.name.endswith(
                 ('.bmp', '.dib', '.png', '.jpg', '.jpeg', '.pbm', '.pgm', '.ppm', '.tif', '.tiff'))
-            img_name = "static/feedback/" + str(feedback.feedback_id) + params['img'].name.split('.')[-1]
+            img_name = "static/feedback/" + str(feedback.feedback_id) + '.'+img.name.split('.')[-1]
             feedback.img = img_name
             feedback.save()
             with open(img_name, 'wb+') as img_file:
@@ -130,9 +130,11 @@ def delete_feedback(request):
     if feedback.user_id != request.session.get('user_id'):
         return JsonResponse({"message": "您没有删除的权限，请确认登陆状态"}, status=403)
     user = User.objects(user_id=feedback.user_id).first()
-
-    user.feedback.remove(feedback.id)
-    user.save()
+    try:
+        user.feedback.remove(feedback.id)
+        user.save()
+    except:
+        pass
     feedback.delete()
     if feedback.img != "None":
         try:
