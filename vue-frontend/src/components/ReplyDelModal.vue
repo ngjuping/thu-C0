@@ -12,9 +12,12 @@
                     <div class="modal-body">
                         <p>是否删除该反馈</p>
                     </div>
+                    <div class="alert alert-danger" v-if="err_msg">
+                        {{ err_msg }}
+                    </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" @click="handleSave">删除</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeDelFeedbackModal">取消</button>
+                        <button type="button" class="btn btn-primary" @click="handleSave">删除</button>
                     </div>
                 </div>
             </div>
@@ -23,6 +26,8 @@
 </template>
 
 <script>
+import $ from 'jquery';
+
 export default {
     name: 'ReplyDelModal',
     props: {
@@ -48,17 +53,21 @@ export default {
                 stars: '',
                 img: '',
             },
-            file: null
+            file: null,
+            err_msg: null
         }
     },
     methods: {
         handleSave() {
             // 删除
-            this.$axios.post('/api/manage/feedback/delete', this.formMessage).then((res) => {
+            this.$axios.post('/api/manage/feedback/delete', this.formMessage)
+            .then((res) => {
                 console.log(res, 'res')
                 this.$emit('edit-success');
+                $('#closeDelFeedbackModal').click();
             }).catch(err => {
                 console.log(err);
+                this.err_msg = err.response.data.message;
             })
         },
     },
