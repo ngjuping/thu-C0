@@ -63,6 +63,11 @@ export default {
                 this.err_msg = "内容过短(少于10字)";
                 return;
             }
+            else if(this.sharePostRawContent.length > 100){
+                this.failedToSubmit = true;
+                this.err_msg = "内容过长(多于100字)";
+                return;
+            }
 
             // 设置UI控制变量
             this.failedToSubmit = false;

@@ -140,9 +140,15 @@ export default {
                 this.original_courts = res.data.courts;
                 this.courts = this.original_courts;
             })
-            .catch(()=>{
+            .catch((err)=>{
                 this.loadCourtsSuccess = false;
-            })
+                Swal.fire({
+                    title: "无法加载",
+                    text: `${err.response.data.message}`,
+                    icon: "error",
+                    timer: 1500});
+                })
+                
             .finally(() => {
                 this.freshLoad = false;
             })
@@ -160,6 +166,8 @@ export default {
             text: `请先点击右上角登陆或注册`,
             icon: "error",
             timer: 1500});
+
+            this.freshLoad = false;
             return;
         }
         this.getReservations();

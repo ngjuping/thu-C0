@@ -35,11 +35,14 @@
                         <input type="text" v-model="formMessage.price" class="form-control" placeholder="请输入"/>
                         </div>
                     </div>
+                    <div class="alert alert-danger" v-if="err_msg">
+                        {{ err_msg }}
+                    </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" @click="handleSave">保存</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeTrainEditModal">取消</button>
+                    <button type="button" class="btn btn-primary" @click="handleSave">保存</button>
                 </div>
                 </div>
             </div>
@@ -48,7 +51,7 @@
 </template>
 
 <script>
-// import $ from 'jquery'
+import $ from 'jquery'
 export default {
     name: 'TrainModal',
     props: {
@@ -74,33 +77,94 @@ export default {
                 name: '',
                 price: '',
             },
+            err_msg:null
         }
     },
     methods: {
         handleSave() {
+            let course_name = this.formMessage.name;
+            let course_intro = this.formMessage.intro;
+            let course_tel = this.formMessage.tel;
+            let course_price = this.formMessage.price;
+
+            // 培训课程名称长度判断
+            if(!course_name || course_name.length < 3){
+                this.err_msg = "课程名称过短(不能少于3个字)";
+                return;
+            }
+            else if(course_name.length > 10){
+                this.err_msg = "课程名称过长(不能多于10个字)";
+                return;
+            }
+
+            // 培训课程介绍长度判断
+            if(!course_intro || course_intro.length < 3){
+                this.err_msg = "课程介绍过短(不能少于3个字)";
+                return;
+            }
+            else if(course_intro.length > 100){
+                this.err_msg = "课程介绍过长(不能多于100个字)";
+                return;
+            }
+
+            // 培训课程联系方式长度判断
+            if(!course_tel || course_tel.length < 3){
+                this.err_msg = "联系方式过短(不能少于3个字)";
+                return;
+            }
+            else if(course_tel.length > 20){
+                this.err_msg = "联系方式过长(不能多于20个字)";
+                return;
+            }
+
+            // 培训课程价格
+            if(!course_price || course_price.length === 0){
+                this.err_msg = "请输入价格！";
+                return;
+            }
+
+            // 下面的代码可以重构，近期(12月25日左右)先不要碰
+
             if (this.status == 'add') {
                 // 新增
-                this.$axios.post('/api/admin/create/course', this.formMessage).then((res) => {
+                this.$axios.post('/api/admin/create/course', this.formMessage)
+                .then((res) => {
                     console.log(res, 'res')
                     this.$emit('edit-success');
-                }).catch(err => {
-                    console.log(err);
+                    this.err_msg = null;
+                    $('#closeTrainEditModal').click();
                 })
-            } else if (this.status == 'edit') {
+                .catch(err => {
+                    console.log(err);
+                    this.err_msg = err.response.data.message;
+                })
+            } 
+            else if (this.status == 'edit') {
                 // 编辑
-                this.$axios.post('/api/admin/update/course', this.formMessage).then((res) => {
+                this.$axios.post('/api/admin/update/course', this.formMessage)
+                .then((res) => {
                     console.log(res, 'res')
+                    this.err_msg = null;
                     this.$emit('edit-success');
-                }).catch(err => {
-                    console.log(err);
+                    $('#closeTrainEditModal').click();
                 })
-            } else if (this.status == 'delete') {
-                // 删除
-                this.$axios.post('/api/admin/delete/course', this.formMessage).then((res) => {
-                    console.log(res, 'res')
-                    this.$emit('edit-success');
-                }).catch(err => {
+                .catch(err => {
                     console.log(err);
+                    this.err_msg = err.response.data.message;
+                })
+            } 
+            else if (this.status == 'delete') {
+                // 删除
+                this.$axios.post('/api/admin/delete/course', this.formMessage)
+                .then((res) => {
+                    console.log(res, 'res')
+                    this.err_msg = null;
+                    this.$emit('edit-success');
+                    $('#closeTrainEditModal').click();
+                })
+                .catch(err => {
+                    console.log(err);
+                    this.err_msg = err.response.data.message;
                 })
             }
         },

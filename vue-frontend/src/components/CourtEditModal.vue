@@ -104,6 +104,8 @@ export default {
       this.formMessage.timeInfoList = temp
     },
     handleSave() {
+
+      // 价格处理
       if(this.formMessage.price === ''){
         this.err_msg = "请输入价格";
         return;
@@ -112,6 +114,18 @@ export default {
         this.err_msg = "价格必须为数字";
         return;
       }
+
+      // 场地名字处理
+      if(this.newCourtName.length < 3){
+        this.err_msg = "场地名字过短（不能少于3个字）";
+        return;
+      }
+      else if(this.newCourtName.length > 10){
+        this.err_msg = "场地名字过长（不能超过10个字）";
+        return;
+      }
+
+      // 准备场地创建参数
       const params_add = {
           price:this.formMessage.price,
           venue_id:this.courtInfo.venue_id,
@@ -120,6 +134,7 @@ export default {
           status: []
       }
 
+      // 如果没用提供名字则使用默认场地名字
       if(this.newCourtName.length === 0){
         params_add.name = this.defaultCourtName
       }
@@ -132,7 +147,7 @@ export default {
           this.$emit('success-edit')
       }).catch(error => {
           console.log(error);
-          console.log(params_add);
+          this.err_msg = error.response.data.message;
       })
       .finally(()=>{
           $('#closeCreateCourtButton').click();

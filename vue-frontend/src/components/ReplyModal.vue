@@ -17,11 +17,14 @@
                             <input type="text" v-model="formMessage.reply" class="form-control" placeholder="请输入"/>
                             </div>
                         </div>
+                        <div class="alert alert-danger" v-if="err_msg">
+                            {{ err_msg }}
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" @click="handleSave">保存</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeReplyFeedbackModal">取消</button>
+                    <button type="button" class="btn btn-primary" @click="handleSave">保存</button>
                 </div>
                 </div>
             </div>
@@ -30,7 +33,7 @@
 </template>
 
 <script>
-// import $ from 'jquery'
+import $ from 'jquery'
 export default {
     name: 'ReplyModal',
     props: {
@@ -48,15 +51,26 @@ export default {
                 reply: '',
                 solved:'',
             },
+            err_msg:null
         }
     },
     methods: {
         handleSave() {
+            if(!this.formMessage.reply || this.formMessage.reply.length < 3){
+                this.err_msg = "您的回复过短(不能少于3个字)"
+                return;
+            }
+            else if(this.formMessage.reply.length > 20){
+                this.err_msg = "您的回复过长(不能多于20个字)"
+                return;
+            }
             this.$axios.post('/api/admin/reply/feedback', this.formMessage).then((res) => {
                 console.log(res, 'res')
                 this.$emit('reply-success');
+                $('#closeReplyFeedbackModal').click();
             }).catch(err => {
                 console.log(err);
+                this.err_msg = err.response.data.message;
             })
         },
     },
