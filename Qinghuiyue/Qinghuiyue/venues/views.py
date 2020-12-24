@@ -1,7 +1,7 @@
 import json
 from django.http import HttpResponse, JsonResponse
 from Qinghuiyue.feedback.models import Feedback
-from Qinghuiyue.venus.models import *
+from Qinghuiyue.venues.models import *
 from Qinghuiyue.models.models import *
 from Qinghuiyue.utils import require
 

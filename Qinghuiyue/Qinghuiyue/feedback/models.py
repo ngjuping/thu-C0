@@ -1,7 +1,7 @@
 from mongoengine import *
 import bson
 import datetime
-from Qinghuiyue.venus.models import Court
+from Qinghuiyue.venues.models import Court
 from Qinghuiyue.models.models import Stat
 from Qinghuiyue.users.models import User
 from Qinghuiyue import settings

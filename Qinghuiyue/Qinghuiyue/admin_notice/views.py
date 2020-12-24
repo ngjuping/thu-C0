@@ -1,5 +1,5 @@
 from Qinghuiyue.users.models import *
-from Qinghuiyue.venus.models import *
+from Qinghuiyue.venues.models import *
 from Qinghuiyue.models.models import *
 from Qinghuiyue.models.models import Stat
 from django.http import HttpResponse, JsonResponse

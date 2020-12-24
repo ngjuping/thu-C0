@@ -4,7 +4,7 @@ import os
 from django.http import HttpResponse, JsonResponse
 from Qinghuiyue.feedback.models import Feedback
 from Qinghuiyue.users.models import User
-from Qinghuiyue.venus.models import Court
+from Qinghuiyue.venues.models import Court
 from Qinghuiyue.utils import require
 
 

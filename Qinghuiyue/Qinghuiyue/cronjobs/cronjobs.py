@@ -1,4 +1,4 @@
-from Qinghuiyue.venus.models import Court
+from Qinghuiyue.venues.models import Court
 from datetime import datetime
 def set_court_next_week():
     print("执行设置场地 ",datetime.now())

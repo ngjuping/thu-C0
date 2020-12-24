@@ -26,7 +26,7 @@ urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('api/main/notices', views.get_notices),
                   path('api/', include('Qinghuiyue.users.urls')),
-                  path('api/',include('Qinghuiyue.venus.urls')),
+                  path('api/', include('Qinghuiyue.venues.urls')),
 
                   path('api/manage/share', include('Qinghuiyue.share.urls')),
                   path('api/manage/feedback', include('Qinghuiyue.feedback.urls')),

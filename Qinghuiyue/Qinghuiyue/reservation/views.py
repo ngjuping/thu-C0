@@ -9,7 +9,7 @@ from Qinghuiyue.reservation.models import Reservation
 from Qinghuiyue.share.models import Share_notification
 from Qinghuiyue.users.models import User
 
-from Qinghuiyue.venus.models import Court
+from Qinghuiyue.venues.models import Court
 
 from Qinghuiyue.utils import require
 

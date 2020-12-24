@@ -1,5 +1,5 @@
 from django.urls import path
-import Qinghuiyue.venus.views as views
+import Qinghuiyue.venues.views as views
 
 urlpatterns = [
     path('main/venues', views.get_venues_info),
