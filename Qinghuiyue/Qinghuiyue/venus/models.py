@@ -31,8 +31,6 @@ class Court(DynamicDocument):
         根据现有的matrix来设定后weeks周的场地
         如果有场地已经有人预定，会跳过这些将带来冲突的场地
         weeks=1代表下一周
-
-\
          matrix:[
          [1,2,3,1,2,2,3],
          [1,2,3,1,2,2,3],
@@ -86,9 +84,14 @@ class Court(DynamicDocument):
         执行抽签，对所有下周可抽签场地执行。
         '''
         from Qinghuiyue.reservation.models import Reservation
+        now = datetime.now() + timedelta(days=1)  # 防止今天是周一
+        while now.weekday() != 0:
+            now += timedelta(days=1)
+        time = now.replace(hour=7, minute=0, second=0, microsecond=0)
+        time_end = time + timedelta(days=6, hours=15)
         for status in self.Status:
             # 供抽签且有人参与才抽，如果没人参与的话就直接变成可先到先得
-            if status['code'] == 3:
+            if status['code'] == 3 and status['start']>=time and status['end']<=time_end:
                 if len(status['reservation_ids']):
                     bingo = randint(0, len(status['reservation_ids']))
                     bingo_id = status['reservation_ids'].pop(bingo)
