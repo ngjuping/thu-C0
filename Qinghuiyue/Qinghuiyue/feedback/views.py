@@ -74,6 +74,8 @@ def get_user_feedbacks(request):
 
     user_id = int(request.GET['user_id'])
     user = User.objects(user_id=user_id).first()
+    if not user:
+        return JsonResponse({"message":"找不到该用户"},status=400)
     feedbacks_all = Feedback.objects(id__in=user.feedback).order_by("-time")
     total = len(feedbacks_all)
     if page * size > total:
@@ -152,6 +154,8 @@ def reply_feedback(request):
     '''
     params = json.loads(request.body)
     feedback = Feedback.objects(feedback_id=params['feedback_id']).first()
+    if not feedback:
+        return JsonResponse({"message": "这条反馈已经不存在了..."}, status=500)
     feedback.reply = params['reply']
     feedback.solved = params['solved']
     feedback.save()

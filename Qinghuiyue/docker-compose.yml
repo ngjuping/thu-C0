@@ -2,7 +2,7 @@ version: '3'
 services:
   redis:
     image: redis
-    command: redis-server
+    command: redis-server --requirepass C0Qinghuiyue
     volumes:
     - /home/ubuntu/redis:/data
     ports:

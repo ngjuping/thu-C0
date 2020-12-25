@@ -15,7 +15,7 @@ class UserViewTest(NoSQLTestCase):
         disconnect()
         connect('mongoenginetest', host='mongomock://localhost')
         Stat.objects.create(name='size_of_collection', data={'user': 0, 'venue': 0
-            , 'court': 0, 'feedback': 0,
+                                                             , 'court': 0, 'feedback': 0,
                                                              'notification': 0, 'share_notification': 0,
                                                              'reservation': 0, 'course': 0})
         User.create(password='123abc', user_id=Stat.add_object("user"), name='test',

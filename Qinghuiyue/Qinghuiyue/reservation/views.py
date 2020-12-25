@@ -40,7 +40,7 @@ def get_reservations(request):
         try:
             court_name=Court.objects(id=rent.details['court'])[0].name
         except Exception:
-            court_name="找不到场地信息"
+            continue
         court = {
             "reservation_id": rent.reservation_id,
             "type": rent.type,
@@ -77,8 +77,6 @@ def book_draw(request):
     book_info['start'] = parse(book_info['start'])
     book_info['end'] = parse(book_info['end'])
     user = User.objects(user_id=request.session.get("user_id")).first()
-    if not user:
-        return JsonResponse({"message": "用户不存在"}, status=400)
     draw_now = Reservation.objects(id__in=user.rent_now, status=5).count()
     if draw_now >= 3:
         return JsonResponse({"message": "您最多同时参与三场抽签", "draw_now": draw_now}, status=400)
@@ -121,11 +119,7 @@ def book_first_come(request):
     book_info['start'] = parse(book_info['start'])
     book_info['end'] = parse(book_info['end'])
     user = User.objects(user_id=request.session.get("user_id")).first()
-    if not user:
-        return JsonResponse({"message": "用户不存在或登陆过期，请重新登陆"}, status=400)
-
     for status in court_status:
-        # print(status['start'], status['end'])
         if status['start'] == book_info['start'] \
                 and status['end'] == book_info['end']:
             if status['code'] == 1:  # 场地状态1，先到先得还能订此时用户就是第一个到的，时间段和场地状态都符合要求，直接预定成功

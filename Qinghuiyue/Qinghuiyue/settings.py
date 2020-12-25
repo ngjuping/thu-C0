@@ -63,7 +63,7 @@ MONGODB_DATABASES={
 CACHES={
     'default':{
         'BACKEND':'django_redis.cache.RedisCache',
-        'LOCATION':'redis://58.87.86.11:6379',
+        'LOCATION':'redis://:C0Qinghuiyue@58.87.86.11:6379',
         'OPTIONS': {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "CONNECTION_POOL_KWARGS": {"max_connections": 100},

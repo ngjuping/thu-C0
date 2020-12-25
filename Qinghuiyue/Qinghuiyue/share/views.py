@@ -4,7 +4,7 @@ from Qinghuiyue.share.models import *
 from Qinghuiyue.reservation.models import Reservation
 
 from Qinghuiyue.utils import require
-
+from Qinghuiyue.checkers.html_content_checker import check_html_content
 
 @require('get')
 def get_share_notifications(request):
@@ -73,8 +73,9 @@ def create_share(request):
     '''
 
     params = json.loads(request.body)
-    #if params['user_id']!=request.session.get('user_id'):
-        #return JsonResponse({"message":"用户登陆失效，请重新登陆"},status=403)
+    ok,message=check_html_content(params['content'])
+    if not ok:
+        return JsonResponse({'message':message},status=400)
 
     ok, message = Share_notification.create(params)
     if ok:
@@ -92,6 +93,11 @@ def update_share(request):
     try:
         params = json.loads(request.body)
         share = Share_notification.objects(share_id=params['share_id']).first()
+        if share.user_id!=request.session.get('user_id'):
+            return JsonResponse({"message": "没有更改权限"}, status=403)
+        ok, message = check_html_content(params['content'])
+        if not ok:
+            return JsonResponse({'message': message}, status=400)
         share.content = params['content']
         share.time = datetime.datetime.now()
         share.save()
@@ -107,6 +113,8 @@ def delete_share(request):
     params = json.loads(request.body)
     share = Share_notification.objects(share_id=params['share_id']).first()
     user = User.objects(user_id=share.user_id).first()
+    if share.user_id != request.session.get('user_id'):
+        return JsonResponse({"message": "没有更改权限"}, status=403)
     try:
         user.invitation.remove(share.id)
     except Exception:
