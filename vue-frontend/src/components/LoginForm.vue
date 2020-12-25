@@ -48,8 +48,8 @@ export default {
   data()
   {
     return {
-      api_id: "2018080120",
-      pwd: "123456",
+      api_id: "",
+      pwd: "",
       logging_in: false
     }
   },

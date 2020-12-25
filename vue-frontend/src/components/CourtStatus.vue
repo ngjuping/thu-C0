@@ -96,7 +96,7 @@ export default {
     },
     methods:{
         outDated(status){
-            let now = new Date();
+            let now = Date();
             return new Date(status.start) < now;
         },
         courtStatusCode(status){
