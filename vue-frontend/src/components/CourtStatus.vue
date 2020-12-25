@@ -17,7 +17,7 @@
                             </div>
                             <div class="col-12 col-md range d-flex justify-content-center align-items-center"  
                             v-for="status in info.status"
-                            :class="[`courtStatus-${status.code} border border-success rounded`]"
+                            :class="[`${courtStatusCode(status)} border border-success rounded`]"
                             :id="selectedCourt && selectedCourt.start === status.start?'activeCourt':'notActive'"
                             :key="`range${status.start}`"
                             :title="courtState(status)"
@@ -95,10 +95,27 @@ export default {
         }
     },
     methods:{
+        outDated(status){
+            let now = new Date();
+            return new Date(status.start) < now;
+        },
+        courtStatusCode(status){
+            let final_code = status.code;
+            if(this.outDated(status)){
+                final_code = 4;
+            }
+            return `courtStatus-${final_code}`;
+        },
         courtState(status){
+            if(this.outDated(status)){
+                return `无法预定`;
+            }
             return this.$store.state.courtStatus[parseInt(status.code)];
         },
         selectCourt(courtinfo){
+            if(this.outDated(courtinfo)){
+                return;
+            }
             this.selectedCourt = courtinfo
         },
         getTimeOnly(date){
@@ -107,7 +124,7 @@ export default {
                 //input: "1999-03-01T00:00:00+01:00"
                 let date_second_part = date.split("T")[1]; //["1999-03-01","00:00:00+01:00"][1] = "00:00:00+01:00"
                 let [hour,minutes] = date_second_part.split(":").slice(0,2); 
-                return hour+minutes;
+                return hour + ':' + minutes;
             }
             catch(err){
                 return "解析日期错误"
@@ -276,6 +293,11 @@ export default {
 
 .courtStatus-3{
     background-color:orange;
+    opacity:0.5;
+}
+
+.courtStatus-4{
+    background-color:grey;
     opacity:0.5;
 }
 

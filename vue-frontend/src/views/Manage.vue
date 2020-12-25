@@ -126,7 +126,7 @@ export default {
             try{
                 let [hour,min] = time.split("T")[1].split("+")[0].split(":");
                 
-                return `${hour}点 ${min}分`;
+                return `${hour}:${min}`;
             }
             catch(e){
                 return "没有时间";
@@ -177,13 +177,15 @@ export default {
             return this.$store.state.reservationStatus.filter((v,i) => {return !!i});
         },
         attributes(){
-            return [...this.original_courts.map(court => ({
-                    key: 'today',
+
+            // 在日历显示那些已支付且尚未过期的场地
+            return [...this.original_courts
+            .filter((court)=>{return !this.outDated(court) && court.status === 2})
+            .map(court => ({
                     highlight: 'purple',
                     dates: court.details.start,
                     popover: {
-                        label: `${this.chineseTime(court.details.start)} to ${this.chineseTime(court.details.end)}  ${court.details.name}`,
-                        hideIndicator: true,
+                        label: `${this.chineseTime(court.details.start)} -- ${this.chineseTime(court.details.end)}  ${court.details.name}`,
                     },
                 }))]
             
