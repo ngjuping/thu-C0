@@ -1,0 +1,3 @@
+Qinghuiyue/test.py中定义的类替换原本的测试类
+防止由于我们没有设置sql数据库报错
+测试写法参照users/test.py中的写法即可

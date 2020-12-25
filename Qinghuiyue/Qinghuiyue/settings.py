@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'Qinghuiyue.utils',
     'django_crontab',
+    'django_redis',
+    'mongomock'
 ]
 #定时任务,在周日12点预置场地，13点抽签,把输出重定向到日志
 CRONJOBS=[
@@ -58,7 +60,17 @@ MONGODB_DATABASES={
         "tz_aware":True,#设置时区
     }
 }
-
+CACHES={
+    'default':{
+        'BACKEND':'django_redis.cache.RedisCache',
+        'LOCATION':'redis://58.87.86.11:6379',
+        'OPTIONS': {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {"max_connections": 100},
+            'SOCKET_TIMEOUT': 10,
+        },
+    }
+}
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',#使用该模块解决跨域问题
     'django.middleware.security.SecurityMiddleware',
@@ -101,12 +113,14 @@ WSGI_APPLICATION = 'Qinghuiyue.wsgi.application'
 from mongoengine import connect
 #connect('qhy',host='mongodb://thuC0:C0Qinghuiyue@db:27017',authentication_source='admin')
 connect('qhy',host='mongodb://thuC0:C0Qinghuiyue@58.87.86.11:27017',authentication_source='admin')
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.dummy'
+        'ENGINE': 'django.db.backends.dummy',
     }
 }
-
+#测试
+TEST_RUNNER= 'Qinghuiyue.test.NoSQLTestRunner'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

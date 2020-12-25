@@ -127,7 +127,8 @@ def delete_feedback(request):
     feedback = Feedback.objects(feedback_id=params['feedback_id']).first()
     if not feedback:
         return JsonResponse({"message": "这条反馈已经不存在了..."}, status=500)
-    if feedback.user_id != request.session.get('user_id'):
+
+    if feedback.user_id != request.session.get('user_id') and request.session.get('privilege')!=1:
         return JsonResponse({"message": "您没有删除的权限，请确认登陆状态"}, status=403)
     user = User.objects(user_id=feedback.user_id).first()
     try:
