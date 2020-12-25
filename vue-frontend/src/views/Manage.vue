@@ -65,7 +65,7 @@
             <br/>
             <div class="row" v-for="court in courts" :key="court.reservation_id" :ref="`resv-${court.reservation_id}`">
                 
-                    <Reservation  :resv="court" ></Reservation>
+                    <Reservation @refresh="getReservations" :resv="court" ></Reservation>
                     
             </div>
             

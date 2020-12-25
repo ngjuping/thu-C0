@@ -130,7 +130,7 @@ export default {
 
                     // 发送信号让parent关闭本弹窗
                     this.$emit('hide-modal');
-                    this.$router.go()
+                    this.$emit('refresh');
                 },1000);
 
             })

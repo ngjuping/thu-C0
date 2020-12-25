@@ -10,59 +10,152 @@ import time
 #Login setup
 caps = DesiredCapabilities().CHROME
 caps["pageLoadStrategy"] = "none"
-baseurl = "https://next.xuetangx.com/"
+baseurl = "http://localhost:8081/"
 login_xpaths = {
-    "entrance":"//*[@id=\"app\"]/div/div[1]/div/div[1]/div/div/div/div[1]/div[2]/div/span",
-    "switch":"//*[@id=\"app\"]/div/div[2]/div[2]/div/div/div[2]/div/div[2]/div/div[1]/img",
-    "login_by_mail":"//*[@id=\"app\"]/div/div[2]/div[2]/div/div/div[2]/div/div[2]/div/div[1]/ul/li[3]",
-    "mail":"//*[@id=\"app\"]/div/div[2]/div[2]/div/div/div[2]/div/div[2]/div/div[2]/div[3]/form/div[1]/div/div/input",
-    "pwd":"//*[@id=\"app\"]/div/div[2]/div[2]/div/div/div[2]/div/div[2]/div/div[2]/div[3]/form/div[2]/div/div/input",
-    "submit":"//*[@id=\"app\"]/div/div[2]/div[2]/div/div/div[2]/div/div[2]/div/div[2]/div[3]/div[2]"
-}
-login_credentials = {
-    "mail":"ngjuping2018@163.com",
-    "pwd":"NJP05141999njp"
+    "submit":"""//*[@id="login_panel"]/form/button[1]"""
 }
 
-
-#Actual work
-courses_xpaths = {
-    "profile_img":"[@class='header-login']",
-    "my_courses":"html/body/div[3]/div[1]/ul/li[3]/div",
-    "PE_course_entrance":"//*[@id=\"app\"]/div/div[2]/div[1]/div/div[2]/div/div[1]/div/div/div[1]/div/div/div[2]/div[3]/div",
+booking_xpaths = {
+    'showvenues':"""//*[@id="menu"]/div/li/a""",
+    'getlastvenue':"""(//*[@id="menu"]/div/li/div/a)[1]""",
+    # div[35] = 26th day of month,
+    'selectDay':"""//*[@id="app"]/div[1]/div[3]/div[1]/div[1]/div/div/div[2]/div[37]/div/span""",
+    # 3rd period of day
+    'selectTime':"""/html/body/div/div[1]/div[5]/div[1]/div[2]/div/div[1]/div/div[7]""", 
+    
+    'book':"""//*[@id="app"]/div[1]/div[5]/div[1]/div[3]/button""",
+    'checkResv':"""/html/body/div[2]/div/div[3]/button[1]""",
+    'clickSelect':"""//*[@id="swal2-content"]/select""",
+    'offline':"""//*[@id="swal2-content"]/select/option[2]""",
+    "offlineOK":"""/html/body/div[2]/div/div[3]/button[1]""",
+    'pay':"""/html/body/div[2]/div/div[3]/button[1]"""
 }
-targeturl = "https://next.xuetangx.com/learn/thu04011002684/thu04011002684/1520527/exercise"
-template = "//*[@id=\"app\"]/div/div[2]/div[1]/div[1]/div[2]/div/ul[{}]/li[4]"
-question_xpaths = [template.format(i) for i in range(1,15)]
-#questions_urls = [3081359,1485934,3081362,3160861,3160862]
-question_xpaths.insert(0,0)
-for i in range(0,15):
-    print(question_xpaths[i])
-next_btn_xpath = "//*[@id=\"app\"]/div/div[2]/div[1]/div[2]/div/div[1]/div[1]/i[2]"
+
+payment_xpaths = {
+    'username':"""//*[@id="J_tLoginId"]""",
+    'password':"""//*[@id="payPasswd_rsainput"]""",
+    'submit':"""//*[@id="J_newBtn"]"""
+}
+
+payment_credentials = {
+    "mail":"wmnlvo1425@sandbox.com",
+    "pwd":"111111"
+}
+
+share_xpath = {
+    'manage': """//*[@id="menu"]/div/a[1]""",
+    'create':"""//*[@id="app"]/div[1]/div[3]/div[3]/div/div[1]/div[2]/form/div[2]/div/div[1]""",
+    'focus':"""/html/body/div[1]/div[1]/div[3]/div[3]/div/div[2]/div/div/div[2]/div/div[1]/div/div[2]/div/p""",
+    'submit':"""/html/body/div[1]/div[1]/div[3]/div[3]/div/div[2]/div/div/div[2]/div/div[2]/button""",
+    'update':"""//*[@id="app"]/div[1]/div[3]/div[3]/div/div[1]/div[2]/form/div[3]/div[2]/div[1]""",
+    'delete':"""//*[@id="app"]/div[1]/div[3]/div[3]/div/div[1]/div[2]/form/div[3]/div[2]/div[2]""",
+    "confirmDelete":"""/html/body/div[2]/div/div[3]/button[1]"""
+}
+
+feedback_xpath = {
+    'manage': """//*[@id="menu"]/div/a[1]""",
+    'feedback': """//*[@id="menu"]/div/a[3]""",
+    'create':'//*[@id="app"]/div[1]/div[3]/div[3]/div/div[1]/div[2]/form/div[3]/div',
+    'focus':"""/html/body/div[1]/div[1]/div[3]/div[3]/div/div[3]/div/div/div[2]/div/div[1]/div/div[2]/div/p""",
+    'submit':"""/html/body/div[1]/div[1]/div[3]/div[3]/div/div[3]/div/div/div[2]/div/div[3]/button""",
+    'update':"""//*[@id="app"]/div[1]/div[3]/div[3]/div/div[1]/div[2]/form/div[2]/div[2]/div[1]""",
+    'delete':"""//*[@id="app"]/div[1]/div[3]/div[3]/div/div[1]/div[2]/form/div[2]/div[2]/div[2]""",
+    "confirmDelete":"""/html/body/div[2]/div/div[3]/button[1]""",
+    'uploadFile':"""/html/body/div[1]/div[1]/div[3]/div[3]/div/div[3]/div/div/div[2]/div/input""",
+    'uploadFilePath':'D:\\thu-c0\\vue-frontend\\test\\feedbacktestjpg.jpg',
+    'closeModal':"""/html/body/div[1]/div[1]/div[3]/div[3]/div/div[3]/div/div/div[1]/button""",
+    '4star':"""/html/body/div[1]/div[1]/div[3]/div[3]/div/div[3]/div/div/div[2]/div/div[2]/div/div[2]/span[4]"""
+
+}
 
 #Starts chrome browser
 mydriver = webdriver.Chrome('./chromedriver.exe',desired_capabilities=caps) 
 mydriver.get(baseurl)
 mydriver.maximize_window()
 
-try:
-    wait = WebDriverWait(mydriver, 120)
-    element = wait.until(EC.element_to_be_clickable((By.XPATH, login_xpaths["entrance"])))
+wait = WebDriverWait(mydriver, 120)
+wait.until(EC.element_to_be_clickable((By.XPATH, login_xpaths["submit"]))).click()
+time.sleep(3)
+# wait.until(EC.element_to_be_clickable((By.XPATH, booking_xpaths["showvenues"]))).click()
+# wait.until(EC.element_to_be_clickable((By.XPATH, booking_xpaths["getlastvenue"]))).click()
+# wait.until(EC.element_to_be_clickable((By.XPATH, booking_xpaths["selectDay"]))).click()
+# wait.until(EC.element_to_be_clickable((By.XPATH, booking_xpaths["selectTime"]))).click()
+# wait.until(EC.element_to_be_clickable((By.XPATH, booking_xpaths["book"]))).click()
+# wait.until(EC.element_to_be_clickable((By.XPATH, booking_xpaths["checkResv"]))).click()
+# wait.until(EC.element_to_be_clickable((By.XPATH, booking_xpaths["clickSelect"]))).click()
+# wait.until(EC.element_to_be_clickable((By.XPATH, booking_xpaths["offline"]))).click()
+# wait.until(EC.element_to_be_clickable((By.XPATH, booking_xpaths["offlineOK"]))).click()
+# wait.until(EC.element_to_be_clickable((By.XPATH, booking_xpaths["pay"]))).click()
 
-#mydriver.implicitly_wait(10) # seconds
-finally:
-    mydriver.find_element_by_xpath(login_xpaths["entrance"]).click()
-    mydriver.find_element_by_xpath(login_xpaths["switch"]).click()
-    mydriver.find_element_by_xpath(login_xpaths["login_by_mail"]).click()
-    mydriver.find_element_by_xpath(login_xpaths["mail"]).send_keys(login_credentials["mail"])
-    mydriver.find_element_by_xpath(login_xpaths["pwd"]).send_keys(login_credentials["pwd"])
-    time.sleep( 10 )
-    mydriver.find_element_by_xpath(login_xpaths["submit"]).click()
-    time.sleep(20)
-    mydriver.get("https://next.xuetangx.com/my-courses/current")
-    wait = WebDriverWait(mydriver, 30)
-    element = wait.until(EC.element_to_be_clickable((By.XPATH, courses_xpaths["PE_course_entrance"])))
-    element.click()
-    time.sleep(20)
-    
-    mydriver.find_element_by_xpath(question_xpaths[1]).click()
+# wait.until(EC.element_to_be_clickable((By.XPATH, share_xpath['manage']))).click()
+# wait.until(EC.element_to_be_clickable((By.XPATH, share_xpath['create']))).click()
+# time.sleep(1)
+# textbox = wait.until(EC.element_to_be_clickable((By.XPATH, share_xpath['focus'])))
+# textbox.send_keys("Hi")
+# submit = wait.until(EC.element_to_be_clickable((By.XPATH, share_xpath['submit'])))
+# submit.click()
+# time.sleep(1)
+# textbox.send_keys(" this is selenium but it's too longggggggggggggggggggg ggggggggggggggggggggggggggg  gggggggggggggggggggggggggggggg")
+# wait.until(EC.element_to_be_clickable((By.XPATH, share_xpath['submit']))).click()
+# time.sleep(1)
+# textbox.clear()
+# textbox.send_keys(" this is selenium")
+# submit.click()
+
+# wait.until(EC.element_to_be_clickable((By.XPATH, share_xpath['update']))).click()
+# textbox = wait.until(EC.element_to_be_clickable((By.XPATH, share_xpath['focus'])))
+# textbox.send_keys("update with selenium")
+# wait.until(EC.element_to_be_clickable((By.XPATH, share_xpath['submit']))).click()
+
+# time.sleep(5)
+# wait.until(EC.element_to_be_clickable((By.XPATH, share_xpath['delete']))).click()
+# wait.until(EC.element_to_be_clickable((By.XPATH, share_xpath['confirmDelete']))).click()
+
+# FEEDBACK
+wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['manage']))).click()
+wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['create']))).click()
+time.sleep(1)
+textbox = wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['focus'])))
+textbox.send_keys("Hi")
+submit = wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['submit'])))
+submit.click()
+time.sleep(1)
+textbox.send_keys(" this is selenium but it's too longggggggggggggggggggg ggggggggggggggggggggggggggg  gggggggggggggggggggggggggggggg")
+wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['submit']))).click()
+time.sleep(1)
+textbox.clear()
+textbox.send_keys(" this is selenium")
+submit.click()
+time.sleep(3)
+wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['closeModal']))).click()
+wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['feedback']))).click()
+time.sleep(10)
+wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['manage']))).click()
+
+wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['update']))).click()
+textbox = wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['focus'])))
+textbox.send_keys("update with selenium")
+time.sleep(1)
+wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['uploadFile']))).send_keys(feedback_xpath['uploadFilePath'])
+wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['4star']))).click()
+wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['submit']))).click()
+time.sleep(3)
+wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['closeModal']))).click()
+
+wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['feedback']))).click()
+# time.sleep(5)
+# wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['manage']))).click()
+# wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['delete']))).click()
+# wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['confirmDelete']))).click()
+
+# wait.until(EC.element_to_be_clickable((By.XPATH, payment_xpaths["username"])))
+# element.send_keys(payment_credentials["mail"])
+# time.sleep(1)
+# wait.until(EC.element_to_be_clickable((By.XPATH, payment_xpaths["password"])))
+# element.send_keys(payment_credentials["pwd"])
+# time.sleep(1)
+# wait.until(EC.element_to_be_clickable((By.XPATH, payment_xpaths["submit"]))).click()
+
+
+
+# To get elements by xpath and click? $x("some xpath") in console.
