@@ -1,0 +1,11 @@
+mongoengine
+bcrypt
+django-cors-headers
+python-dateutil
+pycryptodome
+django
+pymongo
+pytz
+django-crontab
+pandas
+gunicorn

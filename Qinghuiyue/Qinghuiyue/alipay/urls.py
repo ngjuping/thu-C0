@@ -3,5 +3,7 @@ from django.urls import path
 urlpatterns=[
     path('result/',views.pay_result),
     path('update_order/',views.update_order),
-    path('index/',views.index)
+    path('index/',views.index),
+    path('alipay',views.pay_for_reservation)
+
 ]

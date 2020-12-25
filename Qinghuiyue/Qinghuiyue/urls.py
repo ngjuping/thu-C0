@@ -17,21 +17,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic.base import TemplateView
 from Qinghuiyue import views
-from Qinghuiyue import admin_venue
-import Qinghuiyue.admin_venue.views
-from Qinghuiyue import admin_notice
-import Qinghuiyue.admin_notice.views
-from Qinghuiyue import admin_course
-import Qinghuiyue.admin_course.views
 import Qinghuiyue.feedback.views
-from Qinghuiyue import venus
+
 
 urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('api/main/notices', views.get_notices),
                   path('api/', include('Qinghuiyue.users.urls')),
-                  path('api/',include('Qinghuiyue.venus.urls')),
+                  path('api/', include('Qinghuiyue.venues.urls')),
 
                   path('api/manage/share', include('Qinghuiyue.share.urls')),
                   path('api/manage/feedback', include('Qinghuiyue.feedback.urls')),
@@ -41,7 +36,8 @@ urlpatterns = [
                   path('api',include('Qinghuiyue.admin_notice.urls')),
                   path('api',include('Qinghuiyue.admin_course.urls')),
                   path('api',include('Qinghuiyue.admin_venue.urls')),
-                  path('api/pay/',include('Qinghuiyue.alipay.urls'))
+                  path('api/pay/',include('Qinghuiyue.alipay.urls')),
+                  path('',TemplateView.as_view(template_name="index.html"))
 
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

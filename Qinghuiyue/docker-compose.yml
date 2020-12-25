@@ -1,0 +1,49 @@
+version: '3'
+services:
+  app:
+    restart: always
+    build: .
+    command: >
+      bash -c
+      "gunicorn -w 3 -b 0.0.0.0:8000 project.wsgi:application"
+    ports:
+      - "8000"
+    volumes:
+    - /home/ubuntu/static:/code/static
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      - backend
+      - database
+    depends_on:
+      - db
+
+  db:
+    image: mongo
+    volumes:
+    - /home/ubuntu/mongodb/data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=thuC0
+      - MONGO_INITDB_ROOT_PASSWORD=C0Qinghuiyue
+      - TZ=ASIA/SHANGHAI
+    networks:
+      - database
+  nginx:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile_nginx
+    ports:
+    - "8000:8000"
+    depends_on:
+      - app
+    volumes:
+    - ./config/nginx:/etc/nginx/conf.d
+    - /home/ubuntu/static:/static
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge
+  database:
+    driver: bridge

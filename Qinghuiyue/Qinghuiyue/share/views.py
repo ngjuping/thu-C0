@@ -1,14 +1,16 @@
-from Qinghuiyue.share.models import *
-from django.http import HttpResponse, JsonResponse
-from Qinghuiyue.reservation.models import Reservation
 import json
+from django.http import HttpResponse, JsonResponse
+from Qinghuiyue.share.models import *
+from Qinghuiyue.reservation.models import Reservation
+
+from Qinghuiyue.utils import require
 
 
+@require('get')
 def get_share_notifications(request):
     '''
     获取所有拼场信息，按时间排，有分页
     :param request: page:int size:int
-    :return:
     '''
     page = int(request.GET['page'])
     size = int(request.GET['size'])
@@ -33,6 +35,7 @@ def get_share_notifications(request):
     return JsonResponse({"message": "ok", "total": total, "shares": shares})
 
 
+@require('get',online=True)
 def get_user_shares(request):
     '''
     获取单个用户所有拼场
@@ -53,7 +56,7 @@ def get_user_shares(request):
         shares_page = shares_all[(page - 1) * size:page * size]
     shares = [
         {
-            "user_id":share.user_id,
+            "user_id": share.user_id,
             "share_id": share.share_id,
             "content": share.content,
             "publish_date": share.time,
@@ -63,24 +66,26 @@ def get_user_shares(request):
     ]
     return JsonResponse({"message": "ok", "total": total, "shares": shares})
 
-
+@require('post',check_id=True)
 def create_share(request):
     '''
-    创建拼场通知，一个成功订单才能对应一个拼场信息，必须检查，要检查用户session(还没实现
-    :param request:
-    :return:
+    创建拼场通知，一个成功订单才能对应一个拼场信息，必须检查
     '''
+
     params = json.loads(request.body)
+    #if params['user_id']!=request.session.get('user_id'):
+        #return JsonResponse({"message":"用户登陆失效，请重新登陆"},status=403)
+
     ok, message = Share_notification.create(params)
     if ok:
         return JsonResponse(message)
     else:
         return JsonResponse(message, status=400)
 
-
+@require('post',online=True)
 def update_share(request):
     '''
-    更新拼场通知，同时会更新拼场通知的时间,要检查用户session(还没实现
+    更新拼场通知，同时会更新拼场通知的时间
      :param request:
     :return:
     '''
@@ -94,12 +99,10 @@ def update_share(request):
     except Exception:
         return JsonResponse({"message": "服务器内部错误"}, status=500)
 
-
+@require('post',online=True)
 def delete_share(request):
     '''
-    删除拼场，要检查用户session(还没实现
-    :param request:
-    :return:
+    删除拼场
     '''
     params = json.loads(request.body)
     share = Share_notification.objects(share_id=params['share_id']).first()
@@ -107,7 +110,7 @@ def delete_share(request):
     try:
         user.invitation.remove(share.id)
     except Exception:
-        #可能由于某些原因用户对这条记录没有引用，那么直接删除即可
+        # 可能由于某些原因用户对这条记录没有引用，那么直接删除即可
         pass
     user.save()
     share.delete()

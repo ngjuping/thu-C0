@@ -1,5 +1,5 @@
 from Qinghuiyue.users.models import *
-from Qinghuiyue.venus.models import *
+from Qinghuiyue.venues.models import *
 from Qinghuiyue.models.models import *
 from Qinghuiyue.models.models import Stat
 from django.http import HttpResponse, JsonResponse
@@ -85,7 +85,8 @@ def get_notice(request):
     except:
         return JsonResponse({"message": "requires correct page and size"}, status=401)
 
-    notice = Notification.objects().all()  # all notices in db
+    notice = Notification.objects().order_by("-time")  # all notices in db
+    # sorted(notice, key=lambda s: s['id'], reverse=True)
     total = len(notice)
     begin = size * (page - 1)   # included
     end = size * page           # not included

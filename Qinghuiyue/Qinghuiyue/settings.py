@@ -44,9 +44,13 @@ INSTALLED_APPS = [
     'Qinghuiyue.users',
     'corsheaders',
     'Qinghuiyue.utils',
-
+    'django_crontab',
 ]
-
+#定时任务,在周日12点预置场地，13点抽签,把输出重定向到日志
+CRONJOBS=[
+    ('0 12 * * 0','Qinghuiyue.cronjobs.cronjobs.set_court_next_week',">> ./set_court.log"),
+    ('0 13 * * 0','Qinghuiyue.cronjobs.cronjobs.start_draw',">> ./start_draw.log"),
+]
 MONGODB_DATABASES={
     "default":{
         "name":"qhy",
@@ -72,11 +76,11 @@ MIDDLEWARE = [
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 ROOT_URLCONF = 'Qinghuiyue.urls'
-ALLOWED_HOSTS+=['58.87.86.11','127.0.0.1']
+ALLOWED_HOSTS+=['58.87.86.11','127.0.0.1','app']
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'Qinghuiyue/alipay/templates')],
+        'DIRS': [os.path.join(BASE_DIR,'Qinghuiyue/alipay/templates'),'frontend'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -95,6 +99,7 @@ WSGI_APPLICATION = 'Qinghuiyue.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 from mongoengine import connect
+#connect('qhy',host='mongodb://thuC0:C0Qinghuiyue@db:27017',authentication_source='admin')
 connect('qhy',host='mongodb://thuC0:C0Qinghuiyue@58.87.86.11:27017',authentication_source='admin')
 DATABASES = {
     'default': {
@@ -152,9 +157,11 @@ SESSION_SAVE_EVERY_REQUEST = False  # 是否每次请求都保存Session，默�
 
 
 STATIC_URL = '/static/'
+
 #STATIC_ROOT=os.path.join(BASE_DIR,'static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
+    'frontend/',
 )
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",

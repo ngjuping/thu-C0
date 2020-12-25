@@ -10,4 +10,5 @@ urlpatterns = [
 	path('/admin/delete/court',views.delete_court),
 	path('/admin/court/list',views.list_court),
 	path('/admin/csv/generate',views.generate_csv)
+
 ]

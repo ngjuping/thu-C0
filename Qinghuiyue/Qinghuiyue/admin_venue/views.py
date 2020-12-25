@@ -1,5 +1,5 @@
 from Qinghuiyue.users.models import *
-from Qinghuiyue.venus.models import *
+from Qinghuiyue.venues.models import *
 from Qinghuiyue.models.models import Stat
 from Qinghuiyue.reservation.models import *
 from django.http import HttpResponse, JsonResponse
@@ -37,9 +37,12 @@ def create_venue(request):
             return JsonResponse({"error": "image size invalid"}, status=401)
 
         try:
-            img_format = img.name.split('.')[1]
+            img_format = img.name.split('.')[-1]
             img_name = 'venue_' + str(venue_id) + '_img.' + img_format
             Venue.objects(venue_id=venue_id).update_one(set__image='static/venue/' + img_name)
+
+            if not os.path.exists('static/venue/'):
+                os.mkdir('static/venue')
             with open('static/venue/' + img_name, 'wb+') as destination:
                 for chunk in img.chunks():
                     destination.write(chunk)
