@@ -1,0 +1,3 @@
+vue-frontend/node_modules/*
+vue-frontend/dist/*
+vue-frontend/test/debug.log
