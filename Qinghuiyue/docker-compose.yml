@@ -6,15 +6,18 @@ services:
     volumes:
     - /home/ubuntu/redis:/data
     ports:
-    - "6379:6379"
+    - "6379"
     restart: always
+    networks:
+      - cache
+
 
   app:
     restart: always
     build: .
     command: >
       bash -c
-      "gunicorn  Qinghuiyue.wsgi:application -c gunicorn.conf"
+      "gunicorn  -w 5  -b 0.0.0.0:8000 -k gthread --threads 100 Qinghuiyue.wsgi:application"
     ports:
       - "8000"
     volumes:
@@ -24,6 +27,7 @@ services:
     networks:
       - backend
       - database
+      - cache
     depends_on:
       - db
       - redis
@@ -39,7 +43,7 @@ services:
     networks:
       - database
     ports:
-    - "27017:27017"
+    - "27017"
   nginx:
     restart: always
     build:
@@ -52,10 +56,13 @@ services:
     volumes:
     - ./config/nginx:/etc/nginx/conf.d
     - /home/ubuntu/static:/static
+    - /home/ubuntu/frontend:/frontend
     networks:
       - backend
 networks:
   backend:
     driver: bridge
   database:
+    driver: bridge
+  cache:
     driver: bridge

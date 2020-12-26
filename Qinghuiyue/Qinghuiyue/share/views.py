@@ -1,4 +1,5 @@
 import json
+import datetime
 from django.http import HttpResponse, JsonResponse
 from Qinghuiyue.share.models import *
 from Qinghuiyue.reservation.models import Reservation
@@ -26,7 +27,7 @@ def get_share_notifications(request):
             "user_id": share.user_id,
             "share_id": share.share_id,
             "content": share.content,
-            "publish_date": share.time,
+            "publish_date": share.time+datetime.timedelta(hours=8),
             "reservation": Reservation.get_reservation_info(share.reservation),
             "status": share.status
         } for share in shares_page
@@ -59,7 +60,7 @@ def get_user_shares(request):
             "user_id": share.user_id,
             "share_id": share.share_id,
             "content": share.content,
-            "publish_date": share.time,
+            "publish_date": share.time+datetime.timedelta(hours=8),
             "reservation": Reservation.get_reservation_info(share.reservation),
             "status": share.status
         } for share in shares_page

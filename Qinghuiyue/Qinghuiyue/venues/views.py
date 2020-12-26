@@ -63,7 +63,27 @@ def get_courts_info(request):
    court_json = [{"id": i.court_id, "type": i.enum_id,"name":i.name,
                "status":[{"start":j['start'],"end":j['end'],"code":j['code']} for j in i.Status]
                } for i in courts]
+   try:
+       year = request.GET['year']
+       month = request.GET['month']
+       day = request.GET['day']
+       for i in range(len(court_json)):
+           times_filtered = [item for item in court_json[i]['status'] if str(item['start'].year) == str(year) and str(item['start'].month) == str(month) and str(item['start'].day) == str(day)]
+           court_json[i]['status'] = times_filtered
+       for i in range(len(court_json)):
+           times_filtered = [item for item in court_json[i]['status'] if item['code'] > 0]
+           court_json[i]['status'] = times_filtered
 
+       return JsonResponse({
+           "message": "ok",
+           "requestedDate": [int(day), int(month), int(year)],
+           "venue_name": venue.name,
+           "courts": court_json
+       })
+   except:
+       return JsonResponse({"message":"error"},status=400)
+
+'''
    try:
       year = request.GET['year']
       for i in range(len(court_json)):
@@ -87,17 +107,8 @@ def get_courts_info(request):
         court_json[i]['status'] = times_filtered
    except:
       pass
+'''
 
-   for i in range(len(court_json)):
-        times_filtered = [item for item in court_json[i]['status'] if item['code'] > 0]
-        court_json[i]['status'] = times_filtered
-
-   return JsonResponse({
-      "message": "ok",
-      "requestedDate":[int(day),int(month),int(year)],
-      "venue_name": venue.name,
-      "courts": court_json
-   })
 
 @require('get')
 def get_venues_list(request):

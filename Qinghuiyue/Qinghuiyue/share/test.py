@@ -43,6 +43,7 @@ class ShareViewTest(NoSQLTestCase):
         user.invitation.append(share.id)
         user.rent_now.append(reservation.id)
         user.rent_now.append(reservation2.id)
+        user.invitation.append(share_to_be_delete.id)
         user.save()
     @classmethod
     def tearDownClass(cls):
