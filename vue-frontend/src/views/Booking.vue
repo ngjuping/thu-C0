@@ -46,7 +46,7 @@
                 
             </div>
         </div>
-        <vc-calendar mode="range" is-expanded @dayclick='updateByCalendarClick' :attributes="attributes" :min-date='new Date()'></vc-calendar>
+        <vc-calendar mode="range" is-expanded @dayclick='updateByCalendarClick' :attributes="attributes" :min-date="new Date()"></vc-calendar>
         <br/>
         <div>
             <button class="btn btn-white">
