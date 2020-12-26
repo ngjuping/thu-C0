@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-第二次交付.zip
-第一次交付.zip
 Qinghuiyue/frontend/
-=======
 node_modules/
-<<<<<<< HEAD
 Qinghuiyue/.idea/
-=======
 
 .idea
 .idea/
@@ -128,5 +122,3 @@ media/
 # **/migrations/**
 # !**/migrations
 # !**/migrations/__init__.py
->>>>>>> backpb
->>>>>>> 827ccdaed0c83b72e8a413931904b324fb8e4c47
