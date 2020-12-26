@@ -7,9 +7,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
-#Login setup
 caps = DesiredCapabilities().CHROME
 caps["pageLoadStrategy"] = "none"
+
+# Might need to change this url
 baseurl = "http://localhost:8081/"
 login_xpaths = {
     "username":"""//*[@id="login_panel"]/form/div[1]/input""",
@@ -20,28 +21,16 @@ login_xpaths = {
 booking_xpaths = {
     'showvenues':"""//*[@id="menu"]/div/li/a""",
     'getlastvenue':"""(//*[@id="menu"]/div/li/div/a)[1]""",
-    # div[35] = 26th day of month,
+    # what day to place order... copy xpath from the date and paste here
     'selectDay':"""//*[@id="app"]/div[1]/div[3]/div[1]/div[1]/div/div/div[2]/div[37]/div/span""",
-    # 3rd period of day
+    # what period to place order... copy xpath from the period and paste here
     'selectTime':"""/html/body/div/div[1]/div[5]/div[1]/div[2]/div/div[1]/div/div[7]""", 
-    
     'book':"""//*[@id="app"]/div[1]/div[5]/div[1]/div[3]/button""",
     'checkResv':"""/html/body/div[2]/div/div[3]/button[1]""",
     'clickSelect':"""//*[@id="swal2-content"]/select""",
     'offline':"""//*[@id="swal2-content"]/select/option[2]""",
     "offlineOK":"""/html/body/div[2]/div/div[3]/button[1]""",
     'pay':"""/html/body/div[2]/div/div[3]/button[1]"""
-}
-
-payment_xpaths = {
-    'username':"""//*[@id="J_tLoginId"]""",
-    'password':"""//*[@id="payPasswd_rsainput"]""",
-    'submit':"""//*[@id="J_newBtn"]"""
-}
-
-payment_credentials = {
-    "mail":"wmnlvo1425@sandbox.com",
-    "pwd":"111111"
 }
 
 share_xpath = {
@@ -151,9 +140,9 @@ wait.until(EC.element_to_be_clickable((By.XPATH, share_xpath['delete']))).click(
 wait.until(EC.element_to_be_clickable((By.XPATH, share_xpath['confirmDelete']))).click()
 time.sleep(5)
 
-
+# Fails when source code invoke new Date()... bad mock library
+# For this to work change new Date() in Booking page to Date()
 with open('../node_modules/timeshift-js/timeshift.js', 'r') as timeshift_js: 
-
     timeshiftjs = timeshift_js.read() 
     mydriver.execute_script(timeshiftjs)
     mydriver.execute_script("""
@@ -215,17 +204,6 @@ time.sleep(10)
 manageCourts.click()
 wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['delete']))).click()
 wait.until(EC.element_to_be_clickable((By.XPATH, feedback_xpath['confirmDelete']))).click()
-
-
-# -- payment
-# wait.until(EC.element_to_be_clickable((By.XPATH, payment_xpaths["username"])))
-# element.send_keys(payment_credentials["mail"])
-# time.sleep(1)
-# wait.until(EC.element_to_be_clickable((By.XPATH, payment_xpaths["password"])))
-# element.send_keys(payment_credentials["pwd"])
-# time.sleep(1)
-# wait.until(EC.element_to_be_clickable((By.XPATH, payment_xpaths["submit"]))).click()
-
 
 
 # To get elements by xpath and click? $x("some xpath") in console.
