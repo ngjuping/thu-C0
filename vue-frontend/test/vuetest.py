@@ -11,7 +11,7 @@ caps = DesiredCapabilities().CHROME
 caps["pageLoadStrategy"] = "none"
 
 # Might need to change this url
-baseurl = "http://localhost:8081/"
+baseurl = "http://58.87.86.11:8000/"
 login_xpaths = {
     "username":"""//*[@id="login_panel"]/form/div[1]/input""",
     "pwd":"""//*[@id="login_panel"]/form/div[2]/input""",
@@ -140,8 +140,6 @@ wait.until(EC.element_to_be_clickable((By.XPATH, share_xpath['delete']))).click(
 wait.until(EC.element_to_be_clickable((By.XPATH, share_xpath['confirmDelete']))).click()
 time.sleep(5)
 
-# Fails when source code invoke new Date()... bad mock library
-# For this to work change new Date() in Booking page to Date()
 with open('../node_modules/timeshift-js/timeshift.js', 'r') as timeshift_js: 
     timeshiftjs = timeshift_js.read() 
     mydriver.execute_script(timeshiftjs)
