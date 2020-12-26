@@ -1,24 +1,16 @@
-# vue-frontend
+# 清会约前端代码
 
-## Project setup
+## 下载依赖项
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### 运行本地服务器快速体验
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### 生成可部署的dist文件夹，内含可部署的html,css,js文件
 ```
 npm run build
 ```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
