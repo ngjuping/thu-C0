@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from Qinghuiyue.alipay.alipay import AliPay
 from Qinghuiyue.reservation.models import Reservation
-from Qinghuiyue.venus.models import Court
+from Qinghuiyue.venues.models import Court
 from Qinghuiyue.reservation.models import Reservation
 
 

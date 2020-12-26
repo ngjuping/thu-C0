@@ -4,9 +4,9 @@ import os
 from django.http import HttpResponse, JsonResponse
 from Qinghuiyue.feedback.models import Feedback
 from Qinghuiyue.users.models import User
-from Qinghuiyue.venus.models import Court
+from Qinghuiyue.venues.models import Court
 from Qinghuiyue.utils import require
-
+from Qinghuiyue.checkers.html_content_checker import check_html_content
 
 @require('post', online=True)
 def create_feedback(request):
@@ -18,7 +18,9 @@ def create_feedback(request):
     '''
     params = request.POST
     img = request.FILES.get('img')
-
+    ok,message=check_html_content(params['content'])
+    if not ok:
+        return JsonResponse({"message":message},status=400)
     ok, feedback_id = Feedback.create_feedback({"user_id": int(params['user_id']),
                                                 "stars": int(params['stars']), "content": params["content"], "img": img,
                                                 "reservation_id": int(params['reservation_id'])})
@@ -50,7 +52,7 @@ def get_all_feedback(request):
         {
             "feedback_id": feedback.feedback_id,
             "content": feedback.content,
-            "publish_date": feedback.time,
+            "publish_date": feedback.time+datetime.timedelta(hours=8),
             "court_id": Court.objects(id=feedback.court)[0].court_id,
             "img": feedback.img if feedback.img!="None" else "static/feedback/default.png",
             "reply": feedback.reply,
@@ -74,6 +76,8 @@ def get_user_feedbacks(request):
 
     user_id = int(request.GET['user_id'])
     user = User.objects(user_id=user_id).first()
+    if not user:
+        return JsonResponse({"message":"找不到该用户"},status=400)
     feedbacks_all = Feedback.objects(id__in=user.feedback).order_by("-time")
     total = len(feedbacks_all)
     if page * size > total:
@@ -84,7 +88,7 @@ def get_user_feedbacks(request):
         {
             "feedback_id": feedback.feedback_id,
             "content": feedback.content,
-            "publish_date": feedback.time,
+            "publish_date": feedback.time+datetime.timedelta(hours=8),
             "court_id": Court.objects(id=feedback.court)[0].court_id,
             "img": feedback.img if feedback.img!="None" else "static/feedback/default.png",
             "reply": feedback.reply,
@@ -101,14 +105,18 @@ def update_feedback(request):
     # 目前上传新的图片会更改图片的名字，但是原来的图片没有删除。删除反馈的图片时候也没有删除
     try:
         params = request.POST
+        ok, message = check_html_content(params['content'])
+        if not ok:
+
+            return JsonResponse({"message": message}, status=400)
         feedback = Feedback.objects(feedback_id=int(params['feedback_id'])).first()
         feedback.content = params['content']
         feedback.stars = int(params['stars'])
         img = request.FILES.get("img")
         if img:
-            assert params['img'].name.endwith(
+            assert img.name.endswith(
                 ('.bmp', '.dib', '.png', '.jpg', '.jpeg', '.pbm', '.pgm', '.ppm', '.tif', '.tiff'))
-            img_name = "static/feedback/" + str(feedback.feedback_id) + params['img'].name.split('.')[-1]
+            img_name = "static/feedback/" + str(feedback.feedback_id) + '.'+img.name.split('.')[-1]
             feedback.img = img_name
             feedback.save()
             with open(img_name, 'wb+') as img_file:
@@ -127,12 +135,15 @@ def delete_feedback(request):
     feedback = Feedback.objects(feedback_id=params['feedback_id']).first()
     if not feedback:
         return JsonResponse({"message": "这条反馈已经不存在了..."}, status=500)
-    if feedback.user_id != request.session.get('user_id'):
+
+    if feedback.user_id != request.session.get('user_id') and request.session.get('privilege')!=1:
         return JsonResponse({"message": "您没有删除的权限，请确认登陆状态"}, status=403)
     user = User.objects(user_id=feedback.user_id).first()
-
-    user.feedback.remove(feedback.id)
-    user.save()
+    try:
+        user.feedback.remove(feedback.id)
+        user.save()
+    except:
+        pass
     feedback.delete()
     if feedback.img != "None":
         try:
@@ -149,6 +160,8 @@ def reply_feedback(request):
     '''
     params = json.loads(request.body)
     feedback = Feedback.objects(feedback_id=params['feedback_id']).first()
+    if not feedback:
+        return JsonResponse({"message": "这条反馈已经不存在了..."}, status=500)
     feedback.reply = params['reply']
     feedback.solved = params['solved']
     feedback.save()

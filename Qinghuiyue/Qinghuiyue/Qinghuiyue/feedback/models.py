@@ -1,7 +1,7 @@
 from mongoengine import *
 import bson
 import datetime
-from Qinghuiyue.venus.models import Court
+from Qinghuiyue.venues.models import Court
 from Qinghuiyue.models.models import Stat
 from Qinghuiyue.users.models import User
 from Qinghuiyue import settings
@@ -32,7 +32,7 @@ class Feedback(DynamicDocument):
                                           reply="等待管理员回复中", feedback_id=Stat.add_object("feedback"), reservation_id=params['reservation_id'],solved=False)
             #img_name = settings.STATIC_URL + str(feedback.feedback_id) + params['img'].name
             if params['img']:
-                assert params['img'].name.endwith(('.bmp', '.dib', '.png', '.jpg', '.jpeg', '.pbm', '.pgm', '.ppm', '.tif', '.tiff'))
+                assert params['img'].name.endswith(('.bmp', '.dib', '.png', '.jpg', '.jpeg', '.pbm', '.pgm', '.ppm', '.tif', '.tiff'))
                 img_name = "static/feedback/"+ str(feedback.feedback_id) + params['img'].name.split('.')[-1]
                 feedback.img = img_name
                 feedback.save()

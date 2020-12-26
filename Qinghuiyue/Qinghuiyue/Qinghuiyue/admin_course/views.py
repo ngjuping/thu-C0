@@ -1,5 +1,5 @@
 from Qinghuiyue.users.models import *
-from Qinghuiyue.venus.models import *
+from Qinghuiyue.venues.models import *
 from Qinghuiyue.models.models import *
 from Qinghuiyue.models.models import Stat
 from django.http import HttpResponse, JsonResponse
@@ -9,20 +9,17 @@ from dateutil.parser import parse
 from pytz import tzinfo
 from pytz import utc
 from Qinghuiyue import settings
+from Qinghuiyue.checkers.content_len_checker import *
+from Qinghuiyue.utils import require
 
-
+@require('post',privilege=1)
 def create_course(request):
-    course_id = 1
-    while True:
-        if Course.objects(course_id=course_id).first() != None:
-            course_id += 1
-        else:
-            break
+    course_id = Stat.add_object("course")
     params = json.loads(request.body)
 
     try:
         name = params['name']
-        assert len(name) > 0
+        assert check_content_len(name,min=3,max=10) == (True,"ok")
     except:
         return JsonResponse({"message": "requires correct course name"}, status=401)
     try:
@@ -32,10 +29,12 @@ def create_course(request):
         return JsonResponse({"message": "requires correct price"}, status=401)
     try:
         tel = params['tel']
+        assert check_content_len(tel,min=3,max=20) == (True,"ok")
     except:
         return JsonResponse({"message": "requires correct telephone"}, status=401)
     try:
         intro = params['intro']
+        assert check_content_len(intro,min=3,max=100) == (True,"ok")
     except:
         return JsonResponse({"message": "requires correct introduction"}, status=401)
 
@@ -50,7 +49,7 @@ def create_course(request):
     return JsonResponse({"message": "ok", "course_id": course_id})
 
 
-
+@require('post',privilege=1)
 def update_course(request):
     params = json.loads(request.body)
 
@@ -63,41 +62,45 @@ def update_course(request):
 
     try:
         name = params['name']
-        try:
-            assert len(name) > 0
-        except:
-            return JsonResponse({"message": "requires correct course name"}, status=401)
-        Course.objects(course_id=course_id).update_one(set__name=name)
+        if name != None:
+            try:
+                assert check_content_len(name,min=3,max=10) == (True,"ok")
+            except:
+                return JsonResponse({"message": "requires correct course name"}, status=401)
+            Course.objects(course_id=course_id).update_one(set__name=name)
     except:
         pass
 
     try:
         price = params['price']
-        try:
-            assert len(price) > 0
-        except:
-            return JsonResponse({"message": "requires correct price"}, status=401)
-        Course.objects(course_id=course_id).update_one(set__price=price)
+        if price != None:
+            try:
+                assert len(price) > 0
+            except:
+                return JsonResponse({"message": "requires correct price"}, status=401)
+            Course.objects(course_id=course_id).update_one(set__price=price)
     except:
         pass
 
     try:
         intro = params['intro']
-        try:
-            assert len(intro) > 0
-        except:
-            return JsonResponse({"message": "requires correct introduction"}, status=401)
-        Course.objects(course_id=course_id).update_one(set__intro=intro)
+        if intro != None:
+            try:
+                assert check_content_len(intro,min=3,max=100) == (True,"ok")
+            except:
+                return JsonResponse({"message": "requires correct introduction"}, status=401)
+            Course.objects(course_id=course_id).update_one(set__intro=intro)
     except:
         pass
 
     try:
         tel = params['tel']
-        try:
-            assert len(tel) > 0
-        except:
-            return JsonResponse({"message": "requires correct telephone"}, status=401)
-        Course.objects(course_id=course_id).update_one(set__tel=tel)
+        if tel != None:
+            try:
+                assert check_content_len(tel,min=3,max=20) == (True,"ok")
+            except:
+                return JsonResponse({"message": "requires correct telephone"}, status=401)
+            Course.objects(course_id=course_id).update_one(set__tel=tel)
     except:
         pass
 
@@ -105,6 +108,7 @@ def update_course(request):
         "message": "ok"
     })
 
+@require('post',privilege=1)
 def delete_course(request):
     params = json.loads(request.body)
 
@@ -119,7 +123,7 @@ def delete_course(request):
         "message": "ok"
     })
 
-
+@require('get')
 def get_course(request):
     try:
         page = int(request.GET.get('page'))

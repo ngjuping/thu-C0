@@ -9,10 +9,9 @@ from Qinghuiyue.reservation.models import Reservation
 from Qinghuiyue.share.models import Share_notification
 from Qinghuiyue.users.models import User
 
-from Qinghuiyue.venus.models import Court
-
+from Qinghuiyue.venues.models import Court
 from Qinghuiyue.utils import require
-
+from django.core.cache import cache
 
 @require('get', online=True)
 def get_reservations(request):
@@ -40,7 +39,7 @@ def get_reservations(request):
         try:
             court_name=Court.objects(id=rent.details['court'])[0].name
         except Exception:
-            court_name="找不到场地信息"
+            continue
         court = {
             "reservation_id": rent.reservation_id,
             "type": rent.type,
@@ -77,8 +76,6 @@ def book_draw(request):
     book_info['start'] = parse(book_info['start'])
     book_info['end'] = parse(book_info['end'])
     user = User.objects(user_id=request.session.get("user_id")).first()
-    if not user:
-        return JsonResponse({"message": "用户不存在"}, status=400)
     draw_now = Reservation.objects(id__in=user.rent_now, status=5).count()
     if draw_now >= 3:
         return JsonResponse({"message": "您最多同时参与三场抽签", "draw_now": draw_now}, status=400)
@@ -117,6 +114,8 @@ def book_first_come(request):
     book_info = json.loads(request.body)
     print(book_info)
     court = Court.objects(court_id=book_info['court_id']).first()
+    if not court:
+        return JsonResponse({"message": "找不到场地"}, status=400)
     court_status = court.Status
     book_info['start'] = parse(book_info['start'])
     book_info['end'] = parse(book_info['end'])
@@ -124,14 +123,17 @@ def book_first_come(request):
     if not user:
         return JsonResponse({"message": "用户不存在或登陆过期，请重新登陆"}, status=400)
 
+    cache_key=str(court.court_id)+str(book_info['start'])
     for status in court_status:
-        # print(status['start'], status['end'])
         if status['start'] == book_info['start'] \
                 and status['end'] == book_info['end']:
             if status['code'] == 1:  # 场地状态1，先到先得还能订此时用户就是第一个到的，时间段和场地状态都符合要求，直接预定成功
+                if cache.get(cache_key):
+                    return JsonResponse({"message": "error"}, status=400)
+                cache.set(cache_key,1,50000)
                 status["user_id"] = user.user_id
                 status["code"] = 2  # 2是已经定了
-                stat = Stat.objects(name="size_of_collection")[0]
+                court.save()
                 reservation = Reservation(type=court.enum_id, details={
                     "court": court.id,
                     "user_id": user.user_id,
@@ -139,16 +141,15 @@ def book_first_come(request):
                     "end": book_info["end"],
                     "created": datetime.datetime.now()
 
-                }, reservation_id=stat.data['reservation'] + 1, status=1)
+                }, reservation_id=Stat.add_object("reservation"), status=1)
                 reservation.save()  # 应该先保存，不然会导致读取不出id
-                stat.data['reservation'] += 1
+
                 user.rent_now.append(reservation.id)
 
                 court.save()
                 user.save()
-                stat.save()
-                return JsonResponse({"message": "ok", "reservation_id": reservation.reservation_id})
 
+                return JsonResponse({"message": "ok", "reservation_id": reservation.reservation_id})
     return JsonResponse({"message": "error"}, status=400)
 
 @require('post',online=True)
@@ -270,15 +271,3 @@ def pay_offline(request):
     return JsonResponse({"message": "ok"})
 
 
-def test_draw(request):
-    '''仅用于手动测试抽签'''
-    from Qinghuiyue.cronjobs.cronjobs import start_draw, set_court_next_week
-    # set_court_next_week()
-    start_draw()
-    return JsonResponse({"message": "ok"})
-
-
-def test_set(request):
-    from Qinghuiyue.cronjobs.cronjobs import set_court_next_week
-    set_court_next_week()
-    return JsonResponse({"message": "ok"})

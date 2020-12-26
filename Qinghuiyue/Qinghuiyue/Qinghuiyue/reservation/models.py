@@ -2,7 +2,7 @@ from mongoengine import *
 import bson
 import bcrypt
 
-from Qinghuiyue.venus.models import Court
+from Qinghuiyue.venues.models import Court
 
 
 class Queue_reservation(DynamicDocument):

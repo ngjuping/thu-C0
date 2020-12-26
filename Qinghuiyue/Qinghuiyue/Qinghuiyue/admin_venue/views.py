@@ -1,5 +1,5 @@
 from Qinghuiyue.users.models import *
-from Qinghuiyue.venus.models import *
+from Qinghuiyue.venues.models import *
 from Qinghuiyue.models.models import Stat
 from Qinghuiyue.reservation.models import *
 from django.http import HttpResponse, JsonResponse
@@ -12,21 +12,21 @@ from Qinghuiyue import settings
 import pandas as pd
 import zipfile
 import os
+from Qinghuiyue.checkers.content_len_checker import *
+from Qinghuiyue.models.models import Stat
+from Qinghuiyue.utils import require
 
+@require('post',privilege=1)
 def create_venue(request):
-    venue_id = 1
-    while True:
-        if Venue.objects(venue_id=venue_id).first() != None:
-            venue_id += 1
-        else:
-            break
+    venue_id = Stat.add_object("venue")
     try:
         name = request.POST.get('name')
-        assert type(name) == str
+        assert check_content_len(name,min=3,max=10) == (True,"ok")
     except:
         return JsonResponse({"error": "require venue name"}, status=401)
     try:
         description = request.POST.get('description')
+        assert check_content_len(description,min=3,max=100) == (True,"ok")
         assert type(name) == str
     except:
         return JsonResponse({"error": "require venue description"}, status=401)
@@ -40,6 +40,9 @@ def create_venue(request):
             img_format = img.name.split('.')[-1]
             img_name = 'venue_' + str(venue_id) + '_img.' + img_format
             Venue.objects(venue_id=venue_id).update_one(set__image='static/venue/' + img_name)
+
+            if not os.path.exists('static/'):
+                os.mkdir('static')
             if not os.path.exists('static/venue/'):
                 os.mkdir('static/venue')
             with open('static/venue/' + img_name, 'wb+') as destination:
@@ -63,15 +66,11 @@ def create_venue(request):
         "venue_id": venue_id
     })
 
+@require('post',privilege=1)
 def create_court(request):
 
     params = json.loads(request.body)
-    court_id = 1
-    while True:
-        if Court.objects(court_id=court_id).first() != None:
-            court_id += 1
-        else:
-            break
+    court_id = Stat.add_object("court")
     try:
         venue_id = params['venue_id']
         this_venue = Venue.objects(venue_id=int(venue_id)).first()  # the venue found with id in database
@@ -80,6 +79,7 @@ def create_court(request):
         return JsonResponse({"message": "venue id error"}, status=401)
     try:
         name = params['name']
+        assert check_content_len(name,min=3,max=10) == (True,"ok")
     except:
         return JsonResponse({"message": "requires court name"}, status=401)
     try:
@@ -89,8 +89,7 @@ def create_court(request):
         return JsonResponse({"message": "requires a integer price"}, status=401)
     try:
         type = params['type']
-        # assert type(type) == int
-        assert 0 <= type <= 5     # 需要改
+        assert 0 <= type <= 5
     except:
         return JsonResponse({"message": "venue sport type error"}, status=401)
     try:
@@ -122,6 +121,7 @@ def create_court(request):
     Venue.objects(venue_id=venue_id).update_one(set__courts=courts_ls)
     return JsonResponse({"message": "ok"})
 
+@require('post',privilege=1)
 def update_court(request):
 
     params = json.loads(request.body)
@@ -156,6 +156,7 @@ def update_court(request):
         "message": "ok"
     })
 
+@require('post',privilege=1)
 def update_venue(request):
     try:
         venue_id = request.POST.get('venue_id')  # type(venue_id) is str
@@ -164,11 +165,13 @@ def update_venue(request):
         return JsonResponse({"message": "venue id error"}, status=401)
     try:
         name = request.POST.get('name')
+        assert check_content_len(name,min=3,max=10) == (True,"ok")
         Venue.objects(venue_id=venue_id).update_one(set__name=name)
     except:
         pass
     try:
         description = request.POST.get('description')
+        assert check_content_len(description,min=3,max=100) == (True,"ok")
         Venue.objects(venue_id=venue_id).update_one(set__intro=description)
     except:
         pass
@@ -194,6 +197,7 @@ def update_venue(request):
         "message": "ok"
     })
 
+@require('post',privilege=1)
 def delete_venue(request):
 
     params = json.loads(request.body)
@@ -217,7 +221,7 @@ def delete_venue(request):
         "message": "ok"
     })
 
-
+@require('post',privilege=1)
 def delete_court(request):
 
     params = json.loads(request.body)
@@ -241,6 +245,7 @@ def delete_court(request):
         "message": "ok"
     })
 
+@require('get',privilege=1)
 def list_court(request):
     courts = Court.objects().all()
     total = len(courts)
@@ -252,7 +257,7 @@ def list_court(request):
     except:
         return JsonResponse({
             "message": "require page and size"
-        })
+        }, status=401)
     begin = size * (page - 1)   # included
     end = size * page           # not included
     courts = courts[begin:end]
@@ -271,6 +276,7 @@ def list_court(request):
         "courts": courts_ret
     })
 
+@require('post',privilege=1)
 def make_schedule(request):
     '''
     学期场地预定，接受
@@ -296,6 +302,7 @@ def make_schedule(request):
     court.set_schedule()
     return JsonResponse({"message":"ok"})
 
+
 def generate_csv(request):
 
     path = "static/reservation"
@@ -304,15 +311,13 @@ def generate_csv(request):
 
     # find next monday
     today = datetime.date.today()
-    #today -= datetime.timedelta(days = 1) * 26 # set 11.26 for test
 
     while today.weekday() != 0: # stand for Monday
         today += datetime.timedelta(days = 1)
     next_monday = today
     date = next_monday
-    # print(date)
-    file_list = [] # all files generated this time
 
+    file_list = [] # all files generated this time
     venues = Venue.objects().all()
 
     for venue in venues:
