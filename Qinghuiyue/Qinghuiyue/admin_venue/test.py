@@ -40,7 +40,7 @@ class AdminNoticeViewTest(NoSQLTestCase):
         response = self.client.post('/api/admin/create/venue',
                                     {'name': 'name',
                                      'description': 'description',
-                                     'img': SimpleUploadedFile(name='test_image.jpg', content=open('C:/Users/pb/Pictures/birdhouse.jpg', 'rb').read(),
+                                     'img': SimpleUploadedFile(name='test_image.jpg', content=open('Qinghuiyue/admin_venue/test.png', 'rb').read(),
                                                         content_type='image/jpg')
                                      },
                                     )
@@ -50,7 +50,7 @@ class AdminNoticeViewTest(NoSQLTestCase):
                                     {'name': 'na',
                                      'description': 'description',
                                      'img': SimpleUploadedFile(name='test_image.jpg',
-                                                               content=open('C:/Users/pb/Pictures/birdhouse.jpg',
+                                                               content=open('Qinghuiyue/admin_venue/test.png',
                                                                             'rb').read(),
                                                                content_type='image/jpg')
                                      },
@@ -60,7 +60,7 @@ class AdminNoticeViewTest(NoSQLTestCase):
                                     {'name': 'name',
                                      'description': 'd',
                                      'img': SimpleUploadedFile(name='test_image.jpg',
-                                                               content=open('C:/Users/pb/Pictures/birdhouse.jpg',
+                                                               content=open('Qinghuiyue/admin_venue/test.png',
                                                                             'rb').read(),
                                                                content_type='image/jpg')
                                      },
@@ -192,7 +192,7 @@ class AdminNoticeViewTest(NoSQLTestCase):
                                     {'name': 'name',
                                      'venue_id': 1,
                                      'description': 'description',
-                                     'img': SimpleUploadedFile(name='test_image.jpg', content=open('C:/Users/pb/Pictures/birdhouse.jpg', 'rb').read(),
+                                     'img': SimpleUploadedFile(name='test_image.jpg', content=open('Qinghuiyue/admin_venue/test.png', 'rb').read(),
                                                         content_type='image/jpg')
                                      },
                                     )
@@ -202,7 +202,7 @@ class AdminNoticeViewTest(NoSQLTestCase):
                                     {
                                      'venue_id': 1,
                                      'img': SimpleUploadedFile(name='test_image.jpg',
-                                                               content=open('C:/Users/pb/Pictures/birdhouse.jpg',
+                                                               content=open('Qinghuiyue/admin_venue/test.png',
                                                                             'rb').read(),
                                                                content_type='image/jpg')
                                      },
@@ -223,7 +223,7 @@ class AdminNoticeViewTest(NoSQLTestCase):
                                     {'name': 'name',
                                      'description': 'description',
                                      'img': SimpleUploadedFile(name='test_image.jpg',
-                                                               content=open('C:/Users/pb/Pictures/birdhouse.jpg',
+                                                               content=open('Qinghuiyue/admin_venue/test.png',
                                                                             'rb').read(),
                                                                content_type='image/jpg')
                                      },

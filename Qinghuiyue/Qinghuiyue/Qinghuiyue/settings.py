@@ -27,7 +27,7 @@ SECRET_KEY = 'fxddvzblo*wb6miq+h_j54%@r0p_-k@f65(+^6o(4%2jbfsys9'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['58.87.86.11','127.0.0.1','app']
 
 
 # Application definition
@@ -60,10 +60,11 @@ MONGODB_DATABASES={
         "tz_aware":True,#设置时区
     }
 }
+#缓存设置为redis
 CACHES={
     'default':{
         'BACKEND':'django_redis.cache.RedisCache',
-        'LOCATION':'redis://:C0Qinghuiyue@58.87.86.11:6379',
+        'LOCATION':'redis://:C0Qinghuiyue@redis:6379',
         'OPTIONS': {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "CONNECTION_POOL_KWARGS": {"max_connections": 100},
@@ -72,11 +73,11 @@ CACHES={
     }
 }
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',#使用该模块解决跨域问题
+    #'corsheaders.middleware.CorsMiddleware',#使用该模块解决跨域问题
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',#把这个注释掉是为了调试，最后发布的时候必须改回来
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -85,10 +86,9 @@ MIDDLEWARE = [
 
 
 # 支持跨域配置,在最后应该要删除
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
+#CORS_ORIGIN_ALLOW_ALL = True
+#CORS_ALLOW_CREDENTIALS = True
 ROOT_URLCONF = 'Qinghuiyue.urls'
-ALLOWED_HOSTS+=['58.87.86.11','127.0.0.1','app']
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -111,8 +111,8 @@ WSGI_APPLICATION = 'Qinghuiyue.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 from mongoengine import connect
-#connect('qhy',host='mongodb://thuC0:C0Qinghuiyue@db:27017',authentication_source='admin')
-connect('qhy',host='mongodb://thuC0:C0Qinghuiyue@58.87.86.11:27017',authentication_source='admin')
+
+connect('qhy',host='mongodb://thuC0:C0Qinghuiyue@db:27017',authentication_source='admin')
 
 DATABASES = {
     'default': {
