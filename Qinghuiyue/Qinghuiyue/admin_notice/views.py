@@ -10,8 +10,9 @@ from pytz import tzinfo
 from pytz import utc
 from Qinghuiyue import settings
 from Qinghuiyue.checkers.content_len_checker import *
+from Qinghuiyue.utils import require
 
-
+@require('post',privilege=1)
 def create_notice(request):
     notice_id = Stat.add_object("notification")
     params = json.loads(request.body)
@@ -36,6 +37,7 @@ def create_notice(request):
 
     return JsonResponse({"message": "ok", "notice_id": notice_id})
 
+@require('post',privilege=1)
 def delete_notice(request):
     params = json.loads(request.body)
     try:
@@ -47,6 +49,7 @@ def delete_notice(request):
 
     return JsonResponse({"message": "ok"})
 
+@require('post',privilege=1)
 def update_notice(request):
     params = json.loads(request.body)
     try:
@@ -72,6 +75,7 @@ def update_notice(request):
 
     return JsonResponse({"message": "ok"})
 
+@require('get',privilege=1)
 def get_notice(request):
     try:
         page = int(request.GET.get('page'))

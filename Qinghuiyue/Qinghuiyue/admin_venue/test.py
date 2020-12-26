@@ -4,6 +4,7 @@ from Qinghuiyue.models.models import Notification
 from Qinghuiyue.test import NoSQLTestCase
 from Qinghuiyue.venues.models import *
 from django.core.files.uploadedfile import SimpleUploadedFile
+from Qinghuiyue.users.models import *
 
 
 class AdminNoticeViewTest(NoSQLTestCase):
@@ -21,8 +22,9 @@ class AdminNoticeViewTest(NoSQLTestCase):
                                                              'notification': 0, 'share_notification': 0,
                                                              'reservation': 0, 'course': 0})
         Venue.objects.create(name='name', description='description', img=None, venue_id=1)
-        Court.objects.create(name='name', court_id=1)
-
+        Court.objects.create(name='name', court_id=1,venue_id=1)
+        User.create(password='123abc', user_id=1, name='test', api_id='2018000000', privilege=1)
+        Court.objects.create(name='name', court_id=2, venue_id=1)
 
     @classmethod
     def tearDownClass(cls):
@@ -33,6 +35,7 @@ class AdminNoticeViewTest(NoSQLTestCase):
 
 
     def test_create_venue(self):
+        self.client.post('/api/login', {'api_id': '2018000000', 'pwd': '123abc'}, content_type='application/json')
         # 成功
         response = self.client.post('/api/admin/create/venue',
                                     {'name': 'name',
@@ -71,6 +74,7 @@ class AdminNoticeViewTest(NoSQLTestCase):
         self.assertEqual(response.status_code, 401)
 
     def test_create_court(self):
+        self.client.post('/api/login', {'api_id': '2018000000', 'pwd': '123abc'}, content_type='application/json')
         # 成功
         response = self.client.post('/api/admin/create/court',
                                     {'name': 'name',
@@ -182,6 +186,7 @@ class AdminNoticeViewTest(NoSQLTestCase):
         self.assertEqual(response.status_code, 401)
 
     def test_update_venue(self):
+        self.client.post('/api/login', {'api_id': '2018000000', 'pwd': '123abc'}, content_type='application/json')
         # 成功
         response = self.client.post('/api/admin/update/venue',
                                     {'name': 'name',
@@ -226,6 +231,7 @@ class AdminNoticeViewTest(NoSQLTestCase):
         self.assertEqual(response.status_code, 401)
 
     def test_delete_venue(self):
+        self.client.post('/api/login', {'api_id': '2018000000', 'pwd': '123abc'}, content_type='application/json')
         response = self.client.post('/api/admin/delete/venue',
                                     {
                                         'venue_id': 3
@@ -248,6 +254,7 @@ class AdminNoticeViewTest(NoSQLTestCase):
         self.assertEqual(response.status_code, 401)
 
     def test_delete_venue(self):
+        self.client.post('/api/login', {'api_id': '2018000000', 'pwd': '123abc'}, content_type='application/json')
         response = self.client.post('/api/admin/delete/court',
                                     {
                                         'court_id': 3
@@ -270,10 +277,7 @@ class AdminNoticeViewTest(NoSQLTestCase):
         self.assertEqual(response.status_code, 401)
 
     def test_list_court(self):
-        response = self.client.get('/api/admin/court/list?page=1&size=5',
-
-                                   content_type='application/json')
-        self.assertEqual(response.status_code, 200)
+        self.client.post('/api/login', {'api_id': '2018000000', 'pwd': '123abc'}, content_type='application/json')
 
         response = self.client.get('/api/admin/court/list?page=1',
 
@@ -285,9 +289,44 @@ class AdminNoticeViewTest(NoSQLTestCase):
                                    content_type='application/json')
         self.assertEqual(response.status_code, 401)
 
-    # def test_make_schedule(self):
+    def test_make_schedule(self):
+        submatrix = [1,1,1,1,1,1,1]
+        matrix = []
+        for i in range(15):
+            matrix.append(submatrix)
+
+        response = self.client.post('/api/admin/schedule',{
+            'court_id':2,
+            'price':15,
+            'matrix': matrix
+        }
+        ,content_type='application/json')
+        self.assertEqual(response.status_code, 403)
+
+        self.client.post('/api/login', {'api_id': '2018000000', 'pwd': '123abc'}, content_type='application/json')
+
+        response = self.client.post('/api/admin/schedule', {
+            'court_id': 2,
+            'price': 15,
+            'matrix': matrix
+        }
+                                    , content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post('/api/admin/schedule', {
+            'court_id': 10,
+            'price': 15,
+            'matrix': matrix
+        }
+                                    , content_type='application/json')
+        self.assertEqual(response.status_code, 501)
+
+
+
+
 
     def generate_csv(self):
+        self.client.post('/api/login', {'api_id': '2018000000', 'pwd': '123abc'}, content_type='application/json')
         response = self.client.get('/api/admin/csv/generate',
 
                                    content_type='application/json')

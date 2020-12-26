@@ -5,7 +5,6 @@ from Qinghuiyue.venues.models import *
 from Qinghuiyue.models.models import *
 from Qinghuiyue.utils import require
 
-
 @require('get')
 def get_venues_info(request):
     '''

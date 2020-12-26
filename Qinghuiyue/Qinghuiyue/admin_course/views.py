@@ -10,7 +10,9 @@ from pytz import tzinfo
 from pytz import utc
 from Qinghuiyue import settings
 from Qinghuiyue.checkers.content_len_checker import *
+from Qinghuiyue.utils import require
 
+@require('post',privilege=1)
 def create_course(request):
     course_id = Stat.add_object("course")
     params = json.loads(request.body)
@@ -47,7 +49,7 @@ def create_course(request):
     return JsonResponse({"message": "ok", "course_id": course_id})
 
 
-
+@require('post',privilege=1)
 def update_course(request):
     params = json.loads(request.body)
 
@@ -106,6 +108,7 @@ def update_course(request):
         "message": "ok"
     })
 
+@require('post',privilege=1)
 def delete_course(request):
     params = json.loads(request.body)
 
@@ -120,7 +123,7 @@ def delete_course(request):
         "message": "ok"
     })
 
-
+@require('get')
 def get_course(request):
     try:
         page = int(request.GET.get('page'))

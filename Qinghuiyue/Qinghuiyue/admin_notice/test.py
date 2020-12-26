@@ -3,6 +3,7 @@ from Qinghuiyue.models.models import Stat
 from Qinghuiyue.models.models import Notification
 from Qinghuiyue.test import NoSQLTestCase
 from datetime import datetime
+from Qinghuiyue.users.models import *
 
 
 class AdminNoticeViewTest(NoSQLTestCase):
@@ -20,6 +21,7 @@ class AdminNoticeViewTest(NoSQLTestCase):
                                                              'notification': 0, 'share_notification': 0,
                                                              'reservation': 0, 'course': 0})
         Notification.objects.create(name='tongzhi', content='i am coming', time=datetime.now(), notice_id=1)
+        User.create(password='123abc', user_id=1, name='test', api_id='2018000000', privilege=1)
     @classmethod
     def tearDownClass(cls):
         '''
@@ -28,6 +30,7 @@ class AdminNoticeViewTest(NoSQLTestCase):
         disconnect()
 
     def test_create_notice(self):
+        self.client.post('/api/login', {'api_id': '2018000000', 'pwd': '123abc'}, content_type='application/json')
         # 成功
         response = self.client.post('/api/admin/create/notice',
                                     {'title': 'title',
@@ -70,6 +73,7 @@ class AdminNoticeViewTest(NoSQLTestCase):
         self.assertEqual(response.status_code, 401)
 
     def test_update_notice(self):
+        self.client.post('/api/login', {'api_id': '2018000000', 'pwd': '123abc'}, content_type='application/json')
         # 成功
         response = self.client.post('/api/admin/update/notice',
                                     {'notice_id': 1,
@@ -105,6 +109,7 @@ class AdminNoticeViewTest(NoSQLTestCase):
 
 
     def test_delete_notice(self):
+        self.client.post('/api/login', {'api_id': '2018000000', 'pwd': '123abc'}, content_type='application/json')
         response = self.client.post('/api/admin/delete/notice',
                                     {'notice_id': 4,
                                      },
@@ -125,6 +130,7 @@ class AdminNoticeViewTest(NoSQLTestCase):
         self.assertEqual(response.status_code, 401)
 
     def test_get_notice(self):
+        self.client.post('/api/login', {'api_id': '2018000000', 'pwd': '123abc'}, content_type='application/json')
         response = self.client.get('/api/notices?page=1&size=5',
 
                                    content_type='application/json')

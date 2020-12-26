@@ -14,7 +14,9 @@ import zipfile
 import os
 from Qinghuiyue.checkers.content_len_checker import *
 from Qinghuiyue.models.models import Stat
+from Qinghuiyue.utils import require
 
+@require('post',privilege=1)
 def create_venue(request):
     venue_id = Stat.add_object("venue")
     try:
@@ -64,6 +66,7 @@ def create_venue(request):
         "venue_id": venue_id
     })
 
+@require('post',privilege=1)
 def create_court(request):
 
     params = json.loads(request.body)
@@ -118,6 +121,7 @@ def create_court(request):
     Venue.objects(venue_id=venue_id).update_one(set__courts=courts_ls)
     return JsonResponse({"message": "ok"})
 
+@require('post',privilege=1)
 def update_court(request):
 
     params = json.loads(request.body)
@@ -152,6 +156,7 @@ def update_court(request):
         "message": "ok"
     })
 
+@require('post',privilege=1)
 def update_venue(request):
     try:
         venue_id = request.POST.get('venue_id')  # type(venue_id) is str
@@ -192,6 +197,7 @@ def update_venue(request):
         "message": "ok"
     })
 
+@require('post',privilege=1)
 def delete_venue(request):
 
     params = json.loads(request.body)
@@ -215,7 +221,7 @@ def delete_venue(request):
         "message": "ok"
     })
 
-
+@require('post',privilege=1)
 def delete_court(request):
 
     params = json.loads(request.body)
@@ -239,6 +245,7 @@ def delete_court(request):
         "message": "ok"
     })
 
+@require('get',privilege=1)
 def list_court(request):
     courts = Court.objects().all()
     total = len(courts)
@@ -269,6 +276,7 @@ def list_court(request):
         "courts": courts_ret
     })
 
+@require('post',privilege=1)
 def make_schedule(request):
     '''
     学期场地预定，接受
@@ -294,6 +302,7 @@ def make_schedule(request):
     court.set_schedule()
     return JsonResponse({"message":"ok"})
 
+
 def generate_csv(request):
 
     path = "static/reservation"
@@ -302,15 +311,13 @@ def generate_csv(request):
 
     # find next monday
     today = datetime.date.today()
-    #today -= datetime.timedelta(days = 1) * 26 # set 11.26 for test
 
     while today.weekday() != 0: # stand for Monday
         today += datetime.timedelta(days = 1)
     next_monday = today
     date = next_monday
-    # print(date)
-    file_list = [] # all files generated this time
 
+    file_list = [] # all files generated this time
     venues = Venue.objects().all()
 
     for venue in venues:
