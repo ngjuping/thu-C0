@@ -23,11 +23,15 @@
                         <input type="text" v-model="formMessage.content" class="form-control" placeholder="请输入"/>
                         </div>
                     </div>
+                    <div class="alert alert-danger" v-if="err_msg">
+                        {{ err_msg }}
+                    </div>  
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" @click="handleSave">保存</button>
+                    <button type="button" class="btn btn-secondary" id="closeNoticeEditModal" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" @click="handleSave">保存</button>
+                    
                 </div>
                 </div>
             </div>
@@ -36,6 +40,8 @@
 </template>
 
 <script>
+import $ from 'jquery';
+
 export default {
     name: 'NoticeModal',
     props: {
@@ -60,33 +66,63 @@ export default {
                 content: '',
                 title: '',
             },
+            err_msg:null
         }
     },
     methods: {
         handleSave() {
+
+            // 通知标题长度
+            if(!this.formMessage.title || this.formMessage.title.length < 3){
+                this.err_msg = "通知标题过短(不能少于3个字)"
+                return;
+            }
+            else if(this.formMessage.title.length > 10){
+                this.err_msg = "通知标题过长(不能多于10字)"
+                return;
+            }
+            // 通知内容长度
+            if(!this.formMessage.content || this.formMessage.content.length < 3){
+                this.err_msg = "通知内容过短(不能少于3个字)"
+                return;
+            }
+            else if(this.formMessage.content.length > 100){
+                this.err_msg = "通知内容过长(不能多于100字)"
+                return;
+            }
+
             if (this.status == 'add') {
                 // 新增
-                this.$axios.post('/api/admin/create/notice', this.formMessage).then((res) => {
-                    console.log(res, 'res')
+                this.$axios.post('/api/admin/create/notice', this.formMessage)
+                .then(() => {
                     this.$emit('edit-success');
-                }).catch(err => {
-                    console.log(err);
+                    $('#closeNoticeEditModal').click();
                 })
-            } else if (this.status == 'edit') {
+                .catch(err => {
+                    console.log(err);
+                    this.err_msg = err.response.data.message;
+                })
+            } 
+            else if (this.status == 'edit') {
                 // 编辑
-                this.$axios.post('/api/admin/update/notice', this.formMessage).then((res) => {
-                    console.log(res, 'res')
+                this.$axios.post('/api/admin/update/notice', this.formMessage)
+                .then(() => {
                     this.$emit('edit-success');
+                    $('#closeNoticeEditModal').click();
                 }).catch(err => {
                     console.log(err);
+                    this.err_msg = err.response.data.message;
                 })
-            } else if (this.status == 'delete') {
+            } 
+            else if (this.status == 'delete') {
                 // 删除
-                this.$axios.post('/api/admin/delete/notice', this.formMessage).then((res) => {
-                    console.log(res, 'res')
+                this.$axios.post('/api/admin/delete/notice', this.formMessage)
+                .then(() => {
                     this.$emit('edit-success');
+                    $('#closeNoticeEditModal').click();
                 }).catch(err => {
                     console.log(err);
+                    this.err_msg = err.response.data.message;
                 })
             }
         },

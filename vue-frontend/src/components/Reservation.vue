@@ -99,14 +99,17 @@
         <ShareModal :reservation="resv"
                     :mode="share_mode"
                     class="modal fade" :id="`share_modal-${resv.reservation_id}`"
-                    @hide-modal="hideShareModal"></ShareModal>
+                    @hide-modal="hideShareModal"
+                    @refresh="$emit('refresh')"></ShareModal>
         <FeedbackModal :reservation="resv"
                        :mode="feedback_mode"
                        class="modal fade" :id="`feedback_modal-${resv.reservation_id}`"
-                       @hide-modal="hideFeedbackModal"></FeedbackModal>
+                       @hide-modal="hideFeedbackModal"
+                       @refresh="$emit('refresh')"></FeedbackModal>
         <TransferModal :reservation="resv"
                        class="modal fade" :id="`transfer_modal-${resv.reservation_id}`"
-                       @hide-modal="hideTransferModal"></TransferModal>
+                       @hide-modal="hideTransferModal"
+                       @refresh="$emit('refresh')"></TransferModal>
     </div>
 </template>
 
@@ -224,7 +227,7 @@ export default {
                         timer:1000}
                         )
                         .then(() => {
-                            this.$router.go()
+                            this.$emit("refresh")
                         })
                     })
                     .catch((err)=>{
@@ -269,7 +272,7 @@ export default {
                         timer:1000}
                         )
                         .then(() => {
-                            this.$router.go()
+                            this.$emit("refresh")
                         })
                     })
                     .catch((err)=>{
@@ -315,7 +318,7 @@ export default {
                         timer:1000}
                         )
                         .then(() => {
-                            this.$router.go()
+                            this.$emit("refresh")
                         })
                     })
                     .catch((err)=>{

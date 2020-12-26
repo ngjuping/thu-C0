@@ -36,6 +36,7 @@
                        :reservation="fake_resv"
                        mode="update"
                        class="modal fade" id="all_feedbacks_modal"
+                       @refresh="getFeedbacks"
                        @hide-modal="hideFeedbackModal"></FeedbackModal>
         </div>
 </template>

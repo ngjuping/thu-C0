@@ -76,6 +76,11 @@ export default {
                 this.err_msg = "内容过短(少于10字)";
                 return;
             }
+            else if(this.feedback_raw_content.length > 100){
+                this.failedToSubmit = true;
+                this.err_msg = "内容过长(大于100字)";
+                return;
+            }
 
             // 设置UI控制变量
             this.failedToSubmit = false;
@@ -125,7 +130,7 @@ export default {
 
                     // 发送信号让parent关闭本弹窗
                     this.$emit('hide-modal');
-                    this.$router.go()
+                    this.$emit('refresh');
                 },1000);
 
             })

@@ -87,11 +87,33 @@ export default {
       this.file = e.target.files[0]
     },
     handleSave() {
-      
+      // 必须上传场馆图片
       if(!this.file || this.file.value === ''){
         this.err_msg = "必须上传图片"
         return;
       }
+
+      // 场馆名字长度
+      if(this.formMessage.name.length < 3){
+        this.err_msg = "场馆名字过短(不能少于3个字)"
+        return;
+      }
+      else if(this.formMessage.name.length > 10){
+        this.err_msg = "场馆名字过长(不能多于10字)"
+        return;
+      }
+
+
+      // 场馆形容长度
+      if(this.formMessage.description.length < 3){
+        this.err_msg = "场馆形容过短(不能少于3个字)"
+        return;
+      }
+      else if(this.formMessage.description.length > 100){
+        this.err_msg = "场馆形容过长(不能多于100字)"
+        return;
+      }
+
       const params = new FormData()
       params.set('name', this.formMessage.name)
       params.set('description', this.formMessage.description)
@@ -102,12 +124,14 @@ export default {
       this.loading = true;
       if (this.status == 'add') {
         // 新增
-        this.$axios.post('/api/admin/create/venue', params,{headers:{'Content-Type':'multipart/form-data'}}).then((res) => {
+        this.$axios.post('/api/admin/create/venue', params,{headers:{'Content-Type':'multipart/form-data'}})
+        .then((res) => {
             console.log(res, 'res')
             this.$emit('edit-success');
-        }).catch(err => {
+        })
+        .catch(err => {
             console.log(err.response.data);
-
+            this.err_msg = err.response.data.error;
         })
         .finally(() => {
           $('#closeVenueEdit').click();
@@ -121,10 +145,13 @@ export default {
             headers: {
                     'Content-Type':'multipart/form-data'
                 }
-        }).then(() => {
+        })
+        .then(() => {
             this.$emit('edit-success')
-        }).catch((error) => {
-            console.log(error.response.data.message)
+        })
+        .catch((error) => {
+            console.log(error.response.data)
+            this.err_msg = error.response.data.error;
         })
         .finally(() => {
           $('#closeVenueEdit').click();
