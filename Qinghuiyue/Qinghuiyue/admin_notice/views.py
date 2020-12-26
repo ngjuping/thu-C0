@@ -75,7 +75,7 @@ def update_notice(request):
 
     return JsonResponse({"message": "ok"})
 
-@require('get',privilege=1)
+@require('get')
 def get_notice(request):
     try:
         page = int(request.GET.get('page'))
